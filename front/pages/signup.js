@@ -1,13 +1,8 @@
 import React from "react";
-import SignUpForm from "../Components/SignLayout/SignUp";
-import SignLayout from "../Components/SignLayout";
+import SignUpForm from "../Components/SignUp";
 
 const SignUp = () => {
-  return (
-    <SignLayout>
-      <SignUpForm />
-    </SignLayout>
-  );
+  return <SignUpForm />;
 };
 
 export default SignUp;

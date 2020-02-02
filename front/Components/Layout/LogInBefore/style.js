@@ -2,11 +2,13 @@ import styled from "styled-components";
 
 export const Menu = styled.ul`
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   & li {
     color: white;
   }
   & li:first-child {
-    margin-right: 50px;
+    width: 10vw;
+    display: flex;
+    justify-content: center;
   }
 `;

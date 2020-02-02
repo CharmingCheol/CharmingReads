@@ -1,27 +1,27 @@
 import styled from "styled-components";
 
 export const LogInMain = styled.div`
+  font-size: 1rem;
   display: flex;
+  justify-content: center;
   flex-direction: column;
-  margin-top: 50px;
-  width: 100%;
   & input {
-    padding: 10px;
+    width: 30vw;
+    padding: 1em;
     margin: 0 auto;
-    width: 50%;
     border-width: 0;
-    border-radius: 15px;
-    margin-bottom: 30px;
+    border-radius: 15em;
+    margin-bottom: 2em;
   }
   & button {
     font-weight: 600;
     color: white;
-    padding: 10px;
+    padding: 1em;
     margin: 0 auto;
-    width: 50%;
+    width: 30vw;
     border-width: 0;
-    border-radius: 15px;
-    margin-bottom: 30px;
+    border-radius: 15em;
+    margin-bottom: 2em;
     background-color: rgba(204, 174, 98, 1);
   }
 `;

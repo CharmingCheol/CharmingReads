@@ -1,13 +1,10 @@
 import React from "react";
-import SignLayout from "../Components/SignLayout";
-import LoginForm from "../Components/SignLayout/Login";
+import LoginForm from "../Components/Login";
 
 const LogIn = () => {
   return (
     <>
-      <SignLayout>
-        <LoginForm />
-      </SignLayout>
+      <LoginForm />
     </>
   );
 };

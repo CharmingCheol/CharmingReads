@@ -11,10 +11,9 @@ const GlobalStyles = createGlobalStyle`
         box-sizing:border-box
     }
     html, body {
-        height:100%;
-        width: 100%;
     }
     body {
+        padding-top: 20vh;
         background-color:#ecf0f1;
         color:black;
     }

@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 export const Text = styled.div`
-  width: 100%;
-  padding-bottom: 20px;
+  background-color: rgba(204, 174, 98, 1);
+  font-size: 2rem;
+  padding: 5em 0 3em 0;
   text-align: center;
-  font-size: 30px;
   font-weight: 600;
   color: white;
 `;
