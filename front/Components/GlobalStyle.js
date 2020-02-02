@@ -8,12 +8,11 @@ const GlobalStyles = createGlobalStyle`
         color:inherit;
     }
     * {
-        box-sizing:border-box
-    }
-    html, body {
+        box-sizing:border-box;
+        outline: 0;
     }
     body {
-        padding-top: 20vh;
+        padding-top: 120px;
         background-color:#ecf0f1;
         color:black;
     }
