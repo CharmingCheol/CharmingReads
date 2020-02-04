@@ -12,7 +12,6 @@ const GlobalStyles = createGlobalStyle`
         outline: 0;
     }
     body {
-        padding-top: 120px;
         background-color:#ecf0f1;
         color:black;
     }

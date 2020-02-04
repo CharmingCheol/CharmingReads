@@ -10,3 +10,7 @@ export const Menu = styled.div`
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
 `;
+
+export const Main = styled.div`
+  padding-top: 6rem;
+`;

@@ -4,12 +4,19 @@ import {
   User_Section,
   User_Info,
   User_Image,
-  User_Info_Section,
+  User_Button,
   User_Inrtoduce,
   User_Tab_Section,
   User_Tab,
-  User_Post_Image
+  User_Info_Friends,
+  User_Post_Image,
+  User_Info_Section
 } from "./style";
+
+// import Popup from "reactjs-popup";
+// import { Scrollbars } from "react-custom-scrollbars";
+// import ReactShadowScroll from "react-shadow-scroll";
+// import styled from "styled-components";
 
 const UserSection = () => {
   return (
@@ -18,17 +25,18 @@ const UserSection = () => {
         <div>
           <User_Info>
             <User_Image />
-            <div>
-              <User_Info_Section>
+            <User_Info_Section>
+              <div>
                 <div>아이디</div>
-                <button>프로필 편집</button>
-              </User_Info_Section>
-              <User_Info_Section>
+                <User_Button>게시글 추가</User_Button>
+                <User_Button>프로필 편집</User_Button>
+              </div>
+              <User_Info_Friends>
                 <div>게시글 xxxx</div>
                 <div>팔로우 xxxx</div>
                 <div>팔로잉 xxxx</div>
-              </User_Info_Section>
-            </div>
+              </User_Info_Friends>
+            </User_Info_Section>
           </User_Info>
           <User_Inrtoduce>
             <div>소개글</div>
@@ -47,22 +55,27 @@ const UserSection = () => {
             </User_Tab_Section>
             <User_Post_Image>
               <Panel>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
+                <div>7</div>
+                <div>7</div>
+                <div>7</div>
+                <div>7</div>
               </Panel>
             </User_Post_Image>
             <User_Post_Image>
               <Panel>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                <div>2</div>
+                <div>2</div>
+                <div>2</div>
+                <div>2</div>
+                <div>2</div>
+                <div>2</div>
               </Panel>
             </User_Post_Image>
           </Tabs>

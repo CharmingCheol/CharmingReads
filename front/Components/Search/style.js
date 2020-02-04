@@ -9,8 +9,8 @@ export const Search_SearchResult = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   align-items: center;
-  padding: 5vh 0 5vh 0;
-  margin: 2vh 0 2vh 0;
+  padding: 5vw 0 5vw 0;
+  margin: 2vw 0 2vw 0;
   & div {
     margin: 0 auto;
   }

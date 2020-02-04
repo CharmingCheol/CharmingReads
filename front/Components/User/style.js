@@ -7,36 +7,40 @@ export const User_Section = styled.div`
 `;
 
 export const User_Image = styled.div`
-  font-size: 1rem;
-  width: 8em;
-  height: 8em;
+  width: 10vw;
+  height: 10vw;
   background-color: red;
 `;
 
 export const User_Info = styled.div`
   display: flex;
-  align-items: center;
   margin-bottom: 50px;
 `;
 
 export const User_Info_Section = styled.div`
+  & div {
+    margin: 0 0 1.5rem 0.5rem;
+  }
+`;
+
+export const User_Info_Friends = styled.div`
   display: flex;
-  margin: 0 0 25px 25px;
+  margin: 0 0 25px 0;
   & div {
     margin-right: 25px;
   }
-  & button {
-    width: 100px;
-    height: 40px;
-    font-weight: 600;
-    background-color: #ecf0f1;
-    box-shadow: none;
-    border: 1px solid rgb(198, 201, 207);
-    border-radius: 10px;
-    position: relative;
-    top: -10px;
-    z-index: -10;
-  }
+`;
+
+export const User_Button = styled.button`
+  width: 100px;
+  height: 40px;
+  margin-right: 1vw;
+  font-weight: 600;
+  background-color: #ecf0f1;
+  box-shadow: none;
+  border: 1px solid rgb(198, 201, 207);
+  border-radius: 10px;
+  z-index: -10;
 `;
 
 export const User_Inrtoduce = styled.div`
@@ -68,6 +72,6 @@ export const User_Post_Image = styled.div`
     width: auto;
     height: 16vw;
     background-color: red;
-    padding: 1em;
+    padding: 1vw;
   }
 `;

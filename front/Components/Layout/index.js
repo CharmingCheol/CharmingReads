@@ -1,7 +1,7 @@
 import React from "react";
 
 import GlobalStyles from "../GlobalStyle";
-import { Menu } from "./style";
+import { Menu, Main } from "./style";
 import Search from "./Search";
 import LogInBefore from "./LogInBefore";
 import LogInAfter from "./LogInAfter";
@@ -16,7 +16,7 @@ const AppLayout = ({ children }) => {
         <Search />
         {check ? <LogInBefore /> : <LogInAfter />}
       </Menu>
-      <div>{children}</div>
+      <Main>{children}</Main>
     </>
   );
 };
