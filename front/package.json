@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@bumaga/tabs": "^0.2.0",
+    "axios": "^0.19.2",
     "babel-plugin-styled-components": "^1.10.7",
     "immer": "^5.3.2",
     "next": "^9.2.1",

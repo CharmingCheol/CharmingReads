@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react";
-import { useRouter } from "next/router";
+import React, { useState, useCallback, useEffect } from "react";
+import Router from "next/router";
 import { SignUpMain, Message } from "./style";
 import { useDispatch, useSelector } from "react-redux";
 import { SIGN_UP_REQUEST } from "../../redux/actions/userAction";
@@ -19,10 +19,10 @@ const SignUpForm = () => {
   const [confirmPassword, setChangeConfirmPassword] = useState("");
   const [check, setCheck] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
-  const [signUpFailErrorMessage, setSignUpFailErrorMessage] = useState(false);
   const dispatch = useDispatch();
-  const { me } = useSelector(state => state.userReducer);
-  const router = useRouter();
+  const { signUpErrorMessage, me, signUpFail } = useSelector(
+    state => state.userReducer
+  );
 
   const onChangeConfirmPassword = useCallback(
     event => {
@@ -44,18 +44,17 @@ const SignUpForm = () => {
       }
       dispatch({
         type: SIGN_UP_REQUEST,
-        data: id,
-        nickName,
-        password
+        data: { id, nickName, password }
       });
-      if (me) {
-        return router.push("/");
-      } else {
-        return setSignUpFailErrorMessage(true);
-      }
     },
-    [id, nickName, password, confirmPassword, check, me]
+    [id, nickName, password, confirmPassword]
   );
+
+  useEffect(() => {
+    if (me) {
+      Router.push("/");
+    }
+  }, [me && me.id]);
 
   return (
     <>
@@ -84,7 +83,7 @@ const SignUpForm = () => {
           <label htmlFor="signUpCheck">회원가입 체크하기</label>
         </div>
         {errorMessage && <Message>비밀번호가 일치하지 않습니다</Message>}
-        {signUpFailErrorMessage && <Message>에러 메시지</Message>}
+        {signUpFail && <Message>{signUpErrorMessage}</Message>}
         <button>가입하기</button>
       </SignUpMain>
     </>
