@@ -14,13 +14,14 @@ function* signUp(action) {
   try {
     const result = yield call(signUpApi, action.data);
     yield put({
-      type: SIGN_UP_SUCCESS,
-      data: result.data
+      type: SIGN_UP_SUCCESS
+      // data: result.data
     });
   } catch (error) {
+    console.log(error.response.data);
     yield put({
       type: SIGN_UP_FAILURE,
-      error: "이미 가입 된 아이디입니다"
+      error: error.response.data
     });
   }
 }

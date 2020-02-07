@@ -44,7 +44,7 @@ const SignUpForm = () => {
       }
       dispatch({
         type: SIGN_UP_REQUEST,
-        data: { id, nickName, password }
+        data: { userId: id, nickName, password }
       });
     },
     [id, nickName, password, confirmPassword]
