@@ -9,26 +9,26 @@ const passport = require("passport");
 const passportConfig = require("./passport");
 const userRouter = require("./routers/user");
 const db = require("./models");
-db.sequelize.sync();
 
 const app = express();
 const port = 3001;
+db.sequelize.sync();
 dotenv.config();
 passportConfig();
 
-app.use(cors({ origin: true, credentials: true }));
 app.use(morgan("dev"));
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   session({
-    secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
     cookie: {
-      secure: false,
-      httpOnly: true
+      httpOnly: true,
+      secure: false
     }
   })
 );

@@ -25,9 +25,7 @@ exports.postSignUp = async (req, res, next) => {
 };
 
 exports.postLogIn = (req, res, next) => {
-  console.log("second");
   passport.authenticate("local", (err, user, info) => {
-    console.log("third");
     if (err) {
       return next(err);
     }
@@ -42,12 +40,11 @@ exports.postLogIn = (req, res, next) => {
         const fullUser = await db.User.findOne({
           where: { id: user.id }
         });
-        console.log(fullUser);
         return res.json(fullUser);
       } catch (error) {
         console.error(error);
         next(error);
       }
-    })(req, res, next);
-  });
+    });
+  })(req, res, next);
 };

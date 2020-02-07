@@ -1,16 +1,31 @@
 import React, { useCallback } from "react";
 import { useRouter } from "next/router";
+import Router from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+
 import { LogInForm, LogInMain } from "./style";
 import { useInput } from "../SignUp";
+import { LOG_IN_REQUEST } from "../../redux/actions/userAction";
 
 const LoginForm = () => {
   const [id, onChangeId] = useInput("");
   const [password, onChangePassword] = useInput("");
-  const router = useRouter();
+  const dispatch = useDispatch();
 
-  const onLogInSubmit = useCallback(() => {
-    return router.push("/");
-  }, []);
+  const onLogInSubmit = useCallback(
+    event => {
+      event.preventDefault();
+      dispatch({
+        type: LOG_IN_REQUEST,
+        data: {
+          usrId: id,
+          password
+        }
+      });
+    },
+    [id, password]
+  );
+
   return (
     <>
       <LogInMain>
