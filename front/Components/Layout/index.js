@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import GlobalStyles from "../GlobalStyle";
 import { Menu, Main } from "./style";
@@ -7,14 +8,14 @@ import LogInBefore from "./LogInBefore";
 import LogInAfter from "./LogInAfter";
 
 const AppLayout = ({ children }) => {
-  const check = true;
+  const { me } = useSelector(state => state.userReducer);
   return (
     <>
       <GlobalStyles />
       <Menu>
         <div>로고 영역</div>
         <Search />
-        {check ? <LogInBefore /> : <LogInAfter />}
+        {me ? <LogInAfter /> : <LogInBefore />}
       </Menu>
       <Main>{children}</Main>
     </>

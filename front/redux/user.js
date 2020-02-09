@@ -2,19 +2,19 @@ import produce from "immer";
 import {
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
-  SIGN_UP_FAILURE
+  SIGN_UP_FAILURE,
+  LOG_IN_REQUEST,
+  LOG_IN_SUCCESS,
+  LOG_IN_FAILURE,
+  LOG_OUT_REQUEST,
+  LOG_OUT_SUCCESS,
+  LOG_OUT_FAILURE
 } from "./actions/userAction";
 
 export const initialState = {
   signUpErrorMessage: "",
   signUpFail: false,
   me: null
-};
-
-const dummy = {
-  id: 1,
-  userId: "hello",
-  name: "차민철"
 };
 
 export default (state = initialState, action) => {
@@ -25,7 +25,6 @@ export default (state = initialState, action) => {
         draft.signUpErrorMessage = "";
         break;
       case SIGN_UP_SUCCESS:
-        draft.me = dummy;
         draft.signUpFail = false;
         draft.signUpErrorMessage = "";
         break;
@@ -33,6 +32,20 @@ export default (state = initialState, action) => {
         draft.me = null;
         draft.signUpFail = true;
         draft.signUpErrorMessage = action.error;
+        break;
+      case LOG_IN_REQUEST:
+        break;
+      case LOG_IN_SUCCESS:
+        draft.me = action.data;
+        break;
+      case LOG_IN_FAILURE:
+        break;
+      case LOG_OUT_REQUEST:
+        break;
+      case LOG_OUT_SUCCESS:
+        draft.me = null;
+        break;
+      case LOG_OUT_FAILURE:
         break;
     }
   });

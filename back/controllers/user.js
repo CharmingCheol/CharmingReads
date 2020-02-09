@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const db = require("../models");
 const passport = require("passport");
 
-exports.postSignUp = async (req, res, next) => {
+exports.signUp = async (req, res, next) => {
   try {
     const findUser = await db.User.findOne({
       where: { userId: req.body.userId }
@@ -16,15 +16,14 @@ exports.postSignUp = async (req, res, next) => {
       nickName: req.body.nickName,
       password: hashPassword
     });
-    console.log("first");
-    next();
+    return res.status(200).send("회원가입 성공");
   } catch (error) {
     console.error(error);
     next(error);
   }
 };
 
-exports.postLogIn = (req, res, next) => {
+exports.logIn = (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       return next(err);
@@ -38,7 +37,8 @@ exports.postLogIn = (req, res, next) => {
           return next(error);
         }
         const fullUser = await db.User.findOne({
-          where: { id: user.id }
+          where: { id: user.id },
+          attributes: ["id", "userId", "nickName"]
         });
         return res.json(fullUser);
       } catch (error) {
@@ -47,4 +47,10 @@ exports.postLogIn = (req, res, next) => {
       }
     });
   })(req, res, next);
+};
+
+exports.logOut = (req, res, next) => {
+  req.logOut();
+  req.session.destroy();
+  return res.send("Logout 성공");
 };
