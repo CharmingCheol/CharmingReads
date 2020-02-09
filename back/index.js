@@ -7,7 +7,8 @@ const cookieParser = require("cookie-parser");
 const passport = require("passport");
 
 const passportConfig = require("./passport");
-const userRouter = require("./routers/user");
+const userAuthRouter = require("./routers/userAuth");
+const userDetailRouter = require("./routers/userDetail");
 const kakaoRouter = require("./routers/kakao");
 const db = require("./models");
 
@@ -36,7 +37,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/user", userRouter);
+app.use("/user", userAuthRouter);
+app.use("/user", userDetailRouter);
 app.use("/auth", kakaoRouter);
 
 app.listen(port, () => {

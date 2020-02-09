@@ -6,7 +6,8 @@ import Category from "../Components/Home/Category";
 import styled from "styled-components";
 const Test = styled.div`
   position: relative;
-  top: -7vh;
+  left: 0;
+  padding: 0;
   z-index: -1;
 `;
 

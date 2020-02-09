@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const BookList_Section = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 3vh 10vw 3vh 10vw;
+  padding: 3vh 0 3vh 0;
 `;
 
 export const BookList_List = styled.ul`

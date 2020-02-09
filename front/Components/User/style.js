@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const User_Section = styled.div`
-  padding: 0 10vw 0 10vw;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 `;

@@ -12,5 +12,6 @@ export const Menu = styled.div`
 `;
 
 export const Main = styled.div`
-  padding-top: 6rem;
+  height: 80vh;
+  padding: 10vw;
 `;

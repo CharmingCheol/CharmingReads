@@ -88,6 +88,6 @@ function* watchlogOut() {
   yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
 
-export default function* userSaga() {
+export default function* userAuthSaga() {
   yield all([fork(watchSignUp), fork(watchLogIn), fork(watchlogOut)]);
 }

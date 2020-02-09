@@ -1,8 +1,15 @@
-const bcrypt = require("bcrypt");
-const db = require("../models");
-const passport = require("passport");
+const express = require("express");
+const router = express.Router();
 
-exports.signUp = async (req, res, next) => {
+router.get("signUp", async (req, res, next) => {
+  try {
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post("/signUp", async (req, res, next) => {
   try {
     const findUser = await db.User.findOne({
       where: { userId: req.body.userId }
@@ -21,9 +28,9 @@ exports.signUp = async (req, res, next) => {
     console.error(error);
     next(error);
   }
-};
+});
 
-exports.logIn = (req, res, next) => {
+router.post("/logIn", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       return next(err);
@@ -47,10 +54,12 @@ exports.logIn = (req, res, next) => {
       }
     });
   })(req, res, next);
-};
+});
 
-exports.logOut = (req, res, next) => {
+router.post("/logOut", (req, res, next) => {
   req.logOut();
   req.session.destroy();
   return res.send("Logout 성공");
-};
+});
+
+module.exports = router;
