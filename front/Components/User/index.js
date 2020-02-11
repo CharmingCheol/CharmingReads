@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import Link from "next/link";
+import Router from "next/router";
+
 import { Tabs, Tab, Panel } from "@bumaga/tabs";
 import {
   User_Section,
@@ -19,6 +23,12 @@ import {
 // import styled from "styled-components";
 
 const UserSection = () => {
+  const { me } = useSelector(state => state.userReducer);
+  useEffect(() => {
+    if (!me) {
+      Router.push("/");
+    }
+  }, [me && me.id]);
   return (
     <>
       <User_Section>
@@ -28,8 +38,12 @@ const UserSection = () => {
             <User_Info_Section>
               <div>
                 <div>아이디</div>
-                <User_Button>게시글 추가</User_Button>
-                <User_Button>프로필 편집</User_Button>
+                <Link href="/post">
+                  <User_Button>게시글 추가</User_Button>
+                </Link>
+                <Link href="/userEdit">
+                  <User_Button>프로필 편집</User_Button>
+                </Link>
               </div>
               <User_Info_Friends>
                 <div>게시글 xxxx</div>

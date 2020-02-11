@@ -3,10 +3,16 @@ import axios from "axios";
 
 import userAuthSaga from "./userAuth";
 import OAuthSaga from "./oauth";
-import userDetail from "./userDetail";
+import userDetailSaga from "./userDetail";
+import postSaga from "./post";
 
 axios.defaults.baseURL = "http://localhost:3001";
 
 export default function*() {
-  yield all([call(userAuthSaga), call(OAuthSaga), call(userDetail)]);
+  yield all([
+    call(userAuthSaga),
+    call(OAuthSaga),
+    call(userDetailSaga),
+    call(postSaga)
+  ]);
 }

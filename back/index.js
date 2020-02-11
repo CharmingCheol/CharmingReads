@@ -10,6 +10,7 @@ const passportConfig = require("./passport");
 const userAuthRouter = require("./routers/userAuth");
 const userDetailRouter = require("./routers/userDetail");
 const kakaoRouter = require("./routers/kakao");
+const postRouter = require("./routers/post");
 const db = require("./models");
 
 const app = express();
@@ -41,6 +42,7 @@ app.use(passport.session());
 app.use("/user", userAuthRouter);
 app.use("/user", userDetailRouter);
 app.use("/auth", kakaoRouter);
+app.use("/post", postRouter);
 
 app.listen(port, () => {
   console.log(`server start : ${port}`);
