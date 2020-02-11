@@ -1,13 +1,10 @@
 const express = require("express");
-const router = express.Router();
+const bcrypt = require("bcrypt");
+const passport = require("passport");
 
-router.get("signUp", async (req, res, next) => {
-  try {
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
+const db = require("../models");
+
+const router = express.Router();
 
 router.post("/signUp", async (req, res, next) => {
   try {

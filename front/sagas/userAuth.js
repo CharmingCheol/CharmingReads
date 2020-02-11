@@ -20,7 +20,10 @@ function logInApi(logInData) {
 
 function* logIn(action) {
   try {
+    console.log(action.data);
+    console.log("Asdasfas");
     const result = yield call(logInApi, action.data);
+    console.log(result);
     yield put({
       type: LOG_IN_SUCCESS,
       data: result.data

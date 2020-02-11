@@ -13,7 +13,6 @@ const LogInAfter = () => {
       type: LOG_OUT_REQUEST
     });
   }, []);
-  console.log(me);
   return (
     <>
       <LogInAfterLayout>
@@ -22,7 +21,13 @@ const LogInAfter = () => {
           <LogInAfterButton onClick={onClickLogout}>로그아웃</LogInAfterButton>
         </div>
         <Link href="/user">
-          <LogInAfterImage />
+          <LogInAfterImage
+            src={
+              me && me.src
+                ? `http://localhost:3001/${me.src}`
+                : `http://localhost:3001/기본이미지.png`
+            }
+          />
         </Link>
       </LogInAfterLayout>
     </>

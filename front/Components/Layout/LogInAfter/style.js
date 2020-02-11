@@ -5,10 +5,9 @@ export const LogInAfterLayout = styled.div`
   justify-content: flex-end;
 `;
 
-export const LogInAfterImage = styled.div`
+export const LogInAfterImage = styled.img`
   width: 50px;
   height: 50px;
-  background-color: white;
   border-radius: 2rem;
   margin-left: 1vw;
 `;

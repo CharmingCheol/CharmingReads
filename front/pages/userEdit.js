@@ -1,71 +1,76 @@
-import React, { useCallback } from "react";
-import styled from "styled-components";
+import React, { useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useInput } from "../Components/SignUp";
-import { USER_EDIT_REQUEST } from "../redux/actions/userAction";
-
-const UserEdit_Form = styled.form`
-  font-size: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  & div {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    margin-bottom: 30px;
-    & label {
-      margin-right: 10px;
-    }
-    & input {
-      width: 25em;
-      border: 0.1em solid black;
-      padding: 1em;
-    }
-  }
-  & button {
-    padding: 1em;
-    margin-bottom: 30px;
-  }
-`;
-
-const UserEdit_Image = styled.div`
-  border: 1px solid black;
-  padding: 50px;
-  background: red;
-`;
+import {
+  USER_EDIT_REQUEST,
+  UPLOAD_IMAGE_REQUEST
+} from "../redux/actions/userAction";
+import { UserEdit_Form, UserEdit_Image } from "../Components/userEdit/style";
 
 const UserEdit = () => {
   const dispatch = useDispatch();
-  const { me } = useSelector(state => state.userReducer);
+  const { me, image } = useSelector(state => state.userReducer);
+  const imageChange = useRef();
 
   const [editnickName, onEditnickName] = useInput();
   const [editId, onEditId] = useInput();
   const [editPassword, onEditPassword] = useInput();
   const [editText, onEditText] = useInput();
+  console.log(me);
 
   const onSubmitEdit = useCallback(
     event => {
       event.preventDefault();
+      const submitInfo = new FormData();
+      submitInfo.append("userId", editId);
+      submitInfo.append("nickName", editnickName);
+      submitInfo.append("password", editPassword);
+      submitInfo.append("introduction", editText);
+      submitInfo.append("image", image.filename);
       dispatch({
         type: USER_EDIT_REQUEST,
-        data: {
-          userId: editId,
-          nickName: editnickName,
-          password: editPassword,
-          introduction: editText
-        }
+        data: submitInfo
       });
     },
-    [editId, editnickName, editPassword, editText]
+    [editId, editnickName, editPassword, editText, image]
   );
+
+  const uploadImage = useCallback(event => {
+    const image = new FormData();
+    [].forEach.call(event.target.files, file => {
+      image.append("image", file);
+    });
+    dispatch({
+      type: UPLOAD_IMAGE_REQUEST,
+      data: image
+    });
+  }, []);
+
+  const onClickImage = useCallback(() => {
+    imageChange.current.click();
+  }, [imageChange.current]);
 
   return (
     <>
       <div>
-        <UserEdit_Form onSubmit={onSubmitEdit}>
-          <UserEdit_Image />
+        <UserEdit_Form enctype="multipart/form-data" onSubmit={onSubmitEdit}>
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            ref={imageChange}
+            onChange={uploadImage}
+          />
+          <UserEdit_Image
+            onClick={onClickImage}
+            src={
+              image
+                ? `http://localhost:3001/${image.filename}`
+                : me && me.src
+                ? `http://localhost:3001/${me.src}`
+                : `http://localhost:3001/기본이미지.png`
+            }
+          />
           <div>
             <label>닉네임 변경</label>
             <input

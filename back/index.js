@@ -18,6 +18,7 @@ db.sequelize.sync();
 dotenv.config();
 passportConfig();
 
+app.use("/", express.static("upload"));
 app.use(morgan("dev"));
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
