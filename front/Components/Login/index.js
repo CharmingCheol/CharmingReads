@@ -11,7 +11,6 @@ const LoginForm = () => {
   const [password, onChangePassword] = useInput("");
   const { me } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
-  console.log(me);
 
   const onLogInSubmit = useCallback(
     event => {

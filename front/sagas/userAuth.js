@@ -20,10 +20,7 @@ function logInApi(logInData) {
 
 function* logIn(action) {
   try {
-    console.log(action.data);
-    console.log("Asdasfas");
     const result = yield call(logInApi, action.data);
-    console.log(result);
     yield put({
       type: LOG_IN_SUCCESS,
       data: result.data
@@ -74,7 +71,6 @@ function logOutApi() {
 function* logOut() {
   try {
     yield call(logOutApi);
-    console.log("성공");
     yield put({
       type: LOG_OUT_SUCCESS
     });

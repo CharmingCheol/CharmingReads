@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import { useInput } from "../Components/SignUp";
-import { LOAD_POST_IMAGE_REQUEST } from "../redux/actions/postAction";
+import {
+  LOAD_POST_IMAGE_REQUEST,
+  ADD_POST_REQUEST
+} from "../redux/actions/postAction";
 
 const Image = styled.img`
   width: 150px;
@@ -33,11 +36,26 @@ const Post = () => {
   const clickPostImage = useCallback(() => {
     postImage.current.click();
   }, [postImage.current]);
-  console.log(image);
+
+  const onSubmitPost = useCallback(
+    event => {
+      event.preventDefault();
+      const postData = new FormData();
+      postData.append("title", title);
+      postData.append("hashTag", hashTag);
+      postData.append("content", content);
+      postData.append("image", image.filename);
+      dispatch({
+        type: ADD_POST_REQUEST,
+        data: postData
+      });
+    },
+    [title, hashTag, content, image]
+  );
 
   return (
     <>
-      <form encType="multipart/form-data">
+      <form encType="multipart/form-data" onSubmit={onSubmitPost}>
         <div>
           <span>제목</span>
           <input onChange={onTitle} />

@@ -6,11 +6,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(30),
         allowNull: false
       },
-      author: {
-        type: DataTypes.STRING(30),
+      content: {
+        type: DataTypes.TEXT,
         allowNull: false
       },
-      content: {
+      src: {
         type: DataTypes.TEXT,
         allowNull: false
       }
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Post.associate = db => {
-    db.Post.belongsTo(db.User, { as: "User" });
+    db.Post.belongsTo(db.User);
     db.Post.hasMany(db.Comment);
     db.Post.hasMany(db.Image);
     db.Post.belongsToMany(db.User, { through: "PostLike", as: "Like" });

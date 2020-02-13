@@ -24,6 +24,8 @@ import {
 
 const UserSection = () => {
   const { me } = useSelector(state => state.userReducer);
+  const { mainPosts } = useSelector(state => state.postReducer);
+  console.log(mainPosts);
   useEffect(() => {
     if (!me) {
       Router.push("/");

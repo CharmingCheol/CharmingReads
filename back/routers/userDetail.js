@@ -19,13 +19,18 @@ const upload = multer({
   limits: { fileSize: 1024 * 1024 * 20 }
 });
 
-router.get("/loadUser", (req, res, next) => {
-  if (!req.user) {
-    return res.status(401).send("로그인이 필요합니다.");
+router.get("/loadUser", async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.status(401).send("로그인 먼저 해라");
+    }
+    const loadUser = Object.assign({}, req.user.toJSON());
+    delete loadUser.password;
+    return res.json(loadUser);
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
-  const user = Object.assign({}, req.user.toJSON());
-  delete user.password;
-  return res.json(user);
 });
 
 router.patch("/edit", upload.none(), async (req, res, next) => {

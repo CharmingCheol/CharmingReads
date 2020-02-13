@@ -11,6 +11,7 @@ const userAuthRouter = require("./routers/userAuth");
 const userDetailRouter = require("./routers/userDetail");
 const kakaoRouter = require("./routers/kakao");
 const postRouter = require("./routers/post");
+const loadPostsRouter = require("./routers/posts");
 const db = require("./models");
 
 const app = express();
@@ -43,6 +44,7 @@ app.use("/user", userAuthRouter);
 app.use("/user", userDetailRouter);
 app.use("/auth", kakaoRouter);
 app.use("/post", postRouter);
+app.use("/post", loadPostsRouter);
 
 app.listen(port, () => {
   console.log(`server start : ${port}`);
