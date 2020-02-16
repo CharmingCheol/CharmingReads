@@ -12,6 +12,12 @@ const Test = styled.div`
   z-index: -1;
 `;
 
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin: 10px 0 10px 0;
+`;
+
 const Home = () => {
   const { me } = useSelector(state => state.userReducer);
   const { mainPosts } = useSelector(state => state.postReducer);
@@ -37,12 +43,12 @@ const Home = () => {
       <BookList /> */}
       <div>
         <div>
-          <div>내가 쓴 글</div>
-          <div>
+          <div>내가 쓴 최신글</div>
+          <Grid>
             {mainPosts.map(post => {
               return <Book key={post.id} post={post} />;
             })}
-          </div>
+          </Grid>
         </div>
       </div>
     </>

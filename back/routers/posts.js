@@ -8,6 +8,17 @@ router.get("/loadPosts", async (req, res, next) => {
   try {
     const myPosts = await db.Post.findAll({
       where: { UserId: req.user.id },
+      include: [
+        {
+          model: db.User,
+          as: "Like",
+          attributes: ["id"]
+        },
+        {
+          model: db.Comment,
+          attributes: ["id"]
+        }
+      ],
       limit: parseInt(req.query.limit, 10),
       order: [["createdAt", "DESC"]]
     });

@@ -19,6 +19,7 @@ const upload = multer({
   limits: { fileSize: 1024 * 1024 * 20 }
 });
 
+//유저 정보 불러오기
 router.get("/loadUser", async (req, res, next) => {
   try {
     if (!req.user) {

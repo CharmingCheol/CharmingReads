@@ -5,6 +5,7 @@ import userAuthSaga from "./userAuth";
 import OAuthSaga from "./oauth";
 import userDetailSaga from "./userDetail";
 import postSaga from "./post";
+import postDetailSaga from "./postDetail";
 
 axios.defaults.baseURL = "http://localhost:3001";
 
@@ -13,6 +14,7 @@ export default function*() {
     call(userAuthSaga),
     call(OAuthSaga),
     call(userDetailSaga),
-    call(postSaga)
+    call(postSaga),
+    call(postDetailSaga)
   ]);
 }

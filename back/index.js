@@ -11,6 +11,7 @@ const userAuthRouter = require("./routers/userAuth");
 const userDetailRouter = require("./routers/userDetail");
 const kakaoRouter = require("./routers/kakao");
 const postRouter = require("./routers/post");
+const postDetailRouter = require("./routers/postDetail");
 const loadPostsRouter = require("./routers/posts");
 const db = require("./models");
 
@@ -21,6 +22,7 @@ dotenv.config();
 passportConfig();
 
 app.use("/", express.static("upload"));
+app.use("/", express.static("uploadPost"));
 app.use(morgan("dev"));
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
@@ -45,6 +47,7 @@ app.use("/user", userDetailRouter);
 app.use("/auth", kakaoRouter);
 app.use("/post", postRouter);
 app.use("/post", loadPostsRouter);
+app.use("/post", postDetailRouter);
 
 app.listen(port, () => {
   console.log(`server start : ${port}`);
