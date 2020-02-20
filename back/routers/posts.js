@@ -16,7 +16,12 @@ router.get("/loadPosts", async (req, res, next) => {
         },
         {
           model: db.Comment,
-          attributes: ["id"]
+          include: [
+            {
+              model: db.User,
+              attributes: ["id", "nickName", "src"]
+            }
+          ]
         }
       ],
       limit: parseInt(req.query.limit, 10),

@@ -5,16 +5,13 @@ import createSagaMiddleware from "redux-saga";
 import { Provider } from "react-redux";
 import { createStore, compose, applyMiddleware } from "redux";
 
-import Homelayout from "../Components/Layout";
 import RootReducer from "../redux";
 import RootSaga from "../sagas";
 
-const MyApp = ({ Component, store }) => {
+const MyApp = ({ Component, store, pageProps }) => {
   return (
     <Provider store={store}>
-      <Homelayout>
-        <Component />
-      </Homelayout>
+      <Component {...pageProps} />
     </Provider>
   );
 };
@@ -35,6 +32,15 @@ const makeStore = (initialState, options) => {
   const store = createStore(RootReducer, initialState, enhancer);
   store.sagaTask = sagaMiddleware.run(RootSaga);
   return store;
+};
+
+MyApp.getInitialProps = async context => {
+  const { ctx, Component } = context;
+  let pageProps = {};
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
+  }
+  return { pageProps };
 };
 
 export default withRedux(makeStore)(withReduxSaga(MyApp));

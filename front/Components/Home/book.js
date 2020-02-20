@@ -5,9 +5,13 @@ import StarRatings from "react-star-ratings";
 import {
   POST_LIKE_REQUEST,
   POST_LIKE_REMOVE_REQUEST,
-  ADD_COMMENT_REQUEST
+  ADD_COMMENT_REQUEST,
+  LOAD_COMMENTS_REQUEST
 } from "../../redux/actions/postAction";
-import { useInput } from "../SignUp";
+import { ADD_POST_STORAGE_REQUEST } from "../../redux/actions/userAction";
+import Comment from "./comment";
+import BookModal from "../../pages/bookModal";
+import Link from "next/link";
 
 const Image = styled.img`
   width: 10vw;
@@ -26,7 +30,7 @@ const Modal = styled.div`
   /*overflow: auto;  Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-  & div:first-child {
+  & section {
     background-color: #fefefe;
     margin: 5% auto; /* 15% from the top and centered */
     padding: 20px;
@@ -49,28 +53,59 @@ const Modal = styled.div`
   }
 `;
 
+const ModalLayout = styled.div`
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+`;
+
+const ModalTabMenu = styled.div`
+  position: relative;
+`;
+
+const ModalCommentList = styled.div`
+  width: 100%;
+  height: 400%;
+  padding: 5px;
+  word-break: break-word;
+  position: absolute;
+  border: solid #000000 1px;
+  background: white;
+  z-index: 10;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 const RedHeart = styled.i`
   color: red;
 `;
 
 const Book = ({ post }) => {
-  const { me } = useSelector(state => state.userReducer);
+  const { me, modalInfo } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
   const liked = me.id && post.Like && post.Like.find(like => like.id === me.id);
   const [star, onChangeStar] = useState(0);
   const [comment, onChangeComment] = useState("");
   const [submitDisable, onSubmitDisable] = useState(true);
+  const [commentFormOpened, setCommentFormOpened] = useState(false);
 
+  //modal창 열기
   const openModal = useCallback(() => {
-    const modal = document.querySelector(".modal");
-    modal.style.display = "block";
+    // const modal = document.querySelector(".modal");
+    // modal.style.display = "block";
   }, []);
 
+  //modal창 닫기
   const cancelModal = useCallback(() => {
     const modal = document.querySelector(".modal");
     modal.style.display = "none";
   }, []);
 
+  //좋아요 버튼 클릭
   const onClickLike = useCallback(() => {
     if (liked) {
       dispatch({
@@ -127,62 +162,45 @@ const Book = ({ post }) => {
     [comment, star, post && post.id]
   );
 
+  //댓글 창 열기
+  const onToggleComment = useCallback(() => {
+    setCommentFormOpened(prev => !prev);
+    if (!commentFormOpened) {
+      dispatch({
+        type: LOAD_COMMENTS_REQUEST,
+        data: {
+          postId: post.id
+        }
+      });
+    }
+  }, [commentFormOpened, post && post.id]);
+
+  //게시글 저장
+  const onClickPostStorage = useCallback(() => {
+    // dispatch({
+    //   type: ADD_POST_STORAGE_REQUEST,
+    //   data: {
+    //     postId: post.id
+    //   }
+    // });
+  }, []);
+
   return (
     <>
       <div>
-        <Image src={`http://localhost:3001/${post.src}`} onClick={openModal} />
-        <div>{post.title}</div>
-        <Modal className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={cancelModal}>
-              X
-            </span>
-            <div>
-              <header>
-                <img /> {/*작성자 이미지 */}
-                <article>작성자 이름</article>
-                <article>작성일</article>
-              </header>
-              <section>
-                <img /> {/*책 이미지 */}
-                <article>해시태그</article>
-                <article>{`좋아요 수 : ${post.Like.length}`}</article>
-                <article>댓글 수</article>
-                <article>평점</article>
-              </section>
-            </div>
-            <section>
-              <article>책 후기</article>
-              <ul>
-                <li onClick={onClickLike}>
-                  {liked ? (
-                    <RedHeart className="fas fa-heart"></RedHeart>
-                  ) : (
-                    <i className="far fa-heart"></i>
-                  )}
-                </li>
-                <li>댓글 펼치기</li>
-                <li>글 저장</li>
-              </ul>
-              <footer>
-                <form onSubmit={onSubmitComment}>
-                  <img /> {/*유저 이미지 */}
-                  <div onChange={onChangeDisabled}>
-                    <input onChange={commentInput} />
-                    <StarRatings
-                      rating={star}
-                      starRatedColor="blue"
-                      changeRating={changeRating}
-                      numberOfStars={5}
-                      name="rating"
-                    />
-                  </div>
-                  <button disabled={submitDisable}>댓글 작성 버튼</button>
-                </form>
-              </footer>
-            </section>
-          </div>
-        </Modal>
+        <Link
+          href={{ pathname: "/bookModal", query: { id: post.id } }}
+          as={`${post.id}`}
+        >
+          <a>
+            <Image
+              src={`http://localhost:3001/${post.src}`}
+              onClick={openModal}
+            />
+            <div>{post.title}</div>
+          </a>
+        </Link>
+        {/* {modalInfo ? <BookModal className="modal" post={modalInfo} /> : null} */}
       </div>
     </>
   );

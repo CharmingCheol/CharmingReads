@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { LOAD_POSTS_REQUEST } from "../redux/actions/postAction";
 import Book from "../Components/Home/book";
+import Homelayout from "../Components/Layout";
 
 const Test = styled.div`
   position: absolute;
@@ -41,7 +42,7 @@ const Home = () => {
         <Category />
       </Test>
       <BookList /> */}
-      <div>
+      <Homelayout>
         <div>
           <div>내가 쓴 최신글</div>
           <Grid>
@@ -50,7 +51,7 @@ const Home = () => {
             })}
           </Grid>
         </div>
-      </div>
+      </Homelayout>
     </>
   );
 };

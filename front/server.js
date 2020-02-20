@@ -31,9 +31,9 @@ app.prepare().then(() => {
     })
   );
 
-  // server.get("/post/:id", (req, res) => {
-  //   return app.render(req, res, "/postDetail", { id: req.params.id });
-  // });
+  server.get("/bookModal/:id", (req, res) => {
+    return app.render(req, res, "/bookModal", { id: req.params.id });
+  });
 
   server.get("*", (req, res) => {
     return handle(req, res);

@@ -17,69 +17,120 @@ import {
   USER_EDIT_FAILURE,
   UPLOAD_IMAGE_REQUEST,
   UPLOAD_IMAGE_SUCCESS,
-  UPLOAD_IMAGE_FAILURE
+  UPLOAD_IMAGE_FAILURE,
+  ADD_POST_STORAGE_REQUEST,
+  ADD_POST_STORAGE_SUCCESS,
+  ADD_POST_STORAGE_FAILURE,
+  POST_CLICK_REQUEST,
+  POST_CLICK_SUCCESS,
+  POST_CLICK_FAILURE
 } from "./actions/userAction";
 
 export const initialState = {
   signUpErrorMessage: "",
   signUpFail: false,
   me: null,
-  iamge: null
+  iamge: null,
+  modalInfo: null
 };
 
 export default (state = initialState, action) => {
   return produce(state, draft => {
     switch (action.type) {
-      case SIGN_UP_REQUEST:
+      //회원가입
+      case SIGN_UP_REQUEST: {
         draft.signUpFail = false;
         draft.signUpErrorMessage = "";
         break;
-      case SIGN_UP_SUCCESS:
+      }
+      case SIGN_UP_SUCCESS: {
         draft.signUpFail = false;
         draft.signUpErrorMessage = "";
         break;
-      case SIGN_UP_FAILURE:
+      }
+      case SIGN_UP_FAILURE: {
         draft.me = null;
         draft.signUpFail = true;
         draft.signUpErrorMessage = action.error;
         break;
-      case LOG_IN_REQUEST:
+      }
+      //로그인
+      case LOG_IN_REQUEST: {
         break;
-      case LOG_IN_SUCCESS:
+      }
+      case LOG_IN_SUCCESS: {
         draft.me = action.data;
         break;
-      case LOG_IN_FAILURE:
+      }
+      case LOG_IN_FAILURE: {
         break;
-      case LOG_OUT_REQUEST:
+      }
+      //로그아웃
+      case LOG_OUT_REQUEST: {
         break;
-      case LOG_OUT_SUCCESS:
+      }
+      case LOG_OUT_SUCCESS: {
         draft.me = null;
         break;
-      case LOG_OUT_FAILURE:
+      }
+      case LOG_OUT_FAILURE: {
         break;
-      case LOAD_USER_REQUEST:
+      }
+      //유저 정보 로드
+      case LOAD_USER_REQUEST: {
         break;
-      case LOAD_USER_SUCCESS:
+      }
+      case LOAD_USER_SUCCESS: {
         draft.me = action.data;
         break;
-      case LOAD_USER_FAILURE:
+      }
+      case LOAD_USER_FAILURE: {
         break;
-      case USER_EDIT_REQUEST:
+      }
+      //유저 정보 변경
+      case USER_EDIT_REQUEST: {
         break;
-      case USER_EDIT_SUCCESS:
+      }
+      case USER_EDIT_SUCCESS: {
         draft.me = action.data;
         break;
-      case USER_EDIT_FAILURE:
+      }
+      case USER_EDIT_FAILURE: {
         break;
-      case UPLOAD_IMAGE_REQUEST:
+      }
+      //이미지 불러오기
+      case UPLOAD_IMAGE_REQUEST: {
         draft.image = null;
         break;
-      case UPLOAD_IMAGE_SUCCESS:
+      }
+      case UPLOAD_IMAGE_SUCCESS: {
         draft.image = action.data;
         break;
-      case UPLOAD_IMAGE_FAILURE:
+      }
+      case UPLOAD_IMAGE_FAILURE: {
         draft.image = null;
         break;
+      }
+      //게시글 저장
+      case ADD_POST_STORAGE_REQUEST: {
+        break;
+      }
+      case ADD_POST_STORAGE_SUCCESS: {
+        console.log(action.data);
+        draft.me.PostStorages.unshift({ postId: action.data.postId });
+        break;
+      }
+      case ADD_POST_STORAGE_FAILURE: {
+        break;
+      }
+      // case POST_CLICK_SUCCESS: {
+      //   console.log(action.data);
+      //   draft.me.PostStorages.unshift({ postId: action.data.postId });
+      //   break;
+      // }
+      // case POST_CLICK_FAILURE: {
+      //   break;
+      // }
     }
   });
 };

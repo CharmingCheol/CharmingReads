@@ -16,6 +16,10 @@ module.exports = () => {
           {
             model: db.Post,
             attributes: ["id"]
+          },
+          {
+            model: db.PostStorage,
+            attributes: ["postId"]
           }
         ]
       });

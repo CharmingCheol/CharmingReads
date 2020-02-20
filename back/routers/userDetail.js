@@ -34,6 +34,7 @@ router.get("/loadUser", async (req, res, next) => {
   }
 });
 
+//유저 정보 변경
 router.patch("/edit", upload.none(), async (req, res, next) => {
   try {
     const hashPassword = await bcrypt.hash(req.body.password, 10);
@@ -60,9 +61,24 @@ router.patch("/edit", upload.none(), async (req, res, next) => {
   }
 });
 
+//이미지 불러오기
 router.post("/uploadImage", upload.single("image"), async (req, res, next) => {
   try {
     return res.json(req.file);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//게시글 저장
+router.post("/addPostStorage", async (req, res, next) => {
+  try {
+    await db.PostStorage.create({
+      UserId: req.user.id,
+      PostId: req.body.postId
+    });
+    return res.json(req.body.postId);
   } catch (error) {
     console.error(error);
     next(error);

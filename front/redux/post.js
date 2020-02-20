@@ -17,12 +17,19 @@ import {
   POST_LIKE_REMOVE_SUCCESS,
   ADD_COMMENT_REQUEST,
   ADD_COMMENT_SUCCESS,
-  ADD_COMMENT_FAILURE
+  ADD_COMMENT_FAILURE,
+  LOAD_COMMENTS_REQUEST,
+  LOAD_COMMENTS_SUCCESS,
+  LOAD_COMMENTS_FAILURE,
+  LOAD_MODAL_POST_REQUEST,
+  LOAD_MODAL_POST_SUCCESS,
+  LOAD_MODAL_POST_FAILURE
 } from "./actions/postAction";
 
 export const initialState = {
   image: null,
-  mainPosts: []
+  mainPosts: [],
+  modalPost: null
 };
 
 export default (state = initialState, action) => {
@@ -103,9 +110,35 @@ export default (state = initialState, action) => {
         const postIndex = draft.mainPosts.findIndex(
           postIndex => postIndex.id === action.data.PostId
         );
+        draft.mainPosts[postIndex].Comments.push(action.data.comment);
         break;
       }
       case ADD_COMMENT_FAILURE: {
+        break;
+      }
+      //댓글 불러오기
+      case LOAD_COMMENTS_REQUEST: {
+        break;
+      }
+      case LOAD_COMMENTS_SUCCESS: {
+        const postIndex = draft.mainPosts.findIndex(
+          postIndex => postIndex.id === action.post.postId
+        );
+        draft.mainPosts[postIndex].Comments = action.data;
+        break;
+      }
+      case LOAD_COMMENTS_FAILURE: {
+        break;
+      }
+      //modal 불러오기
+      case LOAD_MODAL_POST_REQUEST: {
+        break;
+      }
+      case LOAD_MODAL_POST_SUCCESS: {
+        draft.modalPost = action.data;
+        break;
+      }
+      case LOAD_MODAL_POST_FAILURE: {
         break;
       }
     }
