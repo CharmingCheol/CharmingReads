@@ -4,15 +4,23 @@ import withReduxSaga from "next-redux-saga";
 import createSagaMiddleware from "redux-saga";
 import { Provider } from "react-redux";
 import { createStore, compose, applyMiddleware } from "redux";
+import { Container } from "next/app";
+import axios from "axios";
 
 import RootReducer from "../redux";
 import RootSaga from "../sagas";
+import { LOAD_USER_REQUEST } from "../redux/actions/userAction";
+import Homelayout from "../Components/Layout";
 
 const MyApp = ({ Component, store, pageProps }) => {
   return (
-    <Provider store={store}>
-      <Component {...pageProps} />
-    </Provider>
+    <Container>
+      <Provider store={store}>
+        <Homelayout>
+          <Component {...pageProps} />
+        </Homelayout>
+      </Provider>
+    </Container>
   );
 };
 
@@ -37,8 +45,21 @@ const makeStore = (initialState, options) => {
 MyApp.getInitialProps = async context => {
   const { ctx, Component } = context;
   let pageProps = {};
+  const state = ctx.store.getState();
+  const cookie = ctx.isServer ? ctx.req.headers.cookie : "";
+  if (ctx.isServer) {
+    axios.defaults.headers.Cookie = "";
+  }
+  if (ctx.isServer && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+  if (!state.userReducer.me) {
+    ctx.store.dispatch({
+      type: LOAD_USER_REQUEST
+    });
+  }
   if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx);
+    pageProps = (await Component.getInitialProps(ctx)) || {};
   }
   return { pageProps };
 };

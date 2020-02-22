@@ -29,7 +29,7 @@ import {
 export const initialState = {
   image: null,
   mainPosts: [],
-  modalPost: null
+  modalPost: []
 };
 
 export default (state = initialState, action) => {
@@ -76,10 +76,7 @@ export default (state = initialState, action) => {
         break;
       }
       case POST_LIKE_SUCCESS: {
-        const likeIndex = draft.mainPosts.findIndex(
-          like => like.id === action.data.id
-        );
-        draft.mainPosts[likeIndex].Like.unshift({ id: action.data.UserId });
+        draft.modalPost.Like.unshift({ id: action.data.UserId });
         break;
       }
       case POST_LIKE_FAILURE: {
@@ -90,13 +87,10 @@ export default (state = initialState, action) => {
         break;
       }
       case POST_LIKE_REMOVE_SUCCESS: {
-        const postIndex = draft.mainPosts.findIndex(
-          post => post.id === action.data.id
-        );
-        const userIndex = draft.mainPosts[postIndex].Like.findIndex(
+        const userIndex = draft.modalPost.Like.findIndex(
           user => user.id === action.data.UserId
         );
-        draft.mainPosts[postIndex].Like.splice(userIndex, 1);
+        draft.modalPost.Like.splice(userIndex, 1);
         break;
       }
       case POST_LIKE_REMOVE_FAILURE: {
@@ -107,10 +101,7 @@ export default (state = initialState, action) => {
         break;
       }
       case ADD_COMMENT_SUCCESS: {
-        const postIndex = draft.mainPosts.findIndex(
-          postIndex => postIndex.id === action.data.PostId
-        );
-        draft.mainPosts[postIndex].Comments.push(action.data.comment);
+        draft.modalPost.Comments.push(action.data.comment);
         break;
       }
       case ADD_COMMENT_FAILURE: {
@@ -121,10 +112,7 @@ export default (state = initialState, action) => {
         break;
       }
       case LOAD_COMMENTS_SUCCESS: {
-        const postIndex = draft.mainPosts.findIndex(
-          postIndex => postIndex.id === action.post.postId
-        );
-        draft.mainPosts[postIndex].Comments = action.data;
+        draft.modalPost.Comments = action.data;
         break;
       }
       case LOAD_COMMENTS_FAILURE: {

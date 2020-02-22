@@ -15,7 +15,13 @@ import {
   LOAD_COMMENTS_SUCCESS,
   LOAD_MODAL_POST_FAILURE,
   LOAD_MODAL_POST_REQUEST,
-  LOAD_MODAL_POST_SUCCESS
+  LOAD_MODAL_POST_SUCCESS,
+  ADD_POST_STORAGE_REQUEST,
+  ADD_POST_STORAGE_FAILURE,
+  ADD_POST_STORAGE_SUCCESS,
+  REMOVE_POST_STORAGE_SUCCESS,
+  REMOVE_POST_STORAGE_FAILURE,
+  REMOVE_POST_STORAGE_REQUEST
 } from "../redux/actions/postAction";
 
 //좋아요 누르기
@@ -28,6 +34,7 @@ function postLikeApi(postLikeData) {
 function* postLike(action) {
   try {
     const result = yield call(postLikeApi, action.data);
+    console.log(result);
     yield put({
       type: POST_LIKE_SUCCESS,
       data: result.data
@@ -54,6 +61,7 @@ function postLikeRemoveApi(postLikeRemoveData) {
 function* postLikeRemove(action) {
   try {
     const result = yield call(postLikeRemoveApi, action.data);
+    console.log(result);
     yield put({
       type: POST_LIKE_REMOVE_SUCCESS,
       data: result.data
@@ -149,12 +157,67 @@ function* watchLoadModal() {
   yield takeLatest(LOAD_MODAL_POST_REQUEST, loadModal);
 }
 
+//게시글 저장
+function addPostStorageApi(addPostStorageData) {
+  return axios.post("/user/addPostStorage", addPostStorageData, {
+    withCredentials: true
+  });
+}
+
+function* addPostStorage(action) {
+  try {
+    const result = yield call(addPostStorageApi, action.data);
+    yield put({
+      type: ADD_POST_STORAGE_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: ADD_POST_STORAGE_FAILURE
+    });
+  }
+}
+
+function* watchAddPostStorage() {
+  yield takeLatest(ADD_POST_STORAGE_REQUEST, addPostStorage);
+}
+
+//게시글 저장 취소
+function removePostStorageApi(postId) {
+  console.log(postId);
+  return axios.delete(`/user/${postId}/removePostStorage`, {
+    withCredentials: true
+  });
+}
+
+function* removePostStorage(action) {
+  try {
+    const result = yield call(removePostStorageApi, action.data);
+    yield put({
+      type: REMOVE_POST_STORAGE_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: REMOVE_POST_STORAGE_FAILURE
+    });
+  }
+}
+
+function* watchRemovePostStorage() {
+  yield takeLatest(REMOVE_POST_STORAGE_REQUEST, removePostStorage);
+}
+
 export default function*() {
   yield all([
     fork(watchPostLike),
     fork(watcPostRemoveLike),
     fork(watchAddCommentLike),
     fork(watchLoadCommentsLike),
-    fork(watchLoadModal)
+    fork(watchLoadModal),
+    fork(watchAddPostStorage),
+    fork(watchRemovePostStorage)
   ]);
 }

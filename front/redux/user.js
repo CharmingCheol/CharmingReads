@@ -17,14 +17,16 @@ import {
   USER_EDIT_FAILURE,
   UPLOAD_IMAGE_REQUEST,
   UPLOAD_IMAGE_SUCCESS,
-  UPLOAD_IMAGE_FAILURE,
+  UPLOAD_IMAGE_FAILURE
+} from "./actions/userAction";
+import {
   ADD_POST_STORAGE_REQUEST,
   ADD_POST_STORAGE_SUCCESS,
   ADD_POST_STORAGE_FAILURE,
-  POST_CLICK_REQUEST,
-  POST_CLICK_SUCCESS,
-  POST_CLICK_FAILURE
-} from "./actions/userAction";
+  REMOVE_POST_STORAGE_REQUEST,
+  REMOVE_POST_STORAGE_SUCCESS,
+  REMOVE_POST_STORAGE_FAILURE
+} from "./actions/postAction";
 
 export const initialState = {
   signUpErrorMessage: "",
@@ -116,21 +118,26 @@ export default (state = initialState, action) => {
         break;
       }
       case ADD_POST_STORAGE_SUCCESS: {
-        console.log(action.data);
-        draft.me.PostStorages.unshift({ postId: action.data.postId });
+        draft.me.PostStorages.unshift({ postId: action.data });
         break;
       }
       case ADD_POST_STORAGE_FAILURE: {
         break;
       }
-      // case POST_CLICK_SUCCESS: {
-      //   console.log(action.data);
-      //   draft.me.PostStorages.unshift({ postId: action.data.postId });
-      //   break;
-      // }
-      // case POST_CLICK_FAILURE: {
-      //   break;
-      // }
+      //게시글 저장 취소
+      case REMOVE_POST_STORAGE_REQUEST: {
+        break;
+      }
+      case REMOVE_POST_STORAGE_SUCCESS: {
+        const userIndex = draft.me.PostStorages.findIndex(
+          post => post.postId === action.data
+        );
+        draft.me.PostStorages.splice(userIndex, 1);
+        break;
+      }
+      case REMOVE_POST_STORAGE_FAILURE: {
+        break;
+      }
     }
   });
 };

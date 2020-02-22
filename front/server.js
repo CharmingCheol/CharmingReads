@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 
 const dev = process.env.NODE_ENV !== "production";
 const PORT = 3000;
@@ -14,8 +15,8 @@ dotenv.config();
 
 app.prepare().then(() => {
   const server = express();
-
   server.use(morgan("dev"));
+  server.use("/", express.static(path.join(__dirname, "public")));
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
   server.use(cookieParser(process.env.COOKIE_SECRET));
@@ -31,8 +32,8 @@ app.prepare().then(() => {
     })
   );
 
-  server.get("/bookModal/:id", (req, res) => {
-    return app.render(req, res, "/bookModal", { id: req.params.id });
+  server.get("/book/:id", (req, res) => {
+    return app.render(req, res, "/book", { id: req.params.id });
   });
 
   server.get("*", (req, res) => {

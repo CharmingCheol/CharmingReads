@@ -85,4 +85,15 @@ router.post("/addPostStorage", async (req, res, next) => {
   }
 });
 
+//게시글 저장 취소
+router.delete("/:id/removePostStorage", async (req, res, next) => {
+  try {
+    await db.PostStorage.destroy({ where: { PostId: req.params.id } });
+    return res.status(200).send(req.params.id);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;

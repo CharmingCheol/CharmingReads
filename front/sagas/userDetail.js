@@ -9,10 +9,7 @@ import {
   USER_EDIT_FAILURE,
   UPLOAD_IMAGE_SUCCESS,
   UPLOAD_IMAGE_REQUEST,
-  UPLOAD_IMAGE_FAILURE,
-  ADD_POST_STORAGE_SUCCESS,
-  ADD_POST_STORAGE_FAILURE,
-  ADD_POST_STORAGE_REQUEST
+  UPLOAD_IMAGE_FAILURE
 } from "../redux/actions/userAction";
 
 //유저 정보 변경
@@ -51,6 +48,7 @@ function loadUserApi() {
 function* loadUser() {
   try {
     const result = yield call(loadUserApi);
+    console.log(result);
     yield put({
       type: LOAD_USER_SUCCESS,
       data: result.data
@@ -93,38 +91,6 @@ function* watchUploadImage() {
   yield takeLatest(UPLOAD_IMAGE_REQUEST, uploadImage);
 }
 
-//게시글 저장
-function addPostStorageApi(addPostStorageData) {
-  return axios.post("/user/addPostStorage", addPostStorageData, {
-    withCredentials: true
-  });
-}
-
-function* addPostStorage(action) {
-  try {
-    const result = yield call(addPostStorageApi, action.data);
-    console.log(result.data);
-    yield put({
-      type: ADD_POST_STORAGE_SUCCESS,
-      data: result.data
-    });
-  } catch (error) {
-    console.error(error);
-    yield put({
-      type: ADD_POST_STORAGE_FAILURE
-    });
-  }
-}
-
-function* watchAddPostStorage() {
-  yield takeLatest(ADD_POST_STORAGE_REQUEST, addPostStorage);
-}
-
 export default function* userDetail() {
-  yield all([
-    fork(watchUserEdit),
-    fork(watchloadUser),
-    fork(watchUploadImage),
-    fork(watchAddPostStorage)
-  ]);
+  yield all([fork(watchUserEdit), fork(watchloadUser), fork(watchUploadImage)]);
 }

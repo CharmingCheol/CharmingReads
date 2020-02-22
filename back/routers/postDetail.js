@@ -61,7 +61,7 @@ router.post("/loadComments", async (req, res, next) => {
   try {
     const comments = await db.Comment.findAll({
       where: { PostId: req.body.postId },
-      attributes: ["id", "content", "rating", "UserId"],
+      // attributes: ["id", "content", "rating", "UserId"],
       include: [
         {
           model: db.User,
@@ -84,6 +84,20 @@ router.get("/:id/loadModal", async (req, res, next) => {
       include: [
         {
           model: db.User
+        },
+        {
+          model: db.Comment,
+          include: [
+            {
+              model: db.User,
+              attributes: ["id", "nickName", "src"]
+            }
+          ]
+        },
+        {
+          model: db.User,
+          as: "Like",
+          attributes: ["id"]
         }
       ]
     });

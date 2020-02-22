@@ -42,16 +42,14 @@ const Home = () => {
         <Category />
       </Test>
       <BookList /> */}
-      <Homelayout>
-        <div>
-          <div>내가 쓴 최신글</div>
-          <Grid>
-            {mainPosts.map(post => {
-              return <Book key={post.id} post={post} />;
-            })}
-          </Grid>
-        </div>
-      </Homelayout>
+      <div>
+        <div>내가 쓴 최신글</div>
+        <Grid>
+          {mainPosts.map(post => {
+            return <Book key={post.id} post={post} />;
+          })}
+        </Grid>
+      </div>
     </>
   );
 };
