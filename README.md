@@ -6,16 +6,16 @@
 
 2. 기술
 > Front End
-  ㄴ React
-  ㄴ Redux
-  ㄴ Redux Saga
-  ㄴ Next.js
-  ㄴ Styled Component
-  ㄴ Express
-  ㄴ axios
+  * React
+  * Redux
+  * Redux Saga
+  * Next.js
+  * Styled Component
+  * Express
+  * axios
   
 > Back End
-  ㄴ Express
-  ㄴ MySQL
-  ㄴ Passport
-  ㄴ AWS
+  * Express
+  * MySQL
+  * Passport
+  * AWS
