@@ -13,6 +13,7 @@ const LogInAfter = () => {
       type: LOG_OUT_REQUEST
     });
   }, []);
+
   return (
     <>
       <LogInAfterLayout>
@@ -20,14 +21,19 @@ const LogInAfter = () => {
           <div>{`${me.nickName}님 안녕하세요`}</div>
           <LogInAfterButton onClick={onClickLogout}>로그아웃</LogInAfterButton>
         </div>
-        <Link href="/user">
-          <LogInAfterImage
-            src={
-              me && me.src
-                ? `http://localhost:3001/${me.src}`
-                : `http://localhost:3001/기본이미지.png`
-            }
-          />
+        <Link
+          href={{ pathname: "/user", query: { id: me.id } }}
+          as={`/user/${me.id}`}
+        >
+          <a>
+            <LogInAfterImage
+              src={
+                me && me.src
+                  ? `http://localhost:3001/${me.src}`
+                  : `http://localhost:3001/기본이미지.png`
+              }
+            />
+          </a>
         </Link>
       </LogInAfterLayout>
     </>

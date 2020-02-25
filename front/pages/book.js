@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Link from "next/link";
 
 import {
   POST_LIKE_REQUEST,
@@ -79,6 +80,7 @@ const Book = ({ id }) => {
       });
     }
   }, [stored, id]);
+  console.log(modalPost);
 
   return (
     <>
@@ -87,13 +89,20 @@ const Book = ({ id }) => {
           <section>
             <header>
               <div>{modalPost ? modalPost.title : null}</div>
-              <img
-                src={
-                  me && me.src
-                    ? `http://localhost:3001/${me.src}`
-                    : `http://localhost:3001/기본이미지.png`
-                }
-              />
+              <Link
+                href={{ pathname: "/user", query: { id: modalPost.UserId } }}
+                as={`/user/${modalPost.UserId}`}
+              >
+                <a>
+                  <img
+                    src={
+                      me && me.src
+                        ? `http://localhost:3001/${me.src}`
+                        : `http://localhost:3001/기본이미지.png`
+                    }
+                  />
+                </a>
+              </Link>
               <article>{me.nickName}</article>
               <article>작성일</article>
             </header>

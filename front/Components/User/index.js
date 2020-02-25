@@ -17,20 +17,10 @@ import {
   User_Info_Section
 } from "./style";
 
-// import Popup from "reactjs-popup";
-// import { Scrollbars } from "react-custom-scrollbars";
-// import ReactShadowScroll from "react-shadow-scroll";
-// import styled from "styled-components";
-
 const UserSection = () => {
   const { me } = useSelector(state => state.userReducer);
   const { mainPosts } = useSelector(state => state.postReducer);
-  console.log(mainPosts);
-  useEffect(() => {
-    if (!me) {
-      Router.push("/");
-    }
-  }, [me && me.id]);
+
   return (
     <>
       <User_Section>

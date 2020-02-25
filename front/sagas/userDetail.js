@@ -9,7 +9,13 @@ import {
   USER_EDIT_FAILURE,
   UPLOAD_IMAGE_SUCCESS,
   UPLOAD_IMAGE_REQUEST,
-  UPLOAD_IMAGE_FAILURE
+  UPLOAD_IMAGE_FAILURE,
+  LOAD_USER_DETAIL_SUCCESS,
+  LOAD_USER_DETAIL_FAILURE,
+  LOAD_USER_DETAIL_REQUEST,
+  FOLLOW_SUCCESS,
+  FOLLOW_FAILURE,
+  FOLLOW_REQUEST
 } from "../redux/actions/userAction";
 
 //유저 정보 변경
@@ -38,7 +44,7 @@ function* watchUserEdit() {
   yield takeLatest(USER_EDIT_REQUEST, userEdit);
 }
 
-//유저 정보 로드
+//내 정보 로드
 function loadUserApi() {
   return axios.get(`/user/loadUser`, {
     withCredentials: true
@@ -91,6 +97,68 @@ function* watchUploadImage() {
   yield takeLatest(UPLOAD_IMAGE_REQUEST, uploadImage);
 }
 
+//유저 상세 정보 불러오기
+function loadUserDetailApi(id) {
+  console.log(id, id.id, { id });
+  return axios.get(`/user/${id}?id=${id}`);
+}
+
+function* loadUserDetail(action) {
+  try {
+    const result = yield call(loadUserDetailApi, action.data);
+    yield put({
+      type: LOAD_USER_DETAIL_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_USER_DETAIL_FAILURE
+    });
+  }
+}
+
+function* watchLoadUserDetail() {
+  yield takeLatest(LOAD_USER_DETAIL_REQUEST, loadUserDetail);
+}
+
+//팔로우
+function followApi(data) {
+  return axios.post(
+    `/user/${data.postId}`,
+    { userId: data.userId },
+    {
+      withCredentials: true
+    }
+  );
+}
+
+function* follow(action) {
+  try {
+    const result = yield call(followApi, action.data);
+    console.log(result);
+    // yield put({
+    //   type: FOLLOW_SUCCESS,
+    //   data: result.data
+    // });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: FOLLOW_FAILURE
+    });
+  }
+}
+
+function* watchFollow() {
+  yield takeLatest(FOLLOW_REQUEST, follow);
+}
+
 export default function* userDetail() {
-  yield all([fork(watchUserEdit), fork(watchloadUser), fork(watchUploadImage)]);
+  yield all([
+    fork(watchUserEdit),
+    fork(watchloadUser),
+    fork(watchUploadImage),
+    fork(watchLoadUserDetail),
+    fork(watchFollow)
+  ]);
 }

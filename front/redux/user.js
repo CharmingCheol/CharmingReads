@@ -17,7 +17,10 @@ import {
   USER_EDIT_FAILURE,
   UPLOAD_IMAGE_REQUEST,
   UPLOAD_IMAGE_SUCCESS,
-  UPLOAD_IMAGE_FAILURE
+  UPLOAD_IMAGE_FAILURE,
+  LOAD_USER_DETAIL_REQUEST,
+  LOAD_USER_DETAIL_SUCCESS,
+  LOAD_USER_DETAIL_FAILURE
 } from "./actions/userAction";
 import {
   ADD_POST_STORAGE_REQUEST,
@@ -33,7 +36,8 @@ export const initialState = {
   signUpFail: false,
   me: null,
   iamge: null,
-  modalInfo: null
+  modalInfo: null,
+  userInfo: null
 };
 
 export default (state = initialState, action) => {
@@ -89,7 +93,7 @@ export default (state = initialState, action) => {
       case LOAD_USER_FAILURE: {
         break;
       }
-      //유저 정보 변경
+      //내 정보 변경
       case USER_EDIT_REQUEST: {
         break;
       }
@@ -136,6 +140,28 @@ export default (state = initialState, action) => {
         break;
       }
       case REMOVE_POST_STORAGE_FAILURE: {
+        break;
+      }
+      //유저 정보 불러오기
+      case LOAD_USER_DETAIL_REQUEST: {
+        break;
+      }
+      case LOAD_USER_DETAIL_SUCCESS: {
+        draft.userInfo = action.data;
+        break;
+      }
+      case LOAD_USER_DETAIL_FAILURE: {
+        break;
+      }
+      //팔로우
+      case LOAD_USER_DETAIL_REQUEST: {
+        break;
+      }
+      case LOAD_USER_DETAIL_SUCCESS: {
+        // draft.userInfo.push()
+        break;
+      }
+      case LOAD_USER_DETAIL_FAILURE: {
         break;
       }
     }

@@ -19,7 +19,7 @@ const upload = multer({
   limits: { fileSize: 1024 * 1024 * 20 }
 });
 
-//유저 정보 불러오기
+//내 정보 불러오기
 router.get("/loadUser", async (req, res, next) => {
   try {
     if (!req.user) {
@@ -90,6 +90,51 @@ router.delete("/:id/removePostStorage", async (req, res, next) => {
   try {
     await db.PostStorage.destroy({ where: { PostId: req.params.id } });
     return res.status(200).send(req.params.id);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//유저 정보 불러오기
+router.get("/:id", async (req, res, next) => {
+  try {
+    console.log("sdlfhsdfoisdhfiosdhfiio", req.params, req.params.id);
+    const user = await db.User.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: db.Post
+        },
+        {
+          model: db.User,
+          as: "Follow",
+          attributes: ["id"]
+        },
+        {
+          model: db.User,
+          as: "Following",
+          attributes: ["id"]
+        }
+      ]
+    });
+    const returnUser = Object.assign({}, user.toJSON());
+    delete returnUser.password;
+    return res.status(200).json(returnUser);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//팔로우
+router.post("/:id", async (req, res, next) => {
+  try {
+    const me = await db.User.findOne({
+      where: { id: req.body.userId }
+    });
+    await me.addFollow(req.params.id);
+    return res.status(200).json(req.params);
   } catch (error) {
     console.error(error);
     next(error);

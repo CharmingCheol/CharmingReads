@@ -1,17 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import styled from "styled-components";
-import { LOAD_POSTS_REQUEST } from "../redux/actions/postAction";
-import Book from "../Components/Home/book";
-import Homelayout from "../Components/Layout";
 
-const Test = styled.div`
-  position: absolute;
-  width: 100vw;
-  left: 0;
-  z-index: -1;
-`;
+import { LOAD_POSTS_REQUEST } from "../redux/actions/postAction";
+import Book from "../Components/Home/BookImage";
 
 const Grid = styled.div`
   display: grid;
