@@ -4,7 +4,8 @@ import Link from "next/link";
 import styled from "styled-components";
 import {
   LOAD_USER_DETAIL_REQUEST,
-  FOLLOW_REQUEST
+  FOLLOW_REQUEST,
+  UNFOLLOW_REQUEST
 } from "../redux/actions/userAction";
 
 export const User_Section = styled.div`
@@ -81,24 +82,30 @@ export const User_Post_Image = styled.div`
 `;
 
 const User = ({ id }) => {
-  const { me, userInfo } = useSelector(state => state.userReducer);
+  const { me } = useSelector(state => state.userReducer);
+  const { userInfo } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
-  const followed =
-    me && userInfo ? userInfo.Follower.find(user => user.id === me.id) : null;
+  const followed = me.Follow && me.Follow.find(user => user.id === id);
 
   //팔로우 토글
   const followToggle = useCallback(() => {
     if (followed) {
-      console.log("asd");
+      dispatch({
+        type: UNFOLLOW_REQUEST,
+        data: { user: id, me: me.id }
+      });
     } else {
       dispatch({
         type: FOLLOW_REQUEST,
         data: { userId: me.id, postId: id }
       });
     }
-  }, [followed, me && me.id]);
-  console.log(userInfo);
+  }, [followed, id, me && me.id]);
   console.log(me);
+  console.log(userInfo);
+  console.log(me.Follow);
+  console.log(me.Follow.length);
+  console.log(followed);
 
   return (
     <>
@@ -109,7 +116,10 @@ const User = ({ id }) => {
             <User_Info_Section>
               <div>
                 <div>{userInfo ? userInfo.nickName : null}</div>
-                {me && userInfo && me.id === userInfo.id ? (
+                <button onClick={followToggle}>
+                  {followed ? "언팔로우" : "팔로우"}
+                </button>
+                {/* {me && userInfo && me.id === userInfo.id ? (
                   <>
                     <Link href="/post">
                       <button>게시글 추가</button>
@@ -119,8 +129,12 @@ const User = ({ id }) => {
                     </Link>
                   </>
                 ) : me ? (
-                  <button onClick={followToggle}>팔로우</button>
-                ) : null}
+                  followed ? (
+                    <button onClick={followToggle}>언팔로우</button>
+                  ) : (
+                    <button onClick={followToggle}>팔로우</button>
+                  )
+                ) : null} */}
               </div>
               <User_Info_Friends>
                 <div>게시글 xxxx</div>

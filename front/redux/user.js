@@ -20,7 +20,16 @@ import {
   UPLOAD_IMAGE_FAILURE,
   LOAD_USER_DETAIL_REQUEST,
   LOAD_USER_DETAIL_SUCCESS,
-  LOAD_USER_DETAIL_FAILURE
+  LOAD_USER_DETAIL_FAILURE,
+  FOLLOW_REQUEST,
+  FOLLOW_SUCCESS,
+  FOLLOW_FAILURE,
+  FOLLOWER_REQUEST,
+  FOLLOWER_SUCCESS,
+  FOLLOWER_FAILURE,
+  UNFOLLOW_REQUEST,
+  UNFOLLOW_SUCCESS,
+  UNFOLLOW_FAILURE
 } from "./actions/userAction";
 import {
   ADD_POST_STORAGE_REQUEST,
@@ -154,14 +163,27 @@ export default (state = initialState, action) => {
         break;
       }
       //팔로우
-      case LOAD_USER_DETAIL_REQUEST: {
+      case FOLLOW_REQUEST: {
         break;
       }
-      case LOAD_USER_DETAIL_SUCCESS: {
-        // draft.userInfo.push()
+      case FOLLOW_SUCCESS: {
+        draft.me.Follow.unshift({ id: action.data.id });
+        draft.userInfo.Follower.unshift({ id: action.data });
         break;
       }
-      case LOAD_USER_DETAIL_FAILURE: {
+      case FOLLOW_FAILURE: {
+        break;
+      }
+      //언팔로우
+      case UNFOLLOW_REQUEST: {
+        break;
+      }
+      case UNFOLLOW_SUCCESS: {
+        draft.me.Follow.splice({ id: action.data.id }, 1);
+        draft.userInfo.Follower.splice({ id: action.data }, 1);
+        break;
+      }
+      case UNFOLLOW_FAILURE: {
         break;
       }
     }

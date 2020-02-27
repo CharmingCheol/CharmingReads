@@ -15,7 +15,12 @@ import {
   LOAD_USER_DETAIL_REQUEST,
   FOLLOW_SUCCESS,
   FOLLOW_FAILURE,
-  FOLLOW_REQUEST
+  FOLLOW_REQUEST,
+  FOLLOWER_SUCCESS,
+  FOLLOWER_FAILURE,
+  UNFOLLOW_REQUEST,
+  UNFOLLOW_FAILURE,
+  UNFOLLOW_SUCCESS
 } from "../redux/actions/userAction";
 
 //유저 정보 변경
@@ -99,8 +104,7 @@ function* watchUploadImage() {
 
 //유저 상세 정보 불러오기
 function loadUserDetailApi(id) {
-  console.log(id, id.id, { id });
-  return axios.get(`/user/${id}?id=${id}`);
+  return axios.get(`/user/${id || 0}`);
 }
 
 function* loadUserDetail(action) {
@@ -136,11 +140,10 @@ function followApi(data) {
 function* follow(action) {
   try {
     const result = yield call(followApi, action.data);
-    console.log(result);
-    // yield put({
-    //   type: FOLLOW_SUCCESS,
-    //   data: result.data
-    // });
+    yield put({
+      type: FOLLOW_SUCCESS,
+      data: result.data
+    });
   } catch (error) {
     console.error(error);
     yield put({
@@ -153,12 +156,39 @@ function* watchFollow() {
   yield takeLatest(FOLLOW_REQUEST, follow);
 }
 
+//언팔로우
+function unfollowApi(data) {
+  return axios.delete(`/user/${data.user}`, {
+    withCredentials: true
+  });
+}
+
+function* unfollow(action) {
+  try {
+    const result = yield call(unfollowApi, action.data);
+    yield put({
+      type: UNFOLLOW_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: UNFOLLOW_FAILURE
+    });
+  }
+}
+
+function* watchUnFollow() {
+  yield takeLatest(UNFOLLOW_REQUEST, unfollow);
+}
+
 export default function* userDetail() {
   yield all([
     fork(watchUserEdit),
     fork(watchloadUser),
     fork(watchUploadImage),
     fork(watchLoadUserDetail),
-    fork(watchFollow)
+    fork(watchFollow),
+    fork(watchUnFollow)
   ]);
 }

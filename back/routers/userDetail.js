@@ -101,7 +101,9 @@ router.get("/:id", async (req, res, next) => {
   try {
     console.log("sdlfhsdfoisdhfiosdhfiio", req.params, req.params.id);
     const user = await db.User.findOne({
-      where: { id: req.params.id },
+      where: {
+        id: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0
+      },
       include: [
         {
           model: db.Post
@@ -113,7 +115,7 @@ router.get("/:id", async (req, res, next) => {
         },
         {
           model: db.User,
-          as: "Following",
+          as: "Follower",
           attributes: ["id"]
         }
       ]
@@ -131,10 +133,32 @@ router.get("/:id", async (req, res, next) => {
 router.post("/:id", async (req, res, next) => {
   try {
     const me = await db.User.findOne({
-      where: { id: req.body.userId }
+      where: { id: req.user.id }
+    });
+    const anotherUser = await db.User.findOne({
+      where: { id: req.params.id }
     });
     await me.addFollow(req.params.id);
+    await anotherUser.addFollower(req.user.id);
     return res.status(200).json(req.params);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//언팔로우
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const me = await db.User.findOne({
+      where: { id: req.user.id }
+    });
+    const anotherUser = await db.User.findOne({
+      where: { id: req.params.id }
+    });
+    await me.removeFollow(req.params.id);
+    await anotherUser.removeFollower(req.user.id);
+    return res.status(200).json(req.params.id);
   } catch (error) {
     console.error(error);
     next(error);

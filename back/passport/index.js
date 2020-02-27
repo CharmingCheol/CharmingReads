@@ -23,7 +23,7 @@ module.exports = () => {
           },
           {
             model: db.User,
-            as: "Following",
+            as: "Follower",
             attributes: ["id"]
           },
           {
