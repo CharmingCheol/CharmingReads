@@ -129,8 +129,8 @@ function* watchLoadUserDetail() {
 //팔로우
 function followApi(data) {
   return axios.post(
-    `/user/${data.postId}`,
-    { userId: data.userId },
+    `/user/${data.user}`,
+    {},
     {
       withCredentials: true
     }
@@ -142,7 +142,8 @@ function* follow(action) {
     const result = yield call(followApi, action.data);
     yield put({
       type: FOLLOW_SUCCESS,
-      data: result.data
+      me: action.data.me,
+      user: action.data.user
     });
   } catch (error) {
     console.error(error);

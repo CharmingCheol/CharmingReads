@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import styled from "styled-components";
@@ -7,6 +7,7 @@ import {
   FOLLOW_REQUEST,
   UNFOLLOW_REQUEST
 } from "../redux/actions/userAction";
+import UserPost from "../Components/User/UserPost";
 
 export const User_Section = styled.div`
   display: grid;
@@ -56,28 +57,24 @@ export const User_Inrtoduce = styled.div`
 `;
 
 export const User_Tab_Section = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-`;
-
-export const User_Tab = styled.button`
-  font-size: 1rem;
-  background-color: #ecf0f1;
-  border: 1px solid rgb(198, 201, 207);
-  height: 50px;
-`;
-
-export const User_Post_Image = styled.div`
-  font-size: 1rem;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-content: center;
-  justify-content: center;
-  & div {
-    width: auto;
-    height: 16vw;
-    background-color: red;
-    padding: 1vw;
+  & article {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0;
+  }
+  & article:last-child {
+    display: none;
+  }
+  & ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    & li {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 0 20px 0;
+    }
   }
 `;
 
@@ -85,7 +82,10 @@ const User = ({ id }) => {
   const { me } = useSelector(state => state.userReducer);
   const { userInfo } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
-  const followed = me.Follow && me.Follow.find(user => user.id === id);
+  const followed =
+    me && me.Follow ? me.Follow.find(user => user.id === id) : null;
+  const tab01 = useRef();
+  const tab02 = useRef();
 
   //팔로우 토글
   const followToggle = useCallback(() => {
@@ -97,15 +97,25 @@ const User = ({ id }) => {
     } else {
       dispatch({
         type: FOLLOW_REQUEST,
-        data: { userId: me.id, postId: id }
+        data: { user: id, me: me.id }
       });
     }
-  }, [followed, id, me && me.id]);
-  console.log(me);
+  }, [followed, me && me.id]);
+
+  //tab 메뉴 변경
+  const onClickTab = useCallback(
+    event => {
+      if (event.target.classList.contains("fa-th")) {
+        tab01.current.style = "display:grid";
+        tab02.current.style = "display:none";
+      } else {
+        tab01.current.style = "display:none";
+        tab02.current.style = "display:grid";
+      }
+    },
+    [tab01, tab02]
+  );
   console.log(userInfo);
-  console.log(me.Follow);
-  console.log(me.Follow.length);
-  console.log(followed);
 
   return (
     <>
@@ -116,10 +126,7 @@ const User = ({ id }) => {
             <User_Info_Section>
               <div>
                 <div>{userInfo ? userInfo.nickName : null}</div>
-                <button onClick={followToggle}>
-                  {followed ? "언팔로우" : "팔로우"}
-                </button>
-                {/* {me && userInfo && me.id === userInfo.id ? (
+                {me && userInfo && me.id === userInfo.id ? (
                   <>
                     <Link href="/post">
                       <button>게시글 추가</button>
@@ -129,17 +136,19 @@ const User = ({ id }) => {
                     </Link>
                   </>
                 ) : me ? (
-                  followed ? (
-                    <button onClick={followToggle}>언팔로우</button>
-                  ) : (
-                    <button onClick={followToggle}>팔로우</button>
-                  )
-                ) : null} */}
+                  <button onClick={followToggle}>
+                    {followed ? "언팔로우" : "팔로우"}
+                  </button>
+                ) : null}
               </div>
               <User_Info_Friends>
-                <div>게시글 xxxx</div>
-                <div>팔로우 xxxx</div>
-                <div>팔로잉 xxxx</div>
+                <div>{`게시글 ${userInfo ? userInfo.Posts.length : null}`}</div>
+                <div>{`팔로워 ${
+                  userInfo ? userInfo.Follower.length : null
+                }`}</div>
+                <div>{`팔로우 ${
+                  userInfo ? userInfo.Follow.length : null
+                }`}</div>
               </User_Info_Friends>
             </User_Info_Section>
           </User_Info>
@@ -151,6 +160,30 @@ const User = ({ id }) => {
             </div>
           </User_Inrtoduce>
         </div>
+        <User_Tab_Section>
+          <ul>
+            <li onClick={onClickTab}>
+              <i className="fas fa-th"></i>
+            </li>
+            <li onClick={onClickTab}>
+              <i className="far fa-bookmark"></i>
+            </li>
+          </ul>
+          <article ref={tab01}>
+            {userInfo
+              ? userInfo.Posts.map(post => {
+                  return <UserPost key={post.id} post={post} />;
+                })
+              : null}
+          </article>
+          <article ref={tab02}>
+            {userInfo
+              ? userInfo.PostStorages.map(post => {
+                  return <UserPost key={post.id} post={post.Post} />;
+                })
+              : null}
+          </article>
+        </User_Tab_Section>
       </User_Section>
     </>
   );

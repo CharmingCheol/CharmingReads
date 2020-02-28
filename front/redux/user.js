@@ -167,8 +167,8 @@ export default (state = initialState, action) => {
         break;
       }
       case FOLLOW_SUCCESS: {
-        draft.me.Follow.unshift({ id: action.data.id });
-        draft.userInfo.Follower.unshift({ id: action.data });
+        draft.me.Follow.unshift({ id: action.user });
+        draft.userInfo.Follower.unshift({ id: action.me });
         break;
       }
       case FOLLOW_FAILURE: {

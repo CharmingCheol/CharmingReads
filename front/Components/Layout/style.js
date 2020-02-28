@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const Menu = styled.div`
   top: 0;
   left: 0;
+  height: 100px;
   position: fixed;
   background-color: rgba(204, 174, 98, 1);
   padding: 3vh 10vw 3vh 10vw;
@@ -12,6 +13,5 @@ export const Menu = styled.div`
 `;
 
 export const Main = styled.div`
-  height: 80vh;
-  padding: 10vw;
+  padding: 5vw 10vw 0 10vw;
 `;

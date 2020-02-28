@@ -99,14 +99,24 @@ router.delete("/:id/removePostStorage", async (req, res, next) => {
 //유저 정보 불러오기
 router.get("/:id", async (req, res, next) => {
   try {
-    console.log("sdlfhsdfoisdhfiosdhfiio", req.params, req.params.id);
     const user = await db.User.findOne({
       where: {
         id: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0
       },
       include: [
         {
-          model: db.Post
+          model: db.Post,
+          include: [
+            {
+              model: db.User,
+              as: "Like",
+              attributes: ["id"]
+            },
+            {
+              model: db.Comment,
+              attributes: ["id"]
+            }
+          ]
         },
         {
           model: db.User,
@@ -117,12 +127,26 @@ router.get("/:id", async (req, res, next) => {
           model: db.User,
           as: "Follower",
           attributes: ["id"]
+        },
+        {
+          model: db.PostStorage,
+          include: [
+            {
+              model: db.Post
+            }
+          ]
         }
       ]
     });
-    const returnUser = Object.assign({}, user.toJSON());
-    delete returnUser.password;
-    return res.status(200).json(returnUser);
+    const jsonUser = Object.assign({}, user.toJSON());
+    jsonUser.Posts.Likes = jsonUser.Posts.Likes
+      ? jsonUser.Posts.Likes.length
+      : 0;
+    jsonUser.Posts.Comments = jsonUser.Posts.Comments
+      ? jsonUser.Posts.Comments.length
+      : 0;
+    delete jsonUser.password;
+    return res.status(200).json(jsonUser);
   } catch (error) {
     console.error(error);
     next(error);

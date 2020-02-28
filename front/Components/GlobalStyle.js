@@ -16,6 +16,8 @@ const GlobalStyles = createGlobalStyle`
     body {
         background-color:#ecf0f1;
         color:black;
+        padding-top:100px;
+        height:100%;
     }
     input:focus {
         outline: none;

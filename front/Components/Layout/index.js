@@ -6,18 +6,9 @@ import { Menu, Main } from "./style";
 import Search from "./Search";
 import LogInBefore from "./LogInBefore";
 import LogInAfter from "./LogInAfter";
-import { LOAD_USER_REQUEST } from "../../redux/actions/userAction";
 
 const AppLayout = ({ children }) => {
   const { me } = useSelector(state => state.userReducer);
-  const dispatch = useDispatch();
-  // useEffect(() => {
-  //   if (!me) {
-  //     dispatch({
-  //       type: LOAD_USER_REQUEST
-  //     });
-  //   }
-  // }, []);
   return (
     <>
       <GlobalStyles />
