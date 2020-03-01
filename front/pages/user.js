@@ -48,6 +48,12 @@ export const User_Info_Friends = styled.div`
   & div {
     margin-right: 25px;
   }
+  .opened {
+    display: block;
+  }
+  .none {
+    display: none;
+  }
 `;
 
 export const User_Inrtoduce = styled.div`
@@ -80,7 +86,6 @@ export const User_Tab_Section = styled.div`
 `;
 
 const User = ({ id }) => {
-  const [popup, setPopup] = useState(null);
   const { me } = useSelector(state => state.userReducer);
   const { userInfo } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
@@ -120,13 +125,13 @@ const User = ({ id }) => {
 
   //팔로워 팝업창 출력
   const FollowerPopup = useCallback(event => {
-    console.log(event.target.classList.contains("follow"));
-    if (event.target.classList.contains("follow")) {
-      setPopup(true);
-    } else {
-      setPopup(false);
+    const targetElem = event.target;
+    if (targetElem.classList.contains("popup")) {
+      targetElem.nextSibling.classList.add("opened");
+      targetElem.nextSibling.classList.remove("none");
     }
   }, []);
+  console.log(userInfo);
 
   return (
     <>
@@ -154,20 +159,24 @@ const User = ({ id }) => {
               </div>
               <User_Info_Friends>
                 <div>{`게시글 ${userInfo ? userInfo.Posts.length : null}`}</div>
-                <div className="follower" onClick={FollowerPopup}>{`팔로워 ${
-                  userInfo ? userInfo.Follower.length : null
-                }`}</div>
-                <div className="follow" onClick={FollowerPopup}>{`팔로우 ${
-                  userInfo ? userInfo.Follow.length : null
-                }`}</div>
+                <div>
+                  <div className="popup" onClick={FollowerPopup}>{`팔로워 ${
+                    userInfo ? userInfo.Follower.length : null
+                  }`}</div>
+                  <div className="none">
+                    <UserPopup title="팔로워" userId={id} />
+                  </div>
+                </div>
+                <div>
+                  <div className="popup" onClick={FollowerPopup}>{`팔로우 ${
+                    userInfo ? userInfo.Follow.length : null
+                  }`}</div>
+                  <div className="none">
+                    <UserPopup title="팔로우" userId={id} />
+                  </div>
+                </div>
               </User_Info_Friends>
-              {popup !== null ? (
-                popup ? (
-                  <UserPopup popup={userInfo.Follow} title="팔로우" />
-                ) : (
-                  <UserPopup popup={userInfo.Follower} title="팔로워" />
-                )
-              ) : null}
+
               {/* <User_Popup ref={popup}>
                 <div>팔로워</div>
                 <button ref={popupCloseBtn} onClick={popUpClose}>

@@ -1,27 +1,74 @@
-import React, { useRef, useCallback, useEffect } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
 
-const User_Popup = styled.div`
-  .opened {
-    display: block;
-    position: fixed;
-    top: 25%;
-    left: 25%;
-    width: 50%;
-    height: 50%;
-    padding: 20px;
-    background: gray;
-    z-index: 10;
+const PopupSection = styled.div`
+  position: fixed;
+  top: 25%;
+  left: 35%;
+  width: 30%;
+  height: 60%;
+  z-index: 10;
+  border: 1px black solid;
+  overflow: hidden;
+  & ul {
+    overflow: scroll;
+    -ms-overflow-style: none;
+    ::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 
-const UserPopup = ({ popup, title }) => {
+const UserPopup = ({ title, userId }) => {
+  const dispatch = useDispatch();
+  const popupParent = useRef();
+
+  //리스트 불러오기
+  useEffect(() => {}, []);
+
+  //팝업창 닫기
+  const closePopup = useCallback(() => {
+    const closePopupElem = popupParent.current.parentNode.classList;
+    closePopupElem.add("none");
+    closePopupElem.remove("opened");
+  }, []);
+
   return (
     <>
-      <User_Popup className="popup">
+      <PopupSection ref={popupParent}>
         <div>{title}</div>
-        <button>X</button>
-      </User_Popup>
+        <button onClick={closePopup}>X</button>
+        <ul>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+        </ul>
+      </PopupSection>
     </>
   );
 };
