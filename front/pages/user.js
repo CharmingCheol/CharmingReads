@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import styled from "styled-components";
@@ -8,6 +8,7 @@ import {
   UNFOLLOW_REQUEST
 } from "../redux/actions/userAction";
 import UserPost from "../Components/User/UserPost";
+import UserPopup from "../Components/User/UserPopup";
 
 export const User_Section = styled.div`
   display: grid;
@@ -79,6 +80,7 @@ export const User_Tab_Section = styled.div`
 `;
 
 const User = ({ id }) => {
+  const [popup, setPopup] = useState(null);
   const { me } = useSelector(state => state.userReducer);
   const { userInfo } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
@@ -115,7 +117,16 @@ const User = ({ id }) => {
     },
     [tab01, tab02]
   );
-  console.log(userInfo);
+
+  //팔로워 팝업창 출력
+  const FollowerPopup = useCallback(event => {
+    console.log(event.target.classList.contains("follow"));
+    if (event.target.classList.contains("follow")) {
+      setPopup(true);
+    } else {
+      setPopup(false);
+    }
+  }, []);
 
   return (
     <>
@@ -143,13 +154,26 @@ const User = ({ id }) => {
               </div>
               <User_Info_Friends>
                 <div>{`게시글 ${userInfo ? userInfo.Posts.length : null}`}</div>
-                <div>{`팔로워 ${
+                <div className="follower" onClick={FollowerPopup}>{`팔로워 ${
                   userInfo ? userInfo.Follower.length : null
                 }`}</div>
-                <div>{`팔로우 ${
+                <div className="follow" onClick={FollowerPopup}>{`팔로우 ${
                   userInfo ? userInfo.Follow.length : null
                 }`}</div>
               </User_Info_Friends>
+              {popup !== null ? (
+                popup ? (
+                  <UserPopup popup={userInfo.Follow} title="팔로우" />
+                ) : (
+                  <UserPopup popup={userInfo.Follower} title="팔로워" />
+                )
+              ) : null}
+              {/* <User_Popup ref={popup}>
+                <div>팔로워</div>
+                <button ref={popupCloseBtn} onClick={popUpClose}>
+                  X
+                </button>
+              </User_Popup> */}
             </User_Info_Section>
           </User_Info>
           <User_Inrtoduce>

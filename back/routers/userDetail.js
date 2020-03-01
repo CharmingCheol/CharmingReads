@@ -132,18 +132,36 @@ router.get("/:id", async (req, res, next) => {
           model: db.PostStorage,
           include: [
             {
-              model: db.Post
+              model: db.Post,
+              include: [
+                {
+                  model: db.User,
+                  as: "Like",
+                  attributes: ["id"]
+                },
+                {
+                  model: db.Comment,
+                  attributes: ["id"]
+                }
+              ]
             }
           ]
         }
       ]
     });
     const jsonUser = Object.assign({}, user.toJSON());
+    console.log(jsonUser);
     jsonUser.Posts.Likes = jsonUser.Posts.Likes
       ? jsonUser.Posts.Likes.length
       : 0;
     jsonUser.Posts.Comments = jsonUser.Posts.Comments
       ? jsonUser.Posts.Comments.length
+      : 0;
+    jsonUser.PostStorages.Likes = jsonUser.PostStorages.Likes
+      ? jsonUser.PostStorages.Likes.length
+      : 0;
+    jsonUser.PostStorages.Comments = jsonUser.PostStorages.Comments
+      ? jsonUser.PostStorages.Comments.length
       : 0;
     delete jsonUser.password;
     return res.status(200).json(jsonUser);
