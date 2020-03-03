@@ -183,6 +183,8 @@ function* watchUnFollow() {
   yield takeLatest(UNFOLLOW_REQUEST, unfollow);
 }
 
+//팔로우 리스트 불러오기
+
 export default function* userDetail() {
   yield all([
     fork(watchUserEdit),

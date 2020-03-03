@@ -26,13 +26,13 @@ export const User_Info = styled.div`
 `;
 
 export const User_Info_Section = styled.div`
-  & div {
+  /* & div {
     margin: 0 0 1.5rem 0.5rem;
-  }
+  } */
   & button {
     width: 100px;
     height: 40px;
-    margin-right: 1vw;
+    /* margin-right: 1vw; */
     font-weight: 600;
     background-color: #ecf0f1;
     box-shadow: none;
@@ -45,9 +45,9 @@ export const User_Info_Section = styled.div`
 export const User_Info_Friends = styled.div`
   display: flex;
   margin: 0 0 25px 0;
-  & div {
+  /* & div {
     margin-right: 25px;
-  }
+  } */
   .opened {
     display: block;
   }
@@ -176,13 +176,6 @@ const User = ({ id }) => {
                   </div>
                 </div>
               </User_Info_Friends>
-
-              {/* <User_Popup ref={popup}>
-                <div>팔로워</div>
-                <button ref={popupCloseBtn} onClick={popUpClose}>
-                  X
-                </button>
-              </User_Popup> */}
             </User_Info_Section>
           </User_Info>
           <User_Inrtoduce>
