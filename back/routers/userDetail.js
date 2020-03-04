@@ -116,17 +116,25 @@ router.get("/:id", async (req, res, next) => {
               model: db.Comment,
               attributes: ["id"]
             }
-          ]
+          ],
+          order: [["createdAt", "DESC"]],
+          limit: 20
         },
         {
           model: db.User,
           as: "Follow",
-          attributes: ["id"]
+          separate: false,
+          attributes: ["id", "nickName", "src"],
+          order: [["createdAt", "DESC"]],
+          limit: 10
         },
         {
           model: db.User,
           as: "Follower",
-          attributes: ["id"]
+          attributes: ["id", "nickName", "src"],
+          separate: false,
+          order: [["createdAt", "DESC"]],
+          limit: 10
         },
         {
           model: db.PostStorage,
@@ -145,25 +153,26 @@ router.get("/:id", async (req, res, next) => {
                 }
               ]
             }
-          ]
+          ],
+          order: [["createdAt", "DESC"]],
+          limit: 10
         }
       ]
     });
     const jsonUser = Object.assign({}, user.toJSON());
-    console.log(jsonUser);
-    jsonUser.Posts.Likes = jsonUser.Posts.Likes
-      ? jsonUser.Posts.Likes.length
-      : 0;
-    jsonUser.Posts.Comments = jsonUser.Posts.Comments
-      ? jsonUser.Posts.Comments.length
-      : 0;
-    jsonUser.PostStorages.Likes = jsonUser.PostStorages.Likes
-      ? jsonUser.PostStorages.Likes.length
-      : 0;
-    jsonUser.PostStorages.Comments = jsonUser.PostStorages.Comments
-      ? jsonUser.PostStorages.Comments.length
-      : 0;
     delete jsonUser.password;
+    // jsonUser.Posts.Likes = jsonUser.Posts.Likes
+    //   ? jsonUser.Posts.Likes.length
+    //   : 0;
+    // jsonUser.Posts.Comments = jsonUser.Posts.Comments
+    //   ? jsonUser.Posts.Comments.length
+    //   : 0;
+    // jsonUser.PostStorages.Likes = jsonUser.PostStorages.Likes
+    //   ? jsonUser.PostStorages.Likes.length
+    //   : 0;
+    // jsonUser.PostStorages.Comments = jsonUser.PostStorages.Comments
+    //   ? jsonUser.PostStorages.Comments.length
+    //   : 0;
     return res.status(200).json(jsonUser);
   } catch (error) {
     console.error(error);
@@ -201,6 +210,23 @@ router.delete("/:id", async (req, res, next) => {
     await me.removeFollow(req.params.id);
     await anotherUser.removeFollower(req.user.id);
     return res.status(200).json(req.params.id);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//팔로우 리스트 불러오기
+router.get("/:id/follow", (req, res, next) => {
+  try {
+    console.log("sddlfhsdoifhsdipfhkwef");
+    console.log(req.params.id, req.query);
+    let where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      where = {
+        [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10)
+      };
+    }
   } catch (error) {
     console.error(error);
     next(error);

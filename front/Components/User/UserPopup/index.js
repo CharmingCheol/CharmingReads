@@ -59,7 +59,6 @@ const UserPopup = ({ title, userId }) => {
   const popupRef = useRef();
   const listRef = useRef();
   const { userInfo } = useSelector(state => state.userReducer);
-  console.log(userInfo);
 
   //리스트 불러오기
   const listScroll = useCallback(() => {
@@ -67,12 +66,18 @@ const UserPopup = ({ title, userId }) => {
       if (title === "팔로우") {
         dispatch({
           type: LOAD_FOLLOW_REQUEST,
-          data: userInfo.Follow[userInfo.Follow.length - 1].id
+          lastId: userInfo.Follow
+            ? userInfo.Follow[userInfo.Follow.length - 1].id
+            : 0,
+          userId
         });
       } else {
         dispatch({
           type: LOAD_FOLLOWER_REQUEST,
-          data: userInfo.Follower[userInfo.Follower.length - 1].id
+          lastId: userInfo.Follower
+            ? userInfo.Follower[userInfo.Follower.length - 1].id
+            : 0,
+          userId
         });
       }
     }
@@ -84,6 +89,8 @@ const UserPopup = ({ title, userId }) => {
     closePopupElem.add("none");
     closePopupElem.remove("opened");
   }, [popupRef]);
+
+  console.log(userInfo);
 
   return (
     <>

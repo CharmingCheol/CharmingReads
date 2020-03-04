@@ -20,7 +20,9 @@ import {
   FOLLOWER_FAILURE,
   UNFOLLOW_REQUEST,
   UNFOLLOW_FAILURE,
-  UNFOLLOW_SUCCESS
+  UNFOLLOW_SUCCESS,
+  LOAD_FOLLOW_REQUEST,
+  LOAD_FOLLOW_FAILURE
 } from "../redux/actions/userAction";
 
 //유저 정보 변경
@@ -184,6 +186,29 @@ function* watchUnFollow() {
 }
 
 //팔로우 리스트 불러오기
+function loadFollowApi(lastId, userId, limit = 10) {
+  return axios.get(`/user/${userId}/follow/?lastId=${lastId}&limit=${limit}`);
+}
+
+function* loadFollow(action) {
+  try {
+    const result = yield call(loadFollowApi, action.lastId, action.userId);
+    console.log(result);
+    // yield put({
+    //   type: loadFOLLOW_SUCCESS,
+    //   data: result.data
+    // });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_FOLLOW_FAILURE
+    });
+  }
+}
+
+function* watchLoadFollow() {
+  yield takeLatest(LOAD_FOLLOW_REQUEST, loadFollow);
+}
 
 export default function* userDetail() {
   yield all([
@@ -192,6 +217,7 @@ export default function* userDetail() {
     fork(watchUploadImage),
     fork(watchLoadUserDetail),
     fork(watchFollow),
-    fork(watchUnFollow)
+    fork(watchUnFollow),
+    fork(watchLoadFollow)
   ]);
 }
