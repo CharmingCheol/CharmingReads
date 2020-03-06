@@ -124,9 +124,7 @@ router.get("/:id", async (req, res, next) => {
           model: db.User,
           as: "Follow",
           separate: false,
-          attributes: ["id", "nickName", "src"],
-          order: [["createdAt", "DESC"]],
-          limit: 10
+          attributes: ["id", "nickName", "src"]
         },
         {
           model: db.User,
@@ -157,22 +155,12 @@ router.get("/:id", async (req, res, next) => {
           order: [["createdAt", "DESC"]],
           limit: 10
         }
-      ]
+      ],
+      order: [["createdAt", "DESC"]],
+      limit: 10
     });
     const jsonUser = Object.assign({}, user.toJSON());
     delete jsonUser.password;
-    // jsonUser.Posts.Likes = jsonUser.Posts.Likes
-    //   ? jsonUser.Posts.Likes.length
-    //   : 0;
-    // jsonUser.Posts.Comments = jsonUser.Posts.Comments
-    //   ? jsonUser.Posts.Comments.length
-    //   : 0;
-    // jsonUser.PostStorages.Likes = jsonUser.PostStorages.Likes
-    //   ? jsonUser.PostStorages.Likes.length
-    //   : 0;
-    // jsonUser.PostStorages.Comments = jsonUser.PostStorages.Comments
-    //   ? jsonUser.PostStorages.Comments.length
-    //   : 0;
     return res.status(200).json(jsonUser);
   } catch (error) {
     console.error(error);
@@ -181,14 +169,28 @@ router.get("/:id", async (req, res, next) => {
 });
 
 //팔로우
-router.post("/:id", async (req, res, next) => {
+router.post("/:id/follow", async (req, res, next) => {
   try {
+    await db.User.update(
+      {
+        followCount: req.body.followCount + 1
+      },
+      { where: { id: req.user.id } }
+    );
+    await db.User.update(
+      {
+        followerCount: req.body.followerCount + 1
+      },
+      { where: { id: req.params.id } }
+    );
+
     const me = await db.User.findOne({
       where: { id: req.user.id }
     });
     const anotherUser = await db.User.findOne({
       where: { id: req.params.id }
     });
+
     await me.addFollow(req.params.id);
     await anotherUser.addFollower(req.user.id);
     return res.status(200).json(req.params);
@@ -199,14 +201,28 @@ router.post("/:id", async (req, res, next) => {
 });
 
 //언팔로우
-router.delete("/:id", async (req, res, next) => {
+router.post("/:id/unfollow", async (req, res, next) => {
   try {
+    await db.User.update(
+      {
+        followCount: req.body.followCount - 1
+      },
+      { where: { id: req.user.id } }
+    );
+    await db.User.update(
+      {
+        followerCount: req.body.followerCount - 1
+      },
+      { where: { id: req.params.id } }
+    );
+
     const me = await db.User.findOne({
       where: { id: req.user.id }
     });
     const anotherUser = await db.User.findOne({
       where: { id: req.params.id }
     });
+
     await me.removeFollow(req.params.id);
     await anotherUser.removeFollower(req.user.id);
     return res.status(200).json(req.params.id);

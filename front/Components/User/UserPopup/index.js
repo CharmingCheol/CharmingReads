@@ -60,6 +60,7 @@ const UserPopup = ({ title, userId }) => {
   const listRef = useRef();
   const { userInfo } = useSelector(state => state.userReducer);
 
+  console.log(userInfo);
   //리스트 불러오기
   const listScroll = useCallback(() => {
     if (listRef.current.scrollHeight - listRef.current.scrollTop < 700) {
@@ -89,8 +90,6 @@ const UserPopup = ({ title, userId }) => {
     closePopupElem.add("none");
     closePopupElem.remove("opened");
   }, [popupRef]);
-
-  console.log(userInfo);
 
   return (
     <>

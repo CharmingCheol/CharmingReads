@@ -86,8 +86,7 @@ export const User_Tab_Section = styled.div`
 `;
 
 const User = ({ id }) => {
-  const { me } = useSelector(state => state.userReducer);
-  const { userInfo } = useSelector(state => state.userReducer);
+  const { me, userInfo } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
   const followed =
     me && me.Follow ? me.Follow.find(user => user.id === id) : null;
@@ -99,15 +98,30 @@ const User = ({ id }) => {
     if (followed) {
       dispatch({
         type: UNFOLLOW_REQUEST,
-        data: { user: id, me: me.id }
+        data: {
+          user: id,
+          me: me.id,
+          followCount: me.followCount,
+          followerCount: userInfo.followerCount
+        }
       });
     } else {
       dispatch({
         type: FOLLOW_REQUEST,
-        data: { user: id, me: me.id }
+        data: {
+          user: id,
+          me: me.id,
+          followCount: me.followCount,
+          followerCount: userInfo.followerCount
+        }
       });
     }
-  }, [followed, me && me.id]);
+  }, [
+    followed,
+    me && me.id,
+    userInfo && userInfo.followCount,
+    userInfo && userInfo.followerCount
+  ]);
 
   //tab 메뉴 변경
   const onClickTab = useCallback(
@@ -131,7 +145,6 @@ const User = ({ id }) => {
       targetElem.nextSibling.classList.remove("none");
     }
   }, []);
-  console.log(userInfo);
 
   return (
     <>
@@ -158,10 +171,10 @@ const User = ({ id }) => {
                 ) : null}
               </div>
               <User_Info_Friends>
-                <div>{`게시글 ${userInfo ? userInfo.Posts.length : null}`}</div>
+                <div>{`게시글 ${userInfo ? userInfo.postCount : null}`}</div>
                 <div>
                   <div className="popup" onClick={FollowerPopup}>{`팔로워 ${
-                    userInfo ? userInfo.Follower.length : null
+                    userInfo ? userInfo.followerCount : null
                   }`}</div>
                   <div className="none">
                     <UserPopup title="팔로워" userId={id} />
@@ -169,7 +182,7 @@ const User = ({ id }) => {
                 </div>
                 <div>
                   <div className="popup" onClick={FollowerPopup}>{`팔로우 ${
-                    userInfo ? userInfo.Follow.length : null
+                    userInfo ? userInfo.followCount : null
                   }`}</div>
                   <div className="none">
                     <UserPopup title="팔로우" userId={id} />

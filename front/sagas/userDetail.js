@@ -131,8 +131,8 @@ function* watchLoadUserDetail() {
 //팔로우
 function followApi(data) {
   return axios.post(
-    `/user/${data.user}`,
-    {},
+    `/user/${data.user}/follow`,
+    { followCount: data.followCount, followerCount: data.followerCount },
     {
       withCredentials: true
     }
@@ -161,9 +161,13 @@ function* watchFollow() {
 
 //언팔로우
 function unfollowApi(data) {
-  return axios.delete(`/user/${data.user}`, {
-    withCredentials: true
-  });
+  return axios.post(
+    `/user/${data.user}/unfollow`,
+    { followCount: data.followCount, followerCount: data.followerCount },
+    {
+      withCredentials: true
+    }
+  );
 }
 
 function* unfollow(action) {

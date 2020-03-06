@@ -14,6 +14,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false
       },
+      postCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+      },
+      followCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+      },
+      followerCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+      },
       src: {
         type: DataTypes.TEXT
       },
