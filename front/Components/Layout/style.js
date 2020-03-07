@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Menu = styled.div`
+  z-index: 20;
   top: 0;
   left: 0;
   height: 100px;

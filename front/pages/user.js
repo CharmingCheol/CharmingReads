@@ -1,7 +1,7 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
-import styled from "styled-components";
+
 import {
   LOAD_USER_DETAIL_REQUEST,
   FOLLOW_REQUEST,
@@ -9,80 +9,26 @@ import {
 } from "../redux/actions/userAction";
 import UserPost from "../Components/User/UserPost";
 import UserPopup from "../Components/User/UserPopup";
+import {
+  User_Section,
+  User_Info,
+  User_Info_Section,
+  User_Info_Friends,
+  User_Inrtoduce,
+  User_Tab_Section
+} from "../Components/User/style";
 
-export const User_Section = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+import styled from "styled-components";
+
+const Test = styled.div`
+  width: 12vw;
+  height: 15vw;
+  margin: 0 0 10px 10px;
+  background: red;
 `;
 
-export const User_Info = styled.div`
-  display: flex;
-  margin-bottom: 50px;
-  & img {
-    width: 10vw;
-    height: 10vw;
-    background-color: red;
-  }
-`;
-
-export const User_Info_Section = styled.div`
-  /* & div {
-    margin: 0 0 1.5rem 0.5rem;
-  } */
-  & button {
-    width: 100px;
-    height: 40px;
-    /* margin-right: 1vw; */
-    font-weight: 600;
-    background-color: #ecf0f1;
-    box-shadow: none;
-    border: 1px solid rgb(198, 201, 207);
-    border-radius: 10px;
-    z-index: -10;
-  }
-`;
-
-export const User_Info_Friends = styled.div`
-  display: flex;
-  margin: 0 0 25px 0;
-  /* & div {
-    margin-right: 25px;
-  } */
-  .opened {
-    display: block;
-  }
-  .none {
-    display: none;
-  }
-`;
-
-export const User_Inrtoduce = styled.div`
-  font-size: 1rem;
-  & div:first-child {
-    margin-bottom: 1.5em;
-  }
-`;
-
-export const User_Tab_Section = styled.div`
-  & article {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    padding: 0;
-  }
-  & article:last-child {
-    display: none;
-  }
-  & ul {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    & li {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0 0 20px 0;
-    }
-  }
+const Fixed = styled.div`
+  position: fixed;
 `;
 
 const User = ({ id }) => {
@@ -146,22 +92,43 @@ const User = ({ id }) => {
     }
   }, []);
 
+  const onScrollPosts = useCallback(() => {
+    console.log(
+      scrollY,
+      document.documentElement.clientHeight,
+      document.documentElement.scrollHeight
+    );
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScrollPosts);
+    return () => {
+      window.removeEventListener("scroll", onScrollPosts);
+    };
+  }, []);
+
   return (
     <>
       <User_Section>
-        <div>
+        {/* fixed하면 Grid 풀리는걸 해결하기 위해 임의의 div 태그 추가 */}
+        <div></div>
+        <Fixed>
           <User_Info>
-            <img />
+            <img className="User-Info_Image" />
             <User_Info_Section>
               <div>
                 <div>{userInfo ? userInfo.nickName : null}</div>
                 {me && userInfo && me.id === userInfo.id ? (
                   <>
                     <Link href="/post">
-                      <button>게시글 추가</button>
+                      <button className="User-Info-Section_Button Post_Button">
+                        게시글 추가
+                      </button>
                     </Link>
                     <Link href="/userEdit">
-                      <button>프로필 편집</button>
+                      <button className="User-Info-Section_Button Edit_Button">
+                        프로필 편집
+                      </button>
                     </Link>
                   </>
                 ) : me ? (
@@ -171,8 +138,10 @@ const User = ({ id }) => {
                 ) : null}
               </div>
               <User_Info_Friends>
-                <div>{`게시글 ${userInfo ? userInfo.postCount : null}`}</div>
-                <div>
+                <div className="User-Info-Friends PostCount">{`게시글 ${
+                  userInfo ? userInfo.postCount : null
+                }`}</div>
+                <div className="User-Info-Friends FollowerCount">
                   <div className="popup" onClick={FollowerPopup}>{`팔로워 ${
                     userInfo ? userInfo.followerCount : null
                   }`}</div>
@@ -180,11 +149,11 @@ const User = ({ id }) => {
                     <UserPopup
                       title="팔로워"
                       userId={id}
-                      data={userInfo.Follower}
+                      data={userInfo ? userInfo.Follower : null}
                     />
                   </div>
                 </div>
-                <div>
+                <div className="User-Info-Friends FollowCount">
                   <div className="popup" onClick={FollowerPopup}>{`팔로우 ${
                     userInfo ? userInfo.followCount : null
                   }`}</div>
@@ -192,7 +161,7 @@ const User = ({ id }) => {
                     <UserPopup
                       title="팔로우"
                       userId={id}
-                      data={userInfo.Follow}
+                      data={userInfo ? userInfo.Follow : null}
                     />
                   </div>
                 </div>
@@ -206,7 +175,8 @@ const User = ({ id }) => {
                 : "소개글이 없습니다"}
             </div>
           </User_Inrtoduce>
-        </div>
+        </Fixed>
+
         <User_Tab_Section>
           <ul>
             <li onClick={onClickTab}>

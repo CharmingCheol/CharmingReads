@@ -25,15 +25,6 @@ const Home = () => {
   }, [me && me.id]);
   return (
     <>
-      {/* <Test>
-        <Description />
-        <Category />
-      </Test> */}
-      {/* <Test>
-        <Description />
-        <Category />
-      </Test>
-      <BookList /> */}
       <div>
         <div>내가 쓴 최신글</div>
         <Grid>

@@ -6,17 +6,19 @@ import { Provider } from "react-redux";
 import { createStore, compose, applyMiddleware } from "redux";
 import { Container } from "next/app";
 import axios from "axios";
+import { withRouter } from "next/router";
 
 import RootReducer from "../redux";
 import RootSaga from "../sagas";
 import { LOAD_USER_REQUEST } from "../redux/actions/userAction";
 import Homelayout from "../Components/Layout";
 
-const MyApp = ({ Component, store, pageProps }) => {
+const MyApp = ({ Component, store, pageProps, router }) => {
+  const { pathname } = router;
   return (
     <Container>
       <Provider store={store}>
-        <Homelayout>
+        <Homelayout pathname={pathname}>
           <Component {...pageProps} />
         </Homelayout>
       </Provider>
@@ -64,4 +66,4 @@ MyApp.getInitialProps = async context => {
   return { pageProps };
 };
 
-export default withRedux(makeStore)(withReduxSaga(MyApp));
+export default withRedux(makeStore)(withReduxSaga(withRouter(MyApp)));

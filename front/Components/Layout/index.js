@@ -1,13 +1,15 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 
 import GlobalStyles from "../GlobalStyle";
 import { Menu, Main } from "./style";
 import Search from "./Search";
 import LogInBefore from "./LogInBefore";
 import LogInAfter from "./LogInAfter";
+import Description from "../Home/Description";
+import Category from "../Home/Category";
 
-const AppLayout = ({ children }) => {
+const AppLayout = ({ children, pathname }) => {
   const { me } = useSelector(state => state.userReducer);
   return (
     <>
@@ -17,6 +19,12 @@ const AppLayout = ({ children }) => {
         <Search />
         {me ? <LogInAfter /> : <LogInBefore />}
       </Menu>
+      {pathname === "/" ? (
+        <div>
+          <Description />
+          <Category />
+        </div>
+      ) : null}
       <Main>{children}</Main>
     </>
   );

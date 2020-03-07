@@ -110,9 +110,16 @@ const UserPopup = ({ title, userId, data }) => {
         </div>
         <div className="PopupSection_main" ref={listRef} onScroll={listScroll}>
           <ul>
-            {data.map(data => {
-              return <UserFollowList key={data.id} data={data} />;
-            })}
+            {data
+              ? data.map(data => {
+                  return (
+                    <UserFollowList
+                      key={data.id + Math.random() * 10}
+                      data={data}
+                    />
+                  );
+                })
+              : null}
           </ul>
         </div>
       </PopupSection>
