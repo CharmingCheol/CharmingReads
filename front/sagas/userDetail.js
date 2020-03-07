@@ -1,4 +1,4 @@
-import { all, call, fork, put, takeLatest } from "redux-saga/effects";
+import { all, call, fork, put, takeLatest, throttle } from "redux-saga/effects";
 import axios from "axios";
 import {
   USER_EDIT_REQUEST,
@@ -22,7 +22,11 @@ import {
   UNFOLLOW_FAILURE,
   UNFOLLOW_SUCCESS,
   LOAD_FOLLOW_REQUEST,
-  LOAD_FOLLOW_FAILURE
+  LOAD_FOLLOW_FAILURE,
+  LOAD_FOLLOW_SUCCESS,
+  LOAD_FOLLOWER_REQUEST,
+  LOAD_FOLLOWER_FAILURE,
+  LOAD_FOLLOWER_SUCCESS
 } from "../redux/actions/userAction";
 
 //유저 정보 변경
@@ -190,18 +194,17 @@ function* watchUnFollow() {
 }
 
 //팔로우 리스트 불러오기
-function loadFollowApi(lastId, userId, limit = 10) {
+function loadFollowApi(lastId, userId, limit = 5) {
   return axios.get(`/user/${userId}/follow/?lastId=${lastId}&limit=${limit}`);
 }
 
 function* loadFollow(action) {
   try {
     const result = yield call(loadFollowApi, action.lastId, action.userId);
-    console.log(result);
-    // yield put({
-    //   type: loadFOLLOW_SUCCESS,
-    //   data: result.data
-    // });
+    yield put({
+      type: LOAD_FOLLOW_SUCCESS,
+      data: result.data
+    });
   } catch (error) {
     console.error(error);
     yield put({
@@ -211,7 +214,31 @@ function* loadFollow(action) {
 }
 
 function* watchLoadFollow() {
-  yield takeLatest(LOAD_FOLLOW_REQUEST, loadFollow);
+  yield throttle(2000, LOAD_FOLLOW_REQUEST, loadFollow);
+}
+
+//팔로워 리스트 불러오기
+function loadFollowerApi(lastId, userId, limit = 5) {
+  return axios.get(`/user/${userId}/follower/?lastId=${lastId}&limit=${limit}`);
+}
+
+function* loadFollower(action) {
+  try {
+    const result = yield call(loadFollowerApi, action.lastId, action.userId);
+    yield put({
+      type: LOAD_FOLLOWER_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_FOLLOWER_FAILURE
+    });
+  }
+}
+
+function* watchLoadFollower() {
+  yield throttle(2000, LOAD_FOLLOWER_REQUEST, loadFollower);
 }
 
 export default function* userDetail() {
@@ -222,6 +249,7 @@ export default function* userDetail() {
     fork(watchLoadUserDetail),
     fork(watchFollow),
     fork(watchUnFollow),
-    fork(watchLoadFollow)
+    fork(watchLoadFollow),
+    fork(watchLoadFollower)
   ]);
 }

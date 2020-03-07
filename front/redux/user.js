@@ -29,7 +29,13 @@ import {
   FOLLOWER_FAILURE,
   UNFOLLOW_REQUEST,
   UNFOLLOW_SUCCESS,
-  UNFOLLOW_FAILURE
+  UNFOLLOW_FAILURE,
+  LOAD_FOLLOW_REQUEST,
+  LOAD_FOLLOW_SUCCESS,
+  LOAD_FOLLOW_FAILURE,
+  LOAD_FOLLOWER_REQUEST,
+  LOAD_FOLLOWER_SUCCESS,
+  LOAD_FOLLOWER_FAILURE
 } from "./actions/userAction";
 import {
   ADD_POST_STORAGE_REQUEST,
@@ -46,7 +52,9 @@ export const initialState = {
   me: null,
   iamge: null,
   modalInfo: null,
-  userInfo: null
+  userInfo: null,
+  hasMoreFollow: null,
+  hasMoreFollower: null
 };
 
 export default (state = initialState, action) => {
@@ -184,6 +192,36 @@ export default (state = initialState, action) => {
         break;
       }
       case UNFOLLOW_FAILURE: {
+        break;
+      }
+      //팔로우 리스트 불러오기
+      case LOAD_FOLLOW_REQUEST: {
+        break;
+      }
+      case LOAD_FOLLOW_SUCCESS: {
+        action.data.Follow.forEach(follow =>
+          draft.userInfo.Follow.push(follow)
+        );
+        draft.hasMoreFollow =
+          action.data.Follow[action.data.Follow.length - 1].id;
+        break;
+      }
+      case LOAD_FOLLOW_FAILURE: {
+        break;
+      }
+      //팔로워 리스트 불러오기
+      case LOAD_FOLLOWER_REQUEST: {
+        break;
+      }
+      case LOAD_FOLLOWER_SUCCESS: {
+        action.data.Follower.forEach(follower =>
+          draft.userInfo.Follower.push(follower)
+        );
+        draft.hasMoreFollower =
+          action.data.Follower[action.data.Follower.length - 1].id;
+        break;
+      }
+      case LOAD_FOLLOWER_FAILURE: {
         break;
       }
     }

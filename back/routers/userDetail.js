@@ -116,23 +116,17 @@ router.get("/:id", async (req, res, next) => {
               model: db.Comment,
               attributes: ["id"]
             }
-          ],
-          order: [["createdAt", "DESC"]],
-          limit: 20
+          ]
         },
         {
           model: db.User,
           as: "Follow",
-          separate: false,
           attributes: ["id", "nickName", "src"]
         },
         {
           model: db.User,
           as: "Follower",
-          attributes: ["id", "nickName", "src"],
-          separate: false,
-          order: [["createdAt", "DESC"]],
-          limit: 10
+          attributes: ["id", "nickName", "src"]
         },
         {
           model: db.PostStorage,
@@ -151,15 +145,19 @@ router.get("/:id", async (req, res, next) => {
                 }
               ]
             }
-          ],
-          order: [["createdAt", "DESC"]],
-          limit: 10
+          ]
         }
-      ],
-      order: [["createdAt", "DESC"]],
-      limit: 10
+      ]
     });
     const jsonUser = Object.assign({}, user.toJSON());
+    jsonUser.Follow = jsonUser.Follow.sort((p, c) => {
+      return c["id"] - p["id"];
+    });
+    jsonUser.Follower = jsonUser.Follower.sort((p, c) => {
+      return c["id"] - p["id"];
+    });
+    jsonUser.Follow = jsonUser.Follow.slice(0, 10);
+    jsonUser.Follower = jsonUser.Follower.slice(0, 10);
     delete jsonUser.password;
     return res.status(200).json(jsonUser);
   } catch (error) {
@@ -233,16 +231,55 @@ router.post("/:id/unfollow", async (req, res, next) => {
 });
 
 //팔로우 리스트 불러오기
-router.get("/:id/follow", (req, res, next) => {
+router.get("/:id/follow", async (req, res, next) => {
   try {
-    console.log("sddlfhsdoifhsdipfhkwef");
-    console.log(req.params.id, req.query);
-    let where = {};
-    if (parseInt(req.query.lastId, 10)) {
-      where = {
-        [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10)
-      };
-    }
+    const user = await db.User.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: db.User,
+          as: "Follow",
+          attributes: ["id", "nickName", "src"],
+          where: {
+            id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) }
+          }
+        }
+      ]
+    });
+    const jsonUser = Object.assign({}, user.toJSON());
+    jsonUser.Follow = jsonUser.Follow.sort((p, c) => {
+      return c["id"] - p["id"];
+    });
+    jsonUser.Follow = jsonUser.Follow.slice(0, req.query.limit);
+    return res.status(200).json(jsonUser);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//팔로워 목록 불러오기
+router.get("/:id/follower", async (req, res, next) => {
+  try {
+    const user = await db.User.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: db.User,
+          as: "Follower",
+          attributes: ["id", "nickName", "src"],
+          where: {
+            id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) }
+          }
+        }
+      ]
+    });
+    const jsonUser = Object.assign({}, user.toJSON());
+    jsonUser.Follower = jsonUser.Follower.sort((p, c) => {
+      return c["id"] - p["id"];
+    });
+    jsonUser.Follower = jsonUser.Follower.slice(0, req.query.limit);
+    return res.status(200).json(jsonUser);
   } catch (error) {
     console.error(error);
     next(error);

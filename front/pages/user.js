@@ -177,7 +177,11 @@ const User = ({ id }) => {
                     userInfo ? userInfo.followerCount : null
                   }`}</div>
                   <div className="none">
-                    <UserPopup title="팔로워" userId={id} />
+                    <UserPopup
+                      title="팔로워"
+                      userId={id}
+                      data={userInfo.Follower}
+                    />
                   </div>
                 </div>
                 <div>
@@ -185,7 +189,11 @@ const User = ({ id }) => {
                     userInfo ? userInfo.followCount : null
                   }`}</div>
                   <div className="none">
-                    <UserPopup title="팔로우" userId={id} />
+                    <UserPopup
+                      title="팔로우"
+                      userId={id}
+                      data={userInfo.Follow}
+                    />
                   </div>
                 </div>
               </User_Info_Friends>
