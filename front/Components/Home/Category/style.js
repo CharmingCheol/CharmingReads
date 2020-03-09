@@ -6,7 +6,7 @@ export const Menu = styled.ul`
   color: white;
   padding-bottom: 5vh;
   background-color: rgba(204, 174, 98, 1);
-  & li:not(:last-child) {
+  & a:not(:last-child) {
     margin-right: 3vw;
   }
 `;

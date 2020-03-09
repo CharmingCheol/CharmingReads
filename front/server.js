@@ -40,6 +40,14 @@ app.prepare().then(() => {
     return app.render(req, res, "/user", { id: req.params.id });
   });
 
+  server.get("/explore/:word", (req, res) => {
+    return app.render(req, res, "/explore/", { word: req.params.word });
+  });
+
+  server.get("/explore/category/:word", (req, res) => {
+    return app.render(req, res, "/explore/category", { word: req.params.word });
+  });
+
   server.get("*", (req, res) => {
     return handle(req, res);
   });
