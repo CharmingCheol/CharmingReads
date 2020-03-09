@@ -153,11 +153,19 @@ router.get("/:id", async (req, res, next) => {
     jsonUser.Follow = jsonUser.Follow.sort((p, c) => {
       return c["id"] - p["id"];
     });
+    jsonUser.Follow = jsonUser.Follow.slice(0, 10);
     jsonUser.Follower = jsonUser.Follower.sort((p, c) => {
       return c["id"] - p["id"];
     });
-    jsonUser.Follow = jsonUser.Follow.slice(0, 10);
     jsonUser.Follower = jsonUser.Follower.slice(0, 10);
+    jsonUser.Posts = jsonUser.Posts.sort((p, c) => {
+      return c["id"] - p["id"];
+    });
+    jsonUser.Posts = jsonUser.Posts.slice(0, 9);
+    jsonUser.PostStorages = jsonUser.PostStorages.sort((p, c) => {
+      return c["id"] - p["id"];
+    });
+    jsonUser.PostStorages = jsonUser.PostStorages.slice(0, 9);
     delete jsonUser.password;
     return res.status(200).json(jsonUser);
   } catch (error) {
@@ -280,6 +288,97 @@ router.get("/:id/follower", async (req, res, next) => {
     });
     jsonUser.Follower = jsonUser.Follower.slice(0, req.query.limit);
     return res.status(200).json(jsonUser);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//유저 게시글 불러오기
+router.get("/:id/userPosts", async (req, res, next) => {
+  try {
+    const user = await db.User.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: db.Post,
+          where: {
+            id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) }
+          },
+          include: [
+            {
+              model: db.User,
+              as: "Like",
+              attributes: ["id"]
+            },
+            {
+              model: db.Comment,
+              attributes: ["id"]
+            }
+          ]
+        }
+      ]
+    });
+    if (user) {
+      const jsonUser = Object.assign({}, user.toJSON());
+      jsonUser.Posts = jsonUser.Posts.sort((p, c) => {
+        return c["id"] - p["id"];
+      });
+      jsonUser.Posts = jsonUser.Posts.slice(0, req.query.limit);
+      return res.status(200).json(jsonUser);
+    } else {
+      return res.status(200).json({ id: 0 });
+    }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//유저 저장 게시글 불러오기
+router.get("/:id/userSavedPosts", async (req, res, next) => {
+  try {
+    const user = await db.User.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: db.PostStorage,
+          where: {
+            id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) }
+          },
+          include: [
+            {
+              model: db.Post,
+              include: [
+                {
+                  model: db.User,
+                  as: "Like",
+                  attributes: ["id"]
+                },
+                {
+                  model: db.Comment,
+                  attributes: ["id"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    });
+    const jsonUser = Object.assign({}, user.toJSON());
+    if (!jsonUser || !jsonUser.PostStorages[1]) {
+      if (jsonUser) {
+        return res.status(200).json(jsonUser);
+      } else {
+        return res.status(200).json({ id: 0 });
+      }
+    } else {
+      jsonUser.PostStorages = jsonUser.PostStorages.sort((p, c) => {
+        return c["id"] - p["id"];
+      });
+      jsonUser.PostStorages = jsonUser.PostStorages.slice(0, req.query.limit);
+      return res.status(200).json(jsonUser);
+    }
   } catch (error) {
     console.error(error);
     next(error);

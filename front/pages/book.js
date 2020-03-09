@@ -103,7 +103,7 @@ const Book = ({ id }) => {
                   />
                 </a>
               </Link>
-              <article>{me.nickName}</article>
+              <article>{me ? me.nickName : null}</article>
               <article>작성일</article>
             </header>
             <BookModalTabMenu>

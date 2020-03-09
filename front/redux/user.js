@@ -35,7 +35,13 @@ import {
   LOAD_FOLLOW_FAILURE,
   LOAD_FOLLOWER_REQUEST,
   LOAD_FOLLOWER_SUCCESS,
-  LOAD_FOLLOWER_FAILURE
+  LOAD_FOLLOWER_FAILURE,
+  LOAD_USER_POSTS_REQUEST,
+  LOAD_USER_POSTS_SUCCESS,
+  LOAD_USER_POSTS_FAILURE,
+  LOAD_USER_SAVED_POSTS_REQUEST,
+  LOAD_USER_SAVED_POSTS_SUCCESS,
+  LOAD_USER_SAVED_POSTS_FAILURE
 } from "./actions/userAction";
 import {
   ADD_POST_STORAGE_REQUEST,
@@ -54,7 +60,9 @@ export const initialState = {
   modalInfo: null,
   userInfo: null,
   hasMoreFollow: null,
-  hasMoreFollower: null
+  hasMoreFollower: null,
+  hasMoreUserPost: null,
+  hasMoreUserSavedPost: null
 };
 
 export default (state = initialState, action) => {
@@ -222,6 +230,42 @@ export default (state = initialState, action) => {
         break;
       }
       case LOAD_FOLLOWER_FAILURE: {
+        break;
+      }
+      //유저 게시글 불러오기
+      case LOAD_USER_POSTS_REQUEST: {
+        break;
+      }
+      case LOAD_USER_POSTS_SUCCESS: {
+        if (action.data.id === 0) {
+          return;
+        } else {
+          action.data.Posts.forEach(post => draft.userInfo.Posts.push(post));
+          draft.hasMoreUserPost =
+            action.data.Posts[action.data.Posts.length - 1].id;
+        }
+        break;
+      }
+      case LOAD_USER_POSTS_FAILURE: {
+        break;
+      }
+      //유저 저장 게시글 불러오기
+      case LOAD_USER_SAVED_POSTS_REQUEST: {
+        break;
+      }
+      case LOAD_USER_SAVED_POSTS_SUCCESS: {
+        if (action.data.id === 0) {
+          return;
+        } else {
+          action.data.PostStorages.forEach(post =>
+            draft.userInfo.PostStorages.push(post)
+          );
+          draft.hasMoreUserSavedPost =
+            action.data.PostStorages[action.data.PostStorages.length - 1].id;
+        }
+        break;
+      }
+      case LOAD_USER_SAVED_POSTS_FAILURE: {
         break;
       }
     }

@@ -1,4 +1,5 @@
 import React, { useRef, useCallback } from "react";
+import Router from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -44,11 +45,12 @@ const Post = () => {
       postData.append("title", title);
       postData.append("hashTag", hashTag);
       postData.append("content", content);
-      postData.append("image", image.filename);
+      postData.append("image", image);
       dispatch({
         type: ADD_POST_REQUEST,
         data: postData
       });
+      Router.push("/");
     },
     [title, hashTag, content, image]
   );
@@ -76,7 +78,7 @@ const Post = () => {
             ref={postImage}
             onChange={changePostImage}
           />
-          <Image onClick={clickPostImage} />
+          <Image onClick={clickPostImage} src={image} />
         </div>
         <button>게시</button>
         <button>취소</button>

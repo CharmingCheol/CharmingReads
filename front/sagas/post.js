@@ -48,9 +48,7 @@ function postApi(postData) {
 
 function* post(action) {
   try {
-    console.log("dhsdlhsdoi");
     const result = yield call(postApi, action.data);
-    console.log(result);
     yield put({
       type: ADD_POST_SUCCESS,
       data: result.data

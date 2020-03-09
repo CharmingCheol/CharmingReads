@@ -5,7 +5,9 @@ import Link from "next/link";
 import {
   LOAD_USER_DETAIL_REQUEST,
   FOLLOW_REQUEST,
-  UNFOLLOW_REQUEST
+  UNFOLLOW_REQUEST,
+  LOAD_USER_POSTS_REQUEST,
+  LOAD_USER_SAVED_POSTS_REQUEST
 } from "../redux/actions/userAction";
 import UserPost from "../Components/User/UserPost";
 import UserPopup from "../Components/User/UserPopup";
@@ -20,24 +22,21 @@ import {
 
 import styled from "styled-components";
 
-const Test = styled.div`
-  width: 12vw;
-  height: 15vw;
-  margin: 0 0 10px 10px;
-  background: red;
-`;
-
 const Fixed = styled.div`
   position: fixed;
 `;
 
 const User = ({ id }) => {
-  const { me, userInfo } = useSelector(state => state.userReducer);
+  const { me, userInfo, hasMoreUserPost, hasMoreUserSavedPost } = useSelector(
+    state => state.userReducer
+  );
   const dispatch = useDispatch();
   const followed =
     me && me.Follow ? me.Follow.find(user => user.id === id) : null;
   const tab01 = useRef();
   const tab02 = useRef();
+
+  console.log(userInfo);
 
   //팔로우 토글
   const followToggle = useCallback(() => {
@@ -74,10 +73,14 @@ const User = ({ id }) => {
     event => {
       if (event.target.classList.contains("fa-th")) {
         tab01.current.style = "display:grid";
+        tab01.current.className = "grid";
         tab02.current.style = "display:none";
+        tab02.current.className = "";
       } else {
         tab01.current.style = "display:none";
+        tab01.current.className = "";
         tab02.current.style = "display:grid";
+        tab02.current.className = "grid";
       }
     },
     [tab01, tab02]
@@ -92,20 +95,48 @@ const User = ({ id }) => {
     }
   }, []);
 
+  //게시글, 저장한 게시글 불러오기
   const onScrollPosts = useCallback(() => {
-    console.log(
-      scrollY,
-      document.documentElement.clientHeight,
-      document.documentElement.scrollHeight
-    );
-  }, []);
+    if (document.documentElement.scrollHeight - scrollY < 750) {
+      if (tab01.current.className === "grid") {
+        if (hasMoreUserPost !== userInfo.Posts[userInfo.Posts.length - 1].id) {
+          dispatch({
+            type: LOAD_USER_POSTS_REQUEST,
+            userId: id,
+            lastId: userInfo.Posts[userInfo.Posts.length - 1]["id"]
+          });
+        }
+      } else {
+        if (
+          hasMoreUserSavedPost !==
+          userInfo.PostStorages[userInfo.PostStorages.length - 1].id
+        ) {
+          dispatch({
+            type: LOAD_USER_SAVED_POSTS_REQUEST,
+            userId: id,
+            lastId:
+              userInfo.PostStorages[userInfo.PostStorages.length - 1]["id"]
+          });
+        }
+      }
+    }
+  }, [
+    tab01,
+    hasMoreUserPost,
+    userInfo && userInfo.Posts,
+    userInfo && userInfo.PostStorages
+  ]);
 
   useEffect(() => {
     window.addEventListener("scroll", onScrollPosts);
     return () => {
       window.removeEventListener("scroll", onScrollPosts);
     };
-  }, []);
+  }, [
+    hasMoreUserPost,
+    userInfo && userInfo.Posts,
+    userInfo && userInfo.PostStorages
+  ]);
 
   return (
     <>
@@ -186,7 +217,7 @@ const User = ({ id }) => {
               <i className="far fa-bookmark"></i>
             </li>
           </ul>
-          <article ref={tab01}>
+          <article className="grid" ref={tab01}>
             {userInfo
               ? userInfo.Posts.map(post => {
                   return <UserPost key={post.id} post={post} />;

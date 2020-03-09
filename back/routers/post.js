@@ -4,16 +4,21 @@ const multer = require("multer");
 
 const router = express.Router();
 const db = require("../models");
+const AWS = require("aws-sdk");
+const multerS3 = require("multer-s3");
+
+AWS.config.update({
+  region: "ap-northeast-2",
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_KEY
+});
 
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, "uploadPost");
-    },
-    filename: (req, file, cb) => {
-      const extName = path.extname(file.originalname);
-      const baseName = path.basename(file.originalname, extName);
-      cb(null, baseName + new Date().valueOf() + extName);
+  storage: multerS3({
+    s3: new AWS.S3(),
+    bucket: "charmingbooks",
+    key(req, file, cb) {
+      cb(null, `original/${+new Date()}${path.basename(file.originalname)}`);
     }
   }),
   limits: { fileSize: 1024 * 1024 * 20 }
@@ -25,7 +30,7 @@ router.post(
   upload.single("image"),
   async (req, res, next) => {
     try {
-      return res.json(req.file);
+      return res.json(req.file.location);
     } catch (error) {
       console.error(error);
       next(error);
@@ -36,6 +41,7 @@ router.post(
 //게시글 추가
 router.post("/addPost", upload.none(), async (req, res, next) => {
   try {
+    console.log(req.body);
     const post = await db.Post.create({
       title: req.body.title,
       content: req.body.content,

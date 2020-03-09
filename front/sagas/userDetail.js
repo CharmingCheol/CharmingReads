@@ -26,7 +26,13 @@ import {
   LOAD_FOLLOW_SUCCESS,
   LOAD_FOLLOWER_REQUEST,
   LOAD_FOLLOWER_FAILURE,
-  LOAD_FOLLOWER_SUCCESS
+  LOAD_FOLLOWER_SUCCESS,
+  LOAD_USER_POSTS_SUCCESS,
+  LOAD_USER_POSTS_FAILURE,
+  LOAD_USER_POSTS_REQUEST,
+  LOAD_USER_SAVED_POSTS_REQUEST,
+  LOAD_USER_SAVED_POSTS_SUCCESS,
+  LOAD_USER_SAVED_POSTS_FAILURE
 } from "../redux/actions/userAction";
 
 //유저 정보 변경
@@ -241,6 +247,62 @@ function* watchLoadFollower() {
   yield throttle(2000, LOAD_FOLLOWER_REQUEST, loadFollower);
 }
 
+//유저 게시글 불러오기
+function loadUserPostsApi(lastId, userId, limit = 9) {
+  return axios.get(
+    `/user/${userId}/userPosts/?lastId=${lastId}&limit=${limit}`
+  );
+}
+
+function* loadUserPosts(action) {
+  try {
+    const result = yield call(loadUserPostsApi, action.lastId, action.userId);
+    yield put({
+      type: LOAD_USER_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_USER_POSTS_FAILURE
+    });
+  }
+}
+
+function* watchLoadUserPosts() {
+  yield throttle(2000, LOAD_USER_POSTS_REQUEST, loadUserPosts);
+}
+
+//유저 저장 게시글 불러오기
+function loadUserSavedPostsApi(lastId, userId, limit = 9) {
+  return axios.get(
+    `/user/${userId}/userSavedPosts/?lastId=${lastId}&limit=${limit}`
+  );
+}
+
+function* loadUserSavedPosts(action) {
+  try {
+    const result = yield call(
+      loadUserSavedPostsApi,
+      action.lastId,
+      action.userId
+    );
+    yield put({
+      type: LOAD_USER_SAVED_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_USER_SAVED_POSTS_FAILURE
+    });
+  }
+}
+
+function* watchLoadUserSavedPosts() {
+  yield throttle(2000, LOAD_USER_SAVED_POSTS_REQUEST, loadUserSavedPosts);
+}
+
 export default function* userDetail() {
   yield all([
     fork(watchUserEdit),
@@ -250,6 +312,8 @@ export default function* userDetail() {
     fork(watchFollow),
     fork(watchUnFollow),
     fork(watchLoadFollow),
-    fork(watchLoadFollower)
+    fork(watchLoadFollower),
+    fork(watchLoadUserPosts),
+    fork(watchLoadUserSavedPosts)
   ]);
 }

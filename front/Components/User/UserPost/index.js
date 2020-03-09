@@ -16,13 +16,7 @@ const UserPost = ({ post }) => {
       >
         <a>
           <UserPost_Section>
-            <UserPost_Image
-              src={
-                post && post.src
-                  ? `http://localhost:3001/${post.src}`
-                  : `http://localhost:3001/기본이미지.png`
-              }
-            />
+            <UserPost_Image src={post.src} />
             <div className="UserPost_Post-Info">
               <UserPost_HeartComment>
                 <i className="fas fa-heart"></i>
