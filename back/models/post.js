@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false
       },
+      category: {
+        type: DataTypes.STRING(10),
+        allowNull: false
+      },
       src: {
         type: DataTypes.TEXT,
         allowNull: false
@@ -26,10 +30,6 @@ module.exports = (sequelize, DataTypes) => {
     db.Post.hasMany(db.PostStorage);
     db.Post.hasMany(db.Image);
     db.Post.belongsToMany(db.User, { through: "PostLike", as: "Like" });
-    db.Post.belongsToMany(db.Hashtag, {
-      through: "PostHashtag",
-      as: "Hashtag"
-    });
   };
   return Post;
 };

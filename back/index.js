@@ -46,7 +46,7 @@ app.use("/user", userAuthRouter);
 app.use("/user", userDetailRouter);
 app.use("/auth", kakaoRouter);
 app.use("/post", postRouter);
-app.use("/post", loadPostsRouter);
+app.use("/posts", loadPostsRouter);
 app.use("/post", postDetailRouter);
 
 app.listen(port, () => {

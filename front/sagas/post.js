@@ -10,7 +10,10 @@ import {
   ADD_POST_REQUEST,
   LOAD_POSTS_FAILURE,
   LOAD_POSTS_SUCCESS,
-  LOAD_POSTS_REQUEST
+  LOAD_POSTS_REQUEST,
+  LOAD_CATEGORY_POSTS_REQUEST,
+  LOAD_CATEGORY_POSTS_FAILURE,
+  LOAD_CATEGORY_POSTS_SUCCESS
 } from "../redux/actions/postAction";
 
 //이미지 불러오기
@@ -67,7 +70,7 @@ function* watchPost() {
 
 //게시글 불러오기
 function loadPostsApi() {
-  return axios.get("/post/loadPosts?limit=10", {
+  return axios.get("/posts/loadPosts?limit=10", {
     withCredentials: true
   });
 }
@@ -91,6 +94,38 @@ function* watchloadPosts() {
   yield takeLatest(LOAD_POSTS_REQUEST, loadposts);
 }
 
+//카테고리별 게시글 불러오기
+function categoryPostsApi(word, lastId = 0, limit = 9) {
+  return axios.get(
+    `/posts/${encodeURIComponent(word)}?lastId=${lastId}&limit=${limit}`
+  );
+}
+
+function* categoryPosts(action) {
+  try {
+    const result = yield call(categoryPostsApi, action.data);
+    console.log(result);
+    yield put({
+      type: LOAD_CATEGORY_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_CATEGORY_POSTS_FAILURE
+    });
+  }
+}
+
+function* watchcategoryPosts() {
+  yield takeLatest(LOAD_CATEGORY_POSTS_REQUEST, categoryPosts);
+}
+
 export default function* postSaga() {
-  yield all([fork(watchLoadPostImage), fork(watchPost), fork(watchloadPosts)]);
+  yield all([
+    fork(watchLoadPostImage),
+    fork(watchPost),
+    fork(watchloadPosts),
+    fork(watchcategoryPosts)
+  ]);
 }

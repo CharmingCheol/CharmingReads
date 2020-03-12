@@ -41,32 +41,14 @@ router.post(
 //게시글 추가
 router.post("/addPost", upload.none(), async (req, res, next) => {
   try {
-    console.log(req.body);
     const post = await db.Post.create({
       title: req.body.title,
       content: req.body.content,
+      category: req.body.category,
       src: req.body.image,
       UserId: req.user.id
     });
-    const hashTags = req.body.hashTag.split(" ");
-    const result = await Promise.all(
-      hashTags.map(tag =>
-        db.Hashtag.findOrCreate({
-          where: { content: tag.slice(1) }
-        })
-      )
-    );
-    await post.addHashtag(result.map(tag => tag[0]));
-    const returnPost = await db.Post.findOne({
-      where: { id: post.id },
-      include: [
-        {
-          model: db.User,
-          attributes: ["id", "userId", "nickName", "src", "introduction"]
-        }
-      ]
-    });
-    return res.json(returnPost);
+    return res.json(post);
   } catch (error) {
     console.error(error);
     next(error);

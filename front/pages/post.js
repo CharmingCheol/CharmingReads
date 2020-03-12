@@ -2,6 +2,7 @@ import React, { useRef, useCallback, useState } from "react";
 import Router from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import Link from "next/link";
 
 import { useInput } from "../Components/SignUp";
 import {
@@ -29,24 +30,41 @@ const Post_Input = styled.div`
       width: 50vw;
     }
   }
-  /* &:hover {
-    ${Image} {
-      display: block;
-    }
-  } */
 `;
 
-const Test = styled.i`
-  &:hover {
-    ${Image} {
-      display: block;
+const Post_Confirm = styled.div`
+  position: relative;
+  &:hover ${Image} {
+    display: block;
+    position: absolute;
+    left: 120px;
+    transform: scale(2);
+    transform-origin: left top;
+  }
+`;
+
+const Post_Payload = styled.div`
+  & textarea {
+    width: 100%;
+    height: 50vw;
+    padding: 30px;
+    margin: 10px 0 10px 0;
+  }
+`;
+
+const Post_Button = styled.div`
+  float: right;
+  & button {
+    margin-bottom: 30px;
+    &:first-child {
+      margin-right: 10px;
     }
   }
 `;
 
 const Post = () => {
   const [title, onTitle] = useInput();
-  const [hashTag, onHashTag] = useState();
+  const [category, onCategory] = useState();
   const [content, onContent] = useInput();
 
   const { image } = useSelector(state => state.postReducer);
@@ -55,7 +73,7 @@ const Post = () => {
 
   //카테고리 변경
   const onChangeCategory = useCallback(event => {
-    onHashTag(event.target.value);
+    onCategory(event.target.value);
   }, []);
 
   //이미지 불러오기
@@ -81,7 +99,7 @@ const Post = () => {
       event.preventDefault();
       const postData = new FormData();
       postData.append("title", title);
-      postData.append("hashTag", hashTag);
+      postData.append("category", category);
       postData.append("content", content);
       postData.append("image", image);
       dispatch({
@@ -90,8 +108,13 @@ const Post = () => {
       });
       Router.push("/");
     },
-    [title, hashTag, content, image]
+    [title, category, content, image]
   );
+
+  //뒤로 가기 버튼
+  const onClickBack = useCallback(() => {
+    history.back();
+  }, []);
 
   return (
     <>
@@ -124,27 +147,36 @@ const Post = () => {
               <h3>제목</h3>
               <input onChange={onTitle} />
             </div>
-            <div>
+            <Post_Confirm>
               <h3>사진 선택</h3>
-              <Test className="fas fa-book" onClick={clickPostImage}></Test>
+              <i className="fas fa-book" onClick={clickPostImage}></i>
               <input
+                required
                 hidden
                 type="file"
                 accept="image/*"
                 ref={postImage}
                 onChange={changePostImage}
               />
-            </div>
-            <Image src={image} />
-          </Post_Input>
-          <div>
+              <Image src={image} />
+            </Post_Confirm>
             <div>
-              <h3>내용</h3>
-              <textarea onChange={onContent}></textarea>
+              <h5>
+                사진 선택 텍스트에 마우스를 올리시면 등록한 사진을 볼 수
+                있습니다
+              </h5>
             </div>
+          </Post_Input>
+          <Post_Payload>
+            <h3>내용</h3>
+            <textarea onChange={onContent}></textarea>
+          </Post_Payload>
+          <Post_Button>
             <button>게시</button>
-            <button>취소</button>
-          </div>
+            <button type="button" onClick={onClickBack}>
+              취소
+            </button>
+          </Post_Button>
         </form>
       </Post_section>
     </>

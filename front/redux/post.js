@@ -23,7 +23,10 @@ import {
   LOAD_COMMENTS_FAILURE,
   LOAD_MODAL_POST_REQUEST,
   LOAD_MODAL_POST_SUCCESS,
-  LOAD_MODAL_POST_FAILURE
+  LOAD_MODAL_POST_FAILURE,
+  LOAD_CATEGORY_POSTS_REQUEST,
+  LOAD_CATEGORY_POSTS_SUCCESS,
+  LOAD_CATEGORY_POSTS_FAILURE
 } from "./actions/postAction";
 
 export const initialState = {
@@ -61,9 +64,11 @@ export default (state = initialState, action) => {
         break;
       }
       //게시글 불러오기
+      //카테고리별 게시글 불러오기
       case LOAD_POSTS_REQUEST: {
         break;
       }
+      case LOAD_CATEGORY_POSTS_SUCCESS:
       case LOAD_POSTS_SUCCESS: {
         draft.mainPosts = action.data;
         break;

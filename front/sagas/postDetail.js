@@ -185,7 +185,6 @@ function* watchAddPostStorage() {
 
 //게시글 저장 취소
 function removePostStorageApi(postId) {
-  console.log(postId);
   return axios.delete(`/user/${postId}/removePostStorage`, {
     withCredentials: true
   });

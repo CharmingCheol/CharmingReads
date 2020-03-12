@@ -99,7 +99,10 @@ const User = ({ id }) => {
   const onScrollPosts = useCallback(() => {
     if (document.documentElement.scrollHeight - scrollY < 750) {
       if (tab01.current.className === "grid") {
-        if (hasMoreUserPost !== userInfo.Posts[userInfo.Posts.length - 1].id) {
+        if (
+          hasMoreUserPost !== userInfo &&
+          userInfo.Posts[userInfo.Posts.length - 1].id
+        ) {
           dispatch({
             type: LOAD_USER_POSTS_REQUEST,
             userId: id,
