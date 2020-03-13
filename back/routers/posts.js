@@ -40,7 +40,8 @@ router.get("/:word", async (req, res, next) => {
     console.log(
       req.query.lastId,
       req.query.limit,
-      "asldfhsdifjsiohioshigodhio"
+      decodeURIComponent(req.params.word),
+      "시작부분"
     );
     let where = {};
     if (parseInt(req.query.lastId, 10)) {

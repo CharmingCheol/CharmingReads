@@ -32,7 +32,8 @@ import {
 export const initialState = {
   image: null,
   mainPosts: [],
-  modalPost: []
+  modalPost: [],
+  hasMoreCategoryPosts: null
 };
 
 export default (state = initialState, action) => {
@@ -70,7 +71,14 @@ export default (state = initialState, action) => {
       }
       case LOAD_CATEGORY_POSTS_SUCCESS:
       case LOAD_POSTS_SUCCESS: {
-        draft.mainPosts = action.data;
+        if (!action.data) {
+          return;
+        }
+        if (action.type === LOAD_CATEGORY_POSTS_SUCCESS) {
+          action.data.forEach(post => draft.mainPosts.push(post));
+          draft.hasMoreCategoryPosts = action.data.length === 9;
+          return;
+        }
         break;
       }
       case LOAD_POSTS_FAILURE: {

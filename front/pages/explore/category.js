@@ -1,7 +1,9 @@
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+
 import { LOAD_CATEGORY_POSTS_REQUEST } from "../../redux/actions/postAction";
-import Book from "../../Components/Home/BookImage";
+import CategoryBook from "../../Components/Category";
 
 const Category_Section = styled.div`
   & div:first-child {
@@ -12,8 +14,47 @@ const Category_Section = styled.div`
   }
 `;
 
+const Categoty_Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 10px;
+  & div {
+    margin: 0 auto;
+    & img {
+      width: 25vw;
+      height: 30vw;
+      margin-bottom: 10px;
+    }
+  }
+`;
+
 const Category = ({ word }) => {
-  const { mainPosts } = useSelector(state => state.postReducer);
+  const { mainPosts, hasMoreCategoryPosts } = useSelector(
+    state => state.postReducer
+  );
+  const dispatch = useDispatch();
+
+  const onScrollPosts = useCallback(() => {
+    if (pageYOffset >= 500) {
+      if (hasMoreCategoryPosts) {
+        dispatch({
+          type: LOAD_CATEGORY_POSTS_REQUEST,
+          data: {
+            word,
+            lastId: mainPosts[mainPosts.length - 1].id
+          }
+        });
+      }
+    }
+  }, [mainPosts, hasMoreCategoryPosts]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScrollPosts);
+    return () => {
+      window.removeEventListener("scroll", onScrollPosts);
+    };
+  }, [mainPosts, hasMoreCategoryPosts]);
+
   return (
     <>
       <Category_Section>
@@ -23,9 +64,11 @@ const Category = ({ word }) => {
         </div>
         <div>
           <h3>게시물</h3>
-          {mainPosts.map(post => (
-            <Book key={post.id} post={post} />
-          ))}
+          <Categoty_Grid>
+            {mainPosts.map(post => {
+              return <CategoryBook key={post.id} post={post} />;
+            })}
+          </Categoty_Grid>
         </div>
       </Category_Section>
     </>
@@ -36,7 +79,9 @@ Category.getInitialProps = async context => {
   const word = context.query.word;
   context.store.dispatch({
     type: LOAD_CATEGORY_POSTS_REQUEST,
-    data: word
+    data: {
+      word
+    }
   });
   return { word };
 };

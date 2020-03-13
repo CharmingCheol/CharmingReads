@@ -95,16 +95,15 @@ function* watchloadPosts() {
 }
 
 //카테고리별 게시글 불러오기
-function categoryPostsApi(word, lastId = 0, limit = 9) {
+function categoryPostsApi(data) {
   return axios.get(
-    `/posts/${encodeURIComponent(word)}?lastId=${lastId}&limit=${limit}`
+    `/posts/${encodeURIComponent(data.word)}?lastId=${data.lastId || 0}&limit=9`
   );
 }
 
 function* categoryPosts(action) {
   try {
     const result = yield call(categoryPostsApi, action.data);
-    console.log(result);
     yield put({
       type: LOAD_CATEGORY_POSTS_SUCCESS,
       data: result.data
