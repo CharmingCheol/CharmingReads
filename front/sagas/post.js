@@ -13,7 +13,10 @@ import {
   LOAD_POSTS_REQUEST,
   LOAD_CATEGORY_POSTS_REQUEST,
   LOAD_CATEGORY_POSTS_FAILURE,
-  LOAD_CATEGORY_POSTS_SUCCESS
+  LOAD_CATEGORY_POSTS_SUCCESS,
+  LOAD_SEARCH_POSTS_REQUEST,
+  LOAD_SEARCH_POSTS_SUCCESS,
+  LOAD_SEARCH_POSTS_FAILURE
 } from "../redux/actions/postAction";
 
 //이미지 불러오기
@@ -120,11 +123,40 @@ function* watchcategoryPosts() {
   yield takeLatest(LOAD_CATEGORY_POSTS_REQUEST, categoryPosts);
 }
 
+//게시글 불러오기
+function loadsearchPostsApi(data) {
+  return axios.get(
+    `/posts/search/${encodeURIComponent(data.word)}
+    ?lastId=${data.lastId || 0}&limit=9`
+  );
+}
+
+function* loadsearchPosts(action) {
+  try {
+    const result = yield call(loadsearchPostsApi, action.data);
+    console.log(result.data);
+    yield put({
+      type: LOAD_SEARCH_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_SEARCH_POSTS_FAILURE
+    });
+  }
+}
+
+function* watchLoadSearchPosts() {
+  yield takeLatest(LOAD_SEARCH_POSTS_REQUEST, loadsearchPosts);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPostImage),
     fork(watchPost),
     fork(watchloadPosts),
-    fork(watchcategoryPosts)
+    fork(watchcategoryPosts),
+    fork(watchLoadSearchPosts)
   ]);
 }

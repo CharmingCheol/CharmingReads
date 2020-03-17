@@ -26,14 +26,16 @@ import {
   LOAD_MODAL_POST_FAILURE,
   LOAD_CATEGORY_POSTS_REQUEST,
   LOAD_CATEGORY_POSTS_SUCCESS,
-  LOAD_CATEGORY_POSTS_FAILURE
+  LOAD_CATEGORY_POSTS_FAILURE,
+  LOAD_SEARCH_POSTS_SUCCESS
 } from "./actions/postAction";
 
 export const initialState = {
   image: null,
   mainPosts: [],
   modalPost: [],
-  hasMoreCategoryPosts: null
+  hasMoreCategoryPosts: null,
+  hasMoreSearchPosts: null
 };
 
 export default (state = initialState, action) => {
@@ -67,17 +69,28 @@ export default (state = initialState, action) => {
       //게시글 불러오기
       //카테고리별 게시글 불러오기
       case LOAD_POSTS_REQUEST: {
+        draft.mainPosts = [];
         break;
       }
+      case LOAD_SEARCH_POSTS_SUCCESS:
       case LOAD_CATEGORY_POSTS_SUCCESS:
       case LOAD_POSTS_SUCCESS: {
         if (!action.data) {
+          return;
+        }
+        if (action.type === LOAD_POSTS_SUCCESS) {
+          console.log(action.data);
+          action.data.forEach(post => draft.mainPosts.push(post));
           return;
         }
         if (action.type === LOAD_CATEGORY_POSTS_SUCCESS) {
           action.data.forEach(post => draft.mainPosts.push(post));
           draft.hasMoreCategoryPosts = action.data.length === 9;
           return;
+        }
+        if (action.type === LOAD_SEARCH_POSTS_SUCCESS) {
+          action.data.forEach(post => draft.mainPosts.push(post));
+          draft.hasMoreSearchPosts = action.data.length === 9;
         }
         break;
       }

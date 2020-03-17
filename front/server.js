@@ -48,6 +48,10 @@ app.prepare().then(() => {
     return app.render(req, res, "/explore/category", { word: req.params.word });
   });
 
+  server.get("/search/:word", (req, res) => {
+    return app.render(req, res, "/search", { word: req.params.word });
+  });
+
   server.get("*", (req, res) => {
     return handle(req, res);
   });

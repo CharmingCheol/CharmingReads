@@ -23,15 +23,21 @@ const Home = () => {
       });
     }
   }, [me && me.id]);
+
   return (
     <>
       <div>
-        <div>내가 쓴 최신글</div>
+        <h3>내가 쓴 최신글</h3>
         <Grid>
-          {mainPosts.map(post => {
-            return <Book key={post.id} post={post} />;
-          })}
+          {mainPosts
+            ? mainPosts.map(post => {
+                return <Book key={post.id} post={post} />;
+              })
+            : null}
         </Grid>
+        <div>
+          <h3>친구가 작성한 추천 책</h3>
+        </div>
       </div>
     </>
   );

@@ -88,4 +88,42 @@ router.get("/:word", async (req, res, next) => {
   }
 });
 
+//게시글 검색
+router.get("/search/:word", async (req, res, next) => {
+  try {
+    console.log(
+      "dsfsdfsdfdsfsdfsd",
+      decodeURIComponent(req.params.word.trim()),
+      req.query.lastId,
+      req.query.limit
+    );
+    let where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      where = {
+        title: {
+          [db.Sequelize.Op.regexp]: decodeURIComponent(req.params.word.trim())
+        },
+        id: {
+          [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10)
+        }
+      };
+    } else {
+      where = {
+        title: {
+          [db.Sequelize.Op.regexp]: decodeURIComponent(req.params.word.trim())
+        }
+      };
+    }
+    const posts = await db.Post.findAll({
+      where,
+      limit: parseInt(req.query.limit, 10),
+      order: [["createdAt", "DESC"]]
+    });
+    return res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;

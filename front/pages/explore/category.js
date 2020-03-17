@@ -1,32 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useCallback } from "react";
-import styled from "styled-components";
 
 import { LOAD_CATEGORY_POSTS_REQUEST } from "../../redux/actions/postAction";
 import CategoryBook from "../../Components/Category";
-
-const Category_Section = styled.div`
-  & div:first-child {
-    & h3 {
-      margin-bottom: 10px;
-    }
-    margin-bottom: 30px;
-  }
-`;
-
-const Categoty_Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  margin-top: 10px;
-  & div {
-    margin: 0 auto;
-    & img {
-      width: 25vw;
-      height: 30vw;
-      margin-bottom: 10px;
-    }
-  }
-`;
+import {
+  Category_Section,
+  Categoty_Grid
+} from "../../Components/Category/style";
 
 const Category = ({ word }) => {
   const { mainPosts, hasMoreCategoryPosts } = useSelector(

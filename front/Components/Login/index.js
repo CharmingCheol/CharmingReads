@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { LogInForm, LogInMain } from "./style";
 import { useInput } from "../SignUp";
 import { LOG_IN_REQUEST, KAKAO_REQUEST } from "../../redux/actions/userAction";
-import Link from "next/link";
 
 const LoginForm = () => {
   const [id, onChangeId] = useInput("");
