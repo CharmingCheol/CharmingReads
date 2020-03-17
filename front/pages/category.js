@@ -1,12 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useCallback } from "react";
 
-import { LOAD_CATEGORY_POSTS_REQUEST } from "../../redux/actions/postAction";
-import CategoryBook from "../../Components/Category";
-import {
-  Category_Section,
-  Categoty_Grid
-} from "../../Components/Category/style";
+import { LOAD_CATEGORY_POSTS_REQUEST } from "../redux/actions/postAction";
+import CategoryBook from "../Components/Category";
+import { Category_Section, Categoty_Grid } from "../Components/Category/style";
 
 const Category = ({ word }) => {
   const { mainPosts, hasMoreCategoryPosts } = useSelector(

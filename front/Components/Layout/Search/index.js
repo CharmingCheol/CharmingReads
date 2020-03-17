@@ -30,7 +30,7 @@ const Search = () => {
           <input
             value={word}
             onChange={onChangeWord}
-            placeholder="저자, 책 이름, 해시태그 검색"
+            placeholder="책 이름 검색"
           />
         </form>
       </Input>

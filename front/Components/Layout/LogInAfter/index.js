@@ -18,7 +18,7 @@ const LogInAfter = () => {
     <>
       <LogInAfterLayout>
         <div>
-          <div>{`${me.nickName}님 안녕하세요`}</div>
+          <h3>{`${me.nickName}님 안녕하세요`}</h3>
           <LogInAfterButton onClick={onClickLogout}>로그아웃</LogInAfterButton>
         </div>
         <Link

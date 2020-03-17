@@ -8,9 +8,9 @@ const Title = ({ title }) => {
         href={{ pathname: "/explore/category", query: { word: title } }}
         as={`/explore/category/${title}`}
       >
-        <a>
-          <li>{title}</li>
-        </a>
+        <li>
+          <a>{title}</a>
+        </li>
       </Link>
     </>
   );

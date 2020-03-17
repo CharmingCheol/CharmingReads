@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState, useEffect } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 
@@ -35,8 +35,6 @@ const User = ({ id }) => {
     me && me.Follow ? me.Follow.find(user => user.id === id) : null;
   const tab01 = useRef();
   const tab02 = useRef();
-
-  console.log(userInfo);
 
   //팔로우 토글
   const followToggle = useCallback(() => {
@@ -210,7 +208,6 @@ const User = ({ id }) => {
             </div>
           </User_Inrtoduce>
         </Fixed>
-
         <User_Tab_Section>
           <ul>
             <li onClick={onClickTab}>

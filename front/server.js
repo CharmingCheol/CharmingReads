@@ -45,7 +45,7 @@ app.prepare().then(() => {
   });
 
   server.get("/explore/category/:word", (req, res) => {
-    return app.render(req, res, "/explore/category", { word: req.params.word });
+    return app.render(req, res, "/category", { word: req.params.word });
   });
 
   server.get("/search/:word", (req, res) => {
