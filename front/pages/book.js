@@ -80,7 +80,6 @@ const Book = ({ id }) => {
       });
     }
   }, [stored, id]);
-  console.log(modalPost);
 
   return (
     <>

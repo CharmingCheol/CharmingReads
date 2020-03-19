@@ -27,13 +27,17 @@ import {
   LOAD_CATEGORY_POSTS_REQUEST,
   LOAD_CATEGORY_POSTS_SUCCESS,
   LOAD_CATEGORY_POSTS_FAILURE,
-  LOAD_SEARCH_POSTS_SUCCESS
+  LOAD_SEARCH_POSTS_SUCCESS,
+  LOAD_FOLLOW_POSTS_REQUEST,
+  LOAD_FOLLOW_POSTS_SUCCESS,
+  LOAD_FOLLOW_POSTS_FAILURE
 } from "./actions/postAction";
 
 export const initialState = {
   image: null,
   mainPosts: [],
   modalPost: [],
+  followPosts: [],
   hasMoreCategoryPosts: null,
   hasMoreSearchPosts: null
 };
@@ -153,6 +157,17 @@ export default (state = initialState, action) => {
         break;
       }
       case LOAD_MODAL_POST_FAILURE: {
+        break;
+      }
+      //팔로우 게시글 불러오기
+      case LOAD_FOLLOW_POSTS_REQUEST: {
+        break;
+      }
+      case LOAD_FOLLOW_POSTS_SUCCESS: {
+        draft.followPosts = action.data;
+        break;
+      }
+      case LOAD_FOLLOW_POSTS_FAILURE: {
         break;
       }
     }

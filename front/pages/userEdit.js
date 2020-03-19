@@ -16,7 +16,6 @@ const UserEdit = () => {
   const [editId, onEditId] = useInput();
   const [editPassword, onEditPassword] = useInput();
   const [editText, onEditText] = useInput();
-  console.log(me);
 
   const onSubmitEdit = useCallback(
     event => {

@@ -1,21 +1,21 @@
 import React from "react";
 import Link from "next/link";
-import { Image } from "./style";
+import { Image, Book_Layout } from "./style";
 
 const Book = ({ post }) => {
   return (
     <>
-      <div>
+      <Book_Layout>
         <Link
           href={{ pathname: "/book", query: { id: post.id } }}
           as={`/book/${post.id}`}
         >
           <a>
             <Image src={post.src} />
-            <div>{post.title}</div>
+            <h3>{post.title}</h3>
           </a>
         </Link>
-      </div>
+      </Book_Layout>
     </>
   );
 };

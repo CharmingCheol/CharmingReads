@@ -16,7 +16,10 @@ import {
   LOAD_CATEGORY_POSTS_SUCCESS,
   LOAD_SEARCH_POSTS_REQUEST,
   LOAD_SEARCH_POSTS_SUCCESS,
-  LOAD_SEARCH_POSTS_FAILURE
+  LOAD_SEARCH_POSTS_FAILURE,
+  LOAD_FOLLOW_POSTS_SUCCESS,
+  LOAD_FOLLOW_POSTS_FAILURE,
+  LOAD_FOLLOW_POSTS_REQUEST
 } from "../redux/actions/postAction";
 
 //이미지 불러오기
@@ -151,12 +154,42 @@ function* watchLoadSearchPosts() {
   yield takeLatest(LOAD_SEARCH_POSTS_REQUEST, loadsearchPosts);
 }
 
+//팔로우 게시글 불러오기
+function loadFollowPostsApi(data) {
+  console.log("asdadasdasdsa", data);
+  return axios.get(
+    `/posts/follow/${parseInt(data.userId, 10) || 0}
+    ?lastId=${data.lastId || 0}&limit=9`,
+    { withCredentials: true }
+  );
+}
+
+function* loadFollowPosts(action) {
+  try {
+    const result = yield call(loadFollowPostsApi, action.data);
+    yield put({
+      type: LOAD_FOLLOW_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_FOLLOW_POSTS_FAILURE
+    });
+  }
+}
+
+function* watchLoadFollowPosts() {
+  yield takeLatest(LOAD_FOLLOW_POSTS_REQUEST, loadFollowPosts);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPostImage),
     fork(watchPost),
     fork(watchloadPosts),
     fork(watchcategoryPosts),
-    fork(watchLoadSearchPosts)
+    fork(watchLoadSearchPosts),
+    fork(watchLoadFollowPosts)
   ]);
 }

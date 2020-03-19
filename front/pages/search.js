@@ -11,8 +11,6 @@ const Search = ({ word }) => {
     state => state.postReducer
   );
 
-  console.log(hasMoreSearchPosts, mainPosts[mainPosts.length - 1].id);
-
   const onScrollPosts = useCallback(() => {
     if (pageYOffset >= 600) {
       if (hasMoreSearchPosts) {

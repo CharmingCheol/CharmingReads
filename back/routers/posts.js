@@ -126,4 +126,51 @@ router.get("/search/:word", async (req, res, next) => {
   }
 });
 
+//팔로우 게시글 불러오기
+router.get("/follow/:id", async (req, res, next) => {
+  try {
+    const user = await db.User.findOne({
+      where: {
+        id: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0
+      },
+      include: [
+        {
+          model: db.User,
+          as: "Follow",
+          attributes: ["id"]
+        }
+      ]
+    });
+    const test = Object.assign({}, user.toJSON());
+    let followId = []; //유저 팔로우 id를 담은 배열
+    test.Follow.forEach(follow => followId.push(follow.id));
+    let where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      where = {
+        UserId: {
+          [db.Sequelize.Op.or]: followId
+        },
+        id: {
+          [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10)
+        }
+      };
+    } else {
+      where = {
+        UserId: {
+          [db.Sequelize.Op.or]: followId
+        }
+      };
+    }
+    const posts = await db.Post.findAll({
+      where,
+      limit: parseInt(req.query.limit, 10),
+      order: [["createdAt", "DESC"]]
+    });
+    return res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;

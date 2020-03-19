@@ -45,6 +45,11 @@ export const User_Info_Friends = styled.div`
 `;
 
 export const User_Inrtoduce = styled.div`
+  /* background: red; */
+  height: 35%;
+  padding: 1rem;
+  border: 1px solid #666;
+  border-radius: 2rem;
   font-size: 1rem;
   & div:first-child {
     margin-bottom: 1.5em;

@@ -24,6 +24,7 @@ import styled from "styled-components";
 
 const Fixed = styled.div`
   position: fixed;
+  height: 100%;
 `;
 
 const User = ({ id }) => {

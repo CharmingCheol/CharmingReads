@@ -1,7 +1,28 @@
 import styled from "styled-components";
 
-export const Image = styled.img`
-  width: 10vw;
-  height: 15vw;
-  margin: 20px 0 5px 0;
+export const Image = styled.img``;
+
+export const Book_Layout = styled.div`
+  width: 50%;
+  padding: 1rem;
+  a {
+    display: block;
+    width: 100%;
+    /* display: flex;
+    flex-direction: column; */
+    img {
+      width: 100%;
+      height: 40vh;
+    }
+    h3 {
+      text-align: center;
+    }
+  }
+  @media (min-width: 650px) {
+    width: 33%;
+  }
+
+  @media (min-width: 950px) {
+    width: 20%;
+  }
 `;
