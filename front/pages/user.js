@@ -14,18 +14,9 @@ import UserPopup from "../Components/User/UserPopup";
 import {
   User_Section,
   User_Info,
-  User_Info_Section,
   User_Info_Friends,
-  User_Inrtoduce,
   User_Tab_Section
 } from "../Components/User/style";
-
-import styled from "styled-components";
-
-const Fixed = styled.div`
-  position: fixed;
-  height: 100%;
-`;
 
 const User = ({ id }) => {
   const { me, userInfo, hasMoreUserPost, hasMoreUserSavedPost } = useSelector(
@@ -71,15 +62,15 @@ const User = ({ id }) => {
   const onClickTab = useCallback(
     event => {
       if (event.target.classList.contains("fa-th")) {
-        tab01.current.style = "display:grid";
-        tab01.current.className = "grid";
+        tab01.current.style = "display:flex";
+        tab01.current.className = "flex";
         tab02.current.style = "display:none";
         tab02.current.className = "";
       } else {
         tab01.current.style = "display:none";
         tab01.current.className = "";
-        tab02.current.style = "display:grid";
-        tab02.current.className = "grid";
+        tab02.current.style = "display:flex";
+        tab02.current.className = "flex";
       }
     },
     [tab01, tab02]
@@ -97,7 +88,7 @@ const User = ({ id }) => {
   //게시글, 저장한 게시글 불러오기
   const onScrollPosts = useCallback(() => {
     if (document.documentElement.scrollHeight - scrollY < 750) {
-      if (tab01.current.className === "grid") {
+      if (tab01.current.className === "flex") {
         if (
           hasMoreUserPost !== userInfo &&
           userInfo.Posts[userInfo.Posts.length - 1].id
@@ -145,23 +136,19 @@ const User = ({ id }) => {
       <User_Section>
         {/* fixed하면 Grid 풀리는걸 해결하기 위해 임의의 div 태그 추가 */}
         <div></div>
-        <Fixed>
+        <div>
           <User_Info>
-            <img className="User-Info_Image" />
-            <User_Info_Section>
+            <img className="User-Info-Image" />
+            <div className="User-Info-Section">
+              <h3>{userInfo ? userInfo.nickName : null}</h3>
               <div>
-                <div>{userInfo ? userInfo.nickName : null}</div>
                 {me && userInfo && me.id === userInfo.id ? (
                   <>
                     <Link href="/post">
-                      <button className="User-Info-Section_Button Post_Button">
-                        게시글 추가
-                      </button>
+                      <button>게시글 추가</button>
                     </Link>
                     <Link href="/userEdit">
-                      <button className="User-Info-Section_Button Edit_Button">
-                        프로필 편집
-                      </button>
+                      <button>프로필 편집</button>
                     </Link>
                   </>
                 ) : me ? (
@@ -170,45 +157,43 @@ const User = ({ id }) => {
                   </button>
                 ) : null}
               </div>
-              <User_Info_Friends>
-                <div className="User-Info-Friends PostCount">{`게시글 ${
-                  userInfo ? userInfo.postCount : null
-                }`}</div>
-                <div className="User-Info-Friends FollowerCount">
-                  <div className="popup" onClick={FollowerPopup}>{`팔로워 ${
-                    userInfo ? userInfo.followerCount : null
-                  }`}</div>
-                  <div className="none">
-                    <UserPopup
-                      title="팔로워"
-                      userId={id}
-                      data={userInfo ? userInfo.Follower : null}
-                    />
-                  </div>
-                </div>
-                <div className="User-Info-Friends FollowCount">
-                  <div className="popup" onClick={FollowerPopup}>{`팔로우 ${
-                    userInfo ? userInfo.followCount : null
-                  }`}</div>
-                  <div className="none">
-                    <UserPopup
-                      title="팔로우"
-                      userId={id}
-                      data={userInfo ? userInfo.Follow : null}
-                    />
-                  </div>
-                </div>
-              </User_Info_Friends>
-            </User_Info_Section>
-          </User_Info>
-          <User_Inrtoduce>
-            <div>
-              {userInfo && userInfo.introduction
-                ? userInfo.introduction
-                : "소개글이 없습니다"}
             </div>
-          </User_Inrtoduce>
-        </Fixed>
+          </User_Info>
+          <h3 className="User-Introduce">
+            {userInfo && userInfo.introduction
+              ? userInfo.introduction
+              : "소개글이 없습니다"}
+          </h3>
+          <User_Info_Friends>
+            <h3 className="User-Info-Friends PostCount">{`게시글 ${
+              userInfo ? userInfo.postCount : null
+            }`}</h3>
+            <div className="User-Info-Friends FollowerCount">
+              <h3 className="popup" onClick={FollowerPopup}>{`팔로워 ${
+                userInfo ? userInfo.followerCount : null
+              }`}</h3>
+              <div className="none">
+                <UserPopup
+                  title="팔로워"
+                  userId={id}
+                  data={userInfo ? userInfo.Follower : null}
+                />
+              </div>
+            </div>
+            <div className="User-Info-Friends FollowCount">
+              <h3 className="popup" onClick={FollowerPopup}>{`팔로우 ${
+                userInfo ? userInfo.followCount : null
+              }`}</h3>
+              <div className="none">
+                <UserPopup
+                  title="팔로우"
+                  userId={id}
+                  data={userInfo ? userInfo.Follow : null}
+                />
+              </div>
+            </div>
+          </User_Info_Friends>
+        </div>
         <User_Tab_Section>
           <ul>
             <li onClick={onClickTab}>

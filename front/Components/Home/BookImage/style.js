@@ -12,7 +12,7 @@ export const Book_Layout = styled.div`
     flex-direction: column; */
     img {
       width: 100%;
-      height: 40vh;
+      height: 30%;
     }
     h3 {
       text-align: center;

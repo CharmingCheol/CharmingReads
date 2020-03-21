@@ -2,38 +2,42 @@ import styled from "styled-components";
 
 export const UserPost_HeartComment = styled.div`
   opacity: 0;
-  margin-bottom: 10px;
-  font-weight: 800;
+  font-weight: bold;
   color: #4d4d4d;
-  & i {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  div:first-child {
+    margin-bottom: 0.5rem;
+  }
+  i {
     margin-right: 10px;
   }
-`;
-
-export const UserPost_Image = styled.img`
-  width: 12vw;
-  height: 15vw;
-  margin: 0 0 10px 10px;
+  h3 {
+    display: inline;
+  }
 `;
 
 export const UserPost_Section = styled.div`
   position: relative;
-  /* & img {
-    width: 12vw;
-    height: 15vw;
-    margin: 0 0 10px 10px; */
-  .UserPost_Post-Info {
-    position: absolute;
-    top: 40%;
-    left: 40%;
+  width: 33%;
+  padding: 0.5rem;
+  figure {
+    height: 30vw;
+    background-image: url(${props => props.src});
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
   }
   &:hover {
-    ${UserPost_Image} {
-      opacity: 0.4;
-      filter: blur(0.1px);
-    }
     ${UserPost_HeartComment} {
       opacity: 1;
+    }
+  }
+  @media (min-width: 700px) {
+    width: 25%;
+    figure {
+      height: 25vw;
     }
   }
 `;

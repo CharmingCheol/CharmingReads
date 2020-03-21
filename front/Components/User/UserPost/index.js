@@ -1,10 +1,6 @@
 import React from "react";
 import Link from "next/Link";
-import {
-  UserPost_Section,
-  UserPost_HeartComment,
-  UserPost_Image
-} from "./style";
+import { UserPost_Section, UserPost_HeartComment } from "./style";
 
 //hover 했을 때 좋아요, 댓글 수 출력하는 부분 해야 함
 const UserPost = ({ post }) => {
@@ -14,21 +10,23 @@ const UserPost = ({ post }) => {
         href={{ pathname: "/book", query: { id: post.id } }}
         as={`/book/${post.id}`}
       >
-        <a>
-          <UserPost_Section>
-            <UserPost_Image src={post.src} />
+        <UserPost_Section className="UserPost_Post-Info" src={post.src}>
+          <a>
+            <figure></figure>
             <div className="UserPost_Post-Info">
               <UserPost_HeartComment>
-                <i className="fas fa-heart"></i>
-                <span>{post.Like.length}</span>
-              </UserPost_HeartComment>
-              <UserPost_HeartComment>
-                <i className="fas fa-comment"></i>
-                <span>{post.Comments.length}</span>
+                <div>
+                  <i className="fas fa-heart"></i>
+                  <h3>{post.Like.length}</h3>
+                </div>
+                <div>
+                  <i className="fas fa-comment"></i>
+                  <h3>{post.Comments.length}</h3>
+                </div>
               </UserPost_HeartComment>
             </div>
-          </UserPost_Section>
-        </a>
+          </a>
+        </UserPost_Section>
       </Link>
     </>
   );

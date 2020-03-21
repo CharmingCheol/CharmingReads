@@ -1,38 +1,62 @@
 import styled from "styled-components";
 
 export const User_Section = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  .User-Introduce {
+    font-size: 1rem;
+    margin-bottom: 1em;
+  }
 `;
 
 export const User_Info = styled.div`
   display: flex;
-  margin-bottom: 50px;
-  .User-Info_Image {
-    width: 10vw;
-    height: 10vw;
+  margin-bottom: 1.5rem;
+  .User-Info-Image {
+    width: 20vw;
+    height: 20vw;
+    border-radius: 50%;
     background-color: red;
-    margin-right: 10px;
+    margin-right: 20px;
   }
-`;
-
-export const User_Info_Section = styled.div`
-  .User-Info-Section_Button {
-    width: 100px;
-    height: 40px;
-    margin: 10px 10px 10px 0;
-    font-weight: 600;
-    background-color: #ecf0f1;
-    box-shadow: none;
+  .User-Info-Section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  button {
+    font-size: 0.8rem;
+    padding: 0.7em;
+    margin-right: 0.5em;
+    font-weight: bold;
+    background: #ecf0f1;
     border: 1px solid rgb(198, 201, 207);
-    border-radius: 10px;
+    border-radius: 1em;
     z-index: -10;
+    box-shadow: none;
+  }
+  h3 {
+    font-size: 4rem;
+    font-weight: 400;
+    margin-bottom: 0.1em;
+  }
+
+  @media (min-width: 1000px) {
+    .User-Info-Image {
+      width: 200px;
+      height: 200px;
+    }
   }
 `;
 
 export const User_Info_Friends = styled.div`
   display: flex;
-  margin: 0 0 25px 0;
+  justify-content: center;
+  padding: 1em 0 1em 0;
+  margin-bottom: 1.5em;
+  border-top: solid rgb(198, 201, 207);
+  border-bottom: solid rgb(198, 201, 207);
   .User-Info-Friends {
     margin-right: 25px;
   }
@@ -44,28 +68,23 @@ export const User_Info_Friends = styled.div`
   }
 `;
 
-export const User_Inrtoduce = styled.div`
-  /* background: red; */
-  height: 35%;
-  padding: 1rem;
-  border: 1px solid #666;
-  border-radius: 2rem;
-  font-size: 1rem;
-  & div:first-child {
-    margin-bottom: 1.5em;
-  }
-`;
-
 export const User_Tab_Section = styled.div`
-  & article {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    padding: 0;
+  ul {
+    display: flex;
+    padding: 1em;
+    li {
+      text-align: center;
+      width: 50%;
+    }
   }
-  & article:last-child {
+  article {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  article:last-child {
     display: none;
   }
+  /*
   & ul {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -75,5 +94,5 @@ export const User_Tab_Section = styled.div`
       align-items: center;
       padding: 0 0 20px 0;
     }
-  }
+  } */
 `;
