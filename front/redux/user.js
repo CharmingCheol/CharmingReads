@@ -109,6 +109,7 @@ export default (state = initialState, action) => {
       }
       //유저 정보 로드
       case LOAD_USER_REQUEST: {
+        draft.me = null;
         break;
       }
       case LOAD_USER_SUCCESS: {

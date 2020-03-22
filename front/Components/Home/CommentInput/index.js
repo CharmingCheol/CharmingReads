@@ -2,6 +2,12 @@ import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import StarRatings from "react-star-ratings";
 import { ADD_COMMENT_REQUEST } from "../../../redux/actions/postAction";
+import { Comment_Form } from "./style";
+
+import styled from "styled-components";
+const Comment_Ratings = styled(StarRatings)`
+  background: blue;
+`;
 
 const CommentInput = ({ id }) => {
   const dispatch = useDispatch();
@@ -21,7 +27,7 @@ const CommentInput = ({ id }) => {
 
   //댓글 달기 버튼 비활성화 해제
   const onChangeDisabled = useCallback(() => {
-    if (!comment || !comment.trim() || !star) {
+    if (!comment || !comment.trim()) {
       return onSubmitDisable(true);
     } else {
       return onSubmitDisable(false);
@@ -49,10 +55,12 @@ const CommentInput = ({ id }) => {
 
   return (
     <>
-      <form onSubmit={onSubmitComment}>
-        <img />
+      <Comment_Form onSubmit={onSubmitComment}>
         <div onChange={onChangeDisabled}>
-          <input onChange={commentInput} />
+          <textarea onChange={commentInput} />
+          <button disabled={submitDisable}>게시</button>
+        </div>
+        {/* <div onChange={onChangeDisabled}>
           <StarRatings
             rating={star}
             starRatedColor="blue"
@@ -61,8 +69,8 @@ const CommentInput = ({ id }) => {
             name="rating"
           />
         </div>
-        <button disabled={submitDisable}>댓글 작성 버튼</button>
-      </form>
+         */}
+      </Comment_Form>
     </>
   );
 };

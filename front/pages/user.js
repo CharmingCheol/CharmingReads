@@ -134,8 +134,6 @@ const User = ({ id }) => {
   return (
     <>
       <User_Section>
-        {/* fixed하면 Grid 풀리는걸 해결하기 위해 임의의 div 태그 추가 */}
-        <div></div>
         <div>
           <User_Info>
             <img className="User-Info-Image" />

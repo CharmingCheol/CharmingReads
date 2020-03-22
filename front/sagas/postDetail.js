@@ -106,13 +106,15 @@ function* watchAddCommentLike() {
 
 //댓글 불러오기
 function loadCommentsApi(loadCommentsData) {
-  return axios.post("/post/loadComments", loadCommentsData, {
+  console.log("loadCommentsData", loadCommentsData);
+  return axios.get(`/post/loadComments?postId=${loadCommentsData}`, {
     withCredentials: true
   });
 }
 
 function* loadComments(action) {
   try {
+    console.log("action.data", action.data);
     const result = yield call(loadCommentsApi, action.data);
     yield put({
       type: LOAD_COMMENTS_SUCCESS,
@@ -127,7 +129,7 @@ function* loadComments(action) {
   }
 }
 
-function* watchLoadCommentsLike() {
+function* watchLoadComments() {
   yield takeLatest(LOAD_COMMENTS_REQUEST, loadComments);
 }
 
@@ -214,7 +216,7 @@ export default function*() {
     fork(watchPostLike),
     fork(watcPostRemoveLike),
     fork(watchAddCommentLike),
-    fork(watchLoadCommentsLike),
+    fork(watchLoadComments),
     fork(watchLoadModal),
     fork(watchAddPostStorage),
     fork(watchRemovePostStorage)

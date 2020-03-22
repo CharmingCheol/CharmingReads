@@ -1,48 +1,73 @@
 import styled from "styled-components";
 
-export const BookModaLayout = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  & section:first-child {
-    grid-column: span 1;
+export const Book_Layout = styled.div``;
+
+export const Book_Main = styled.div`
+  h3 {
+    margin-bottom: 1rem;
   }
-  & section:last-child {
-    width: 100%;
-    height: 100%;
-    grid-column: span 2;
+  h3:first-child {
+    border: 1px solid rgb(198, 201, 207);
+    padding: 0.5rem;
+  }
+  figure {
+    background-image: url(${props => props.postSrc});
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 70%;
+    height: 0;
+    padding-bottom: 80%;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+  }
+`;
+
+export const Book_User_Info = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  figure {
+    background-image: url(${props =>
+      props.profileSrc
+        ? props.profileSrc
+        : "https://charmingbooks.s3.ap-northeast-2.amazonaws.com/basic/%EA%B8%B0%EB%B3%B8%EC%9D%B4%EB%AF%B8%EC%A7%80.PNG"});
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    height: 15vw;
+    width: 15vw;
+    border-radius: 50%;
+    margin-right: 1rem;
+  }
+  div {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    & img {
-      width: 200px;
-      height: 300px;
-      margin-bottom: 10px;
+    h3:first-child {
+      margin-bottom: 0.5rem;
     }
   }
 `;
 
-export const BookModalTabMenu = styled.div`
-  position: relative;
-  & ul {
-    margin: 10px 0 10px 0;
-    list-style: none;
-    display: flex;
-    flex-basis: 0;
-    & li {
-      flex: 1;
-      text-align: center;
-      padding: 1rem;
-    }
+export const Book_Comment_Menu = styled.ul`
+  display: flex;
+  margin-bottom: 1rem;
+  li {
+    width: 50%;
+    text-align: center;
   }
 `;
 
-export const ModalCommentList = styled.ul`
-  position: absolute;
+export const Book_Comment_List = styled.ul`
+  width: 100%;
+  height: 100px;
+  background: red;
+  /* position: absolute;
   display: flex;
   flex-direction: column;
   top: 50px;
   left: 0;
-  width: 100%;
+ 
   height: 250%;
   padding: 5px;
   word-break: break-word;
@@ -53,5 +78,5 @@ export const ModalCommentList = styled.ul`
   -ms-overflow-style: none;
   ::-webkit-scrollbar {
     display: none;
-  }
+  } */
 `;

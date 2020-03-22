@@ -5,10 +5,6 @@ module.exports = (sequelize, DataTypes) => {
       content: {
         type: DataTypes.TEXT,
         allowNull: false
-      },
-      rating: {
-        type: DataTypes.INTEGER,
-        allowNull: false
       }
     },
     {

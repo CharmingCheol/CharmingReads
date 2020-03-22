@@ -139,6 +139,7 @@ export default (state = initialState, action) => {
       }
       //댓글 불러오기
       case LOAD_COMMENTS_REQUEST: {
+        draft.modalPost.Comments = null;
         break;
       }
       case LOAD_COMMENTS_SUCCESS: {
@@ -150,6 +151,7 @@ export default (state = initialState, action) => {
       }
       //modal 불러오기
       case LOAD_MODAL_POST_REQUEST: {
+        draft.modalPost = null;
         break;
       }
       case LOAD_MODAL_POST_SUCCESS: {

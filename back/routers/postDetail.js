@@ -32,7 +32,6 @@ router.post("/addComment", async (req, res, next) => {
   try {
     const newComment = await db.Comment.create({
       content: req.body.comment,
-      rating: req.body.star,
       PostId: req.body.postId,
       UserId: req.user.id
     });
@@ -57,11 +56,11 @@ router.post("/addComment", async (req, res, next) => {
 });
 
 //댓글 불러오기
-router.post("/loadComments", async (req, res, next) => {
+router.get("/loadComments", async (req, res, next) => {
   try {
+    console.log(req.query.postId, "queryyyyy");
     const comments = await db.Comment.findAll({
-      where: { PostId: req.body.postId },
-      // attributes: ["id", "content", "rating", "UserId"],
+      where: { PostId: req.query.postId },
       include: [
         {
           model: db.User,
@@ -101,9 +100,9 @@ router.get("/:id/loadModal", async (req, res, next) => {
         }
       ]
     });
-    const returnPost = Object.assign({}, post.toJSON());
-    delete returnPost.User.password;
-    return res.status(200).json(returnPost);
+    // const returnPost = Object.assign({}, post.toJSON());
+    // delete returnPost.User.password;
+    return res.status(200).json(post);
   } catch (error) {
     console.error(error);
     next(error);
