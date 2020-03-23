@@ -136,17 +136,23 @@ const User = ({ id }) => {
       <User_Section>
         <div>
           <User_Info>
-            <img className="User-Info-Image" />
-            <div className="User-Info-Section">
+            <div className="User-Info">
+              <img className="User-Info-Image" />
               <h3>{userInfo ? userInfo.nickName : null}</h3>
-              <div>
+            </div>
+            <div className="User-Info-Section">
+              <div className="User-Info-Buttons">
                 {me && userInfo && me.id === userInfo.id ? (
                   <>
                     <Link href="/post">
-                      <button>게시글 추가</button>
+                      <a>
+                        <button>게시글 추가</button>
+                      </a>
                     </Link>
                     <Link href="/userEdit">
-                      <button>프로필 편집</button>
+                      <a>
+                        <button>프로필 편집</button>
+                      </a>
                     </Link>
                   </>
                 ) : me ? (

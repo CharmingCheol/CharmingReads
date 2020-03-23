@@ -6,8 +6,8 @@ export const LogInAfterLayout = styled.div`
 `;
 
 export const LogInAfterImage = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 2rem;
   margin-left: 1vw;
 `;

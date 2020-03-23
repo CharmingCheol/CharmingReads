@@ -1,66 +1,20 @@
 import React, { useRef, useCallback, useState } from "react";
 import Router from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
-import Link from "next/link";
 
+import { useDispatch, useSelector } from "react-redux";
 import { useInput } from "../Components/SignUp";
 import {
   LOAD_POST_IMAGE_REQUEST,
   ADD_POST_REQUEST
 } from "../redux/actions/postAction";
-
-const Post_section = styled.div``;
-
-const Image = styled.img`
-  width: 150px;
-  height: 150px;
-  display: none;
-`;
-
-const Post_Input = styled.div`
-  & div {
-    display: flex;
-    margin-bottom: 10px;
-    & h3 {
-      width: 80px;
-      margin-right: 10px;
-    }
-    & input {
-      width: 50vw;
-    }
-  }
-`;
-
-const Post_Confirm = styled.div`
-  position: relative;
-  &:hover ${Image} {
-    display: block;
-    position: absolute;
-    left: 120px;
-    transform: scale(2);
-    transform-origin: left top;
-  }
-`;
-
-const Post_Payload = styled.div`
-  & textarea {
-    width: 100%;
-    height: 50vw;
-    padding: 30px;
-    margin: 10px 0 10px 0;
-  }
-`;
-
-const Post_Button = styled.div`
-  float: right;
-  & button {
-    margin-bottom: 30px;
-    &:first-child {
-      margin-right: 10px;
-    }
-  }
-`;
+import {
+  Post_section,
+  Post_Input,
+  Post_Confirm,
+  Post_Image,
+  Post_Payload,
+  Post_Button
+} from "../Components/Post/style";
 
 const Post = () => {
   const [title, onTitle] = useInput();
@@ -118,66 +72,59 @@ const Post = () => {
 
   return (
     <>
-      <Post_section>
-        <form encType="multipart/form-data" onSubmit={onSubmitPost}>
-          <Post_Input>
-            <div>
-              <h3>카테고리</h3>
-              <select
-                onChange={e => {
-                  onChangeCategory(e);
-                }}
-              >
-                <option value="카테고리 선택">카테고리 선택</option>
-                <option value="소설">소설</option>
-                <option value="에세이">에세이</option>
-                <option value="인문학">인문학</option>
-                <option value="자기계발">자기계발</option>
-                <option value="역사">역사</option>
-                <option value="과학">과학</option>
-                <option value="예술">예술</option>
-                <option value="종교">종교</option>
-                <option value="경제">경제</option>
-                <option value="외국어">외국어</option>
-                <option value="컴퓨터">컴퓨터</option>
-                <option value="수험서">수험서</option>
-              </select>
-            </div>
-            <div>
-              <h3>제목</h3>
-              <input onChange={onTitle} />
-            </div>
-            <Post_Confirm>
-              <h3>사진 선택</h3>
-              <i className="fas fa-book" onClick={clickPostImage}></i>
-              <input
-                required
-                hidden
-                type="file"
-                accept="image/*"
-                ref={postImage}
-                onChange={changePostImage}
-              />
-              <Image src={image} />
-            </Post_Confirm>
-            <div>
-              <h5>
-                사진 선택 텍스트에 마우스를 올리시면 등록한 사진을 볼 수
-                있습니다
-              </h5>
-            </div>
-          </Post_Input>
-          <Post_Payload>
-            <h3>내용</h3>
-            <textarea onChange={onContent}></textarea>
-          </Post_Payload>
-          <Post_Button>
-            <button>게시</button>
-            <button type="button" onClick={onClickBack}>
-              취소
-            </button>
-          </Post_Button>
-        </form>
+      <Post_section
+        postImg={image}
+        encType="multipart/form-data"
+        onSubmit={onSubmitPost}
+      >
+        <div>
+          <h3>사진 등록</h3>
+          <input
+            required
+            hidden
+            type="file"
+            accept="image/*"
+            ref={postImage}
+            onChange={changePostImage}
+          />
+          <figure onClick={clickPostImage} />
+        </div>
+        <div>
+          <h3>카테고리</h3>
+          <select
+            onChange={e => {
+              onChangeCategory(e);
+            }}
+          >
+            <option value="카테고리 선택">카테고리 선택</option>
+            <option value="소설">소설</option>
+            <option value="에세이">에세이</option>
+            <option value="인문학">인문학</option>
+            <option value="자기계발">자기계발</option>
+            <option value="역사">역사</option>
+            <option value="과학">과학</option>
+            <option value="예술">예술</option>
+            <option value="종교">종교</option>
+            <option value="경제">경제</option>
+            <option value="외국어">외국어</option>
+            <option value="컴퓨터">컴퓨터</option>
+            <option value="수험서">수험서</option>
+          </select>
+        </div>
+        <div>
+          <h3>제목</h3>
+          <input onChange={onTitle} />
+        </div>
+        <div>
+          <h3>내용</h3>
+          <textarea onChange={onContent}></textarea>
+        </div>
+        <div>
+          <button>게시</button>
+          <button type="button" onClick={onClickBack}>
+            취소
+          </button>
+        </div>
       </Post_section>
     </>
   );

@@ -25,17 +25,12 @@ const Home = () => {
   const dispatch = useDispatch();
   const onScrollPosts = useCallback(() => {}, []);
 
-  // useEffect(() => {
-  //   if (me) {
-  //     dispatch({
-  //       type: LOAD_POSTS_REQUEST
-  //     });
-  //     dispatch({
-  //       type: LOAD_FOLLOW_POSTS_REQUEST
-  //     });
-  //   }
-  //   window.addEventListener("scroll", onScrollPosts);
-  // }, [me && me.id]);
+  useEffect(() => {
+    window.addEventListener("scroll", onScrollPosts);
+    return () => {
+      window.removeEventListener("scroll", onScrollPosts);
+    };
+  }, []);
 
   return (
     <>

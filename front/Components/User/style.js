@@ -12,34 +12,47 @@ export const User_Section = styled.div`
 
 export const User_Info = styled.div`
   display: flex;
+  flex-direction: column;
   margin-bottom: 1.5rem;
+  .User-Info {
+    display: flex;
+  }
   .User-Info-Image {
-    width: 20vw;
-    height: 20vw;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     background-color: red;
-    margin-right: 20px;
+    margin: 0 1rem 1rem 0;
   }
   .User-Info-Section {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
+  .User-Info-Buttons {
+    display: flex;
+  }
   button {
     font-size: 0.8rem;
-    padding: 0.7em;
+    padding: 0.5em;
     margin-right: 0.5em;
     font-weight: bold;
     background: #ecf0f1;
     border: 1px solid rgb(198, 201, 207);
     border-radius: 1em;
-    z-index: -10;
     box-shadow: none;
   }
   h3 {
     font-size: 4rem;
     font-weight: 400;
     margin-bottom: 0.1em;
+  }
+
+  @media (min-width: 600px) {
+    .User-Info-Image {
+      width: 150px;
+      height: 150px;
+    }
   }
 
   @media (min-width: 1000px) {
@@ -65,6 +78,9 @@ export const User_Info_Friends = styled.div`
   }
   .none {
     display: none;
+  }
+  h3 {
+    font-size: 0.8rem;
   }
 `;
 

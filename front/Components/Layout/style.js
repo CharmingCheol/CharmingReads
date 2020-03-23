@@ -4,7 +4,7 @@ export const Menu = styled.div`
   z-index: 20;
   top: 0;
   left: 0;
-  height: 100px;
+  height: 80px;
   width: 100%;
   position: fixed;
   background-color: rgba(204, 174, 98, 1);

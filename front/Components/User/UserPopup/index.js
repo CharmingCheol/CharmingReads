@@ -1,54 +1,12 @@
-import React, { useCallback, useRef, useEffect } from "react";
-import styled from "styled-components";
+import React, { useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   LOAD_FOLLOW_REQUEST,
   LOAD_FOLLOWER_REQUEST
 } from "../../../redux/actions/userAction";
 import UserFollowList from "./UserFollowList";
-
-const PopupSection = styled.div`
-  position: fixed;
-  top: 25%;
-  left: 35%;
-  width: 30%;
-  height: 60%;
-  padding: 20px 30px 40px 30px;
-
-  z-index: 10;
-  border: 1px solid #d9d9d9;
-  border-radius: 20px;
-  overflow: hidden;
-  background: white;
-  .PopupSection_title {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    justify-content: center;
-    grid-template-columns: repeat(3, 1fr);
-    border-bottom: 1px solid #d9d9d9;
-    margin-bottom: 20px;
-    & h1 {
-      text-align: center;
-    }
-    & button {
-      z-index: 15;
-      background: none;
-      width: 24px;
-      height: 24px;
-      justify-self: right;
-      border: none;
-    }
-  }
-  .PopupSection_main {
-    height: 100%;
-    overflow: scroll;
-    -ms-overflow-style: none;
-    ::-webkit-scrollbar {
-      display: none;
-    }
-  }
-`;
+import { PopupSection } from "./style";
 
 const UserPopup = ({ title, userId, data }) => {
   const dispatch = useDispatch();
@@ -103,24 +61,30 @@ const UserPopup = ({ title, userId, data }) => {
   return (
     <>
       <PopupSection ref={popupRef}>
-        <div className="PopupSection_title">
-          <div></div>
-          <h1>{title}</h1>
-          <button onClick={closePopup}>X</button>
-        </div>
-        <div className="PopupSection_main" ref={listRef} onScroll={listScroll}>
-          <ul>
-            {data
-              ? data.map(data => {
-                  return (
-                    <UserFollowList
-                      key={data.id + Math.random() * 10}
-                      data={data}
-                    />
-                  );
-                })
-              : null}
-          </ul>
+        <div className="dialog">
+          <div className="PopupSection_title">
+            <div></div>
+            <h1>{title}</h1>
+            <button onClick={closePopup}>X</button>
+          </div>
+          <div
+            className="PopupSection_main"
+            ref={listRef}
+            onScroll={listScroll}
+          >
+            <ul>
+              {data
+                ? data.map(data => {
+                    return (
+                      <UserFollowList
+                        key={data.id + Math.random() * 10}
+                        data={data}
+                      />
+                    );
+                  })
+                : null}
+            </ul>
+          </div>
         </div>
       </PopupSection>
     </>
