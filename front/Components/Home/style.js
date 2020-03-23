@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-export const Book_Layout = styled.div``;
-
 export const Book_Main = styled.div`
   h3 {
     margin-bottom: 1rem;
@@ -35,8 +33,8 @@ export const Book_User_Info = styled.div`
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    height: 15vw;
-    width: 15vw;
+    height: 6vw;
+    width: 6vw;
     border-radius: 50%;
     margin-right: 1rem;
   }
@@ -61,22 +59,28 @@ export const Book_Comment_Menu = styled.ul`
 export const Book_Comment_List = styled.ul`
   width: 100%;
   height: 100px;
-  background: red;
-  /* position: absolute;
-  display: flex;
-  flex-direction: column;
-  top: 50px;
-  left: 0;
- 
-  height: 250%;
-  padding: 5px;
-  word-break: break-word;
-  border: solid #000000 1px;
-  background: white;
-  z-index: 10;
-  overflow: scroll;
-  -ms-overflow-style: none;
-  ::-webkit-scrollbar {
-    display: none;
-  } */
+  display: none;
+`;
+
+export const Book_Layout = styled.div`
+  @media (min-width: 750px) {
+    display: flex;
+    .Flex-Section {
+      width: 50%;
+    }
+    .Second {
+      padding: 0 0 0 1rem;
+      overflow: scroll;
+      -ms-overflow-style: none;
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    .Second-A {
+      margin-bottom: 1rem;
+    }
+    ${Book_Comment_List} {
+      display: block;
+    }
+  }
 `;

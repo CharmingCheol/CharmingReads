@@ -106,7 +106,6 @@ function* watchAddCommentLike() {
 
 //댓글 불러오기
 function loadCommentsApi(loadCommentsData) {
-  console.log("loadCommentsData", loadCommentsData);
   return axios.get(`/post/loadComments?postId=${loadCommentsData}`, {
     withCredentials: true
   });
@@ -114,7 +113,6 @@ function loadCommentsApi(loadCommentsData) {
 
 function* loadComments(action) {
   try {
-    console.log("action.data", action.data);
     const result = yield call(loadCommentsApi, action.data);
     yield put({
       type: LOAD_COMMENTS_SUCCESS,

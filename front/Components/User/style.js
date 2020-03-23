@@ -84,15 +84,4 @@ export const User_Tab_Section = styled.div`
   article:last-child {
     display: none;
   }
-  /*
-  & ul {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    & li {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0 0 20px 0;
-    }
-  } */
 `;

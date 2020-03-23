@@ -49,6 +49,8 @@ const UserEdit = () => {
     imageChange.current.click();
   }, [imageChange.current]);
 
+  console.log(image);
+
   return (
     <>
       <div>
@@ -62,32 +64,29 @@ const UserEdit = () => {
           />
           <UserEdit_Image
             onClick={onClickImage}
-            src={
-              image
-                ? `http://localhost:3001/${image.filename}`
-                : me && me.src
-                ? `http://localhost:3001/${me.src}`
-                : `http://localhost:3001/기본이미지.png`
-            }
+            profileImg={image ? image.location : me.src}
           />
           <div>
-            <label>닉네임 변경</label>
+            <h3>닉네임 변경</h3>
             <input
               placeholder={me ? me.nickName : ""}
               onChange={onEditnickName}
             />
           </div>
           <div>
-            <label>아이디 변경</label>
+            <h3>아이디 변경</h3>
             <input placeholder={me ? me.userId : ""} onChange={onEditId} />
           </div>
           <div>
-            <label>비밀번호 변경</label>
+            <h3>비밀번호 변경</h3>
             <input type="password" onChange={onEditPassword} />
           </div>
           <div>
-            <label>소개글 변경</label>
-            <input placeholder={me ? me.nickName : ""} onChange={onEditText} />
+            <h3>소개글 변경</h3>
+            <textarea
+              placeholder={me ? me.nickName : ""}
+              onChange={onEditText}
+            />
           </div>
           <button>저장</button>
         </UserEdit_Form>

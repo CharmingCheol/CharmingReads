@@ -5,15 +5,21 @@ const path = require("path");
 const router = express.Router();
 
 const db = require("../models");
+const AWS = require("aws-sdk");
+const multerS3 = require("multer-s3");
+
+AWS.config.update({
+  region: "ap-northeast-2",
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_KEY
+});
+
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, "upload");
-    },
-    filename: (req, file, cb) => {
-      const extName = path.extname(file.originalname);
-      const baseName = path.basename(file.originalname, extName);
-      cb(null, baseName + new Date().valueOf() + extName);
+  storage: multerS3({
+    s3: new AWS.S3(),
+    bucket: "charmingbooks",
+    key(req, file, cb) {
+      cb(null, `original/${+new Date()}${path.basename(file.originalname)}`);
     }
   }),
   limits: { fileSize: 1024 * 1024 * 20 }

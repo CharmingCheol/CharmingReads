@@ -14,8 +14,8 @@ const Comment = ({ comment }) => {
             }
           />
           <div>
-            <div>{comment.User.nickName}</div>
-            <div>{comment.content}</div>
+            <h3>{comment.User.nickName}</h3>
+            <h3>{comment.content}</h3>
           </div>
         </CommentLayout>
       ) : null}

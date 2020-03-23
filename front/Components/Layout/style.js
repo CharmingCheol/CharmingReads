@@ -21,5 +21,5 @@ export const Menu = styled.div`
 `;
 
 export const Main = styled.div`
-  padding: 5vw 10vw 0 10vw;
+  padding: 2rem 4rem 2rem 4rem;
 `;

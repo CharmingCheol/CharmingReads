@@ -131,7 +131,7 @@ export default (state = initialState, action) => {
         break;
       }
       case ADD_COMMENT_SUCCESS: {
-        draft.modalPost.Comments.push(action.data.comment);
+        draft.modalPost.Comments.push(action.data);
         break;
       }
       case ADD_COMMENT_FAILURE: {
@@ -139,11 +139,11 @@ export default (state = initialState, action) => {
       }
       //댓글 불러오기
       case LOAD_COMMENTS_REQUEST: {
-        draft.modalPost.Comments = null;
+        // draft.modalPost.Comments = null;
         break;
       }
       case LOAD_COMMENTS_SUCCESS: {
-        draft.modalPost.Comments = action.data;
+        // draft.modalPost.Comments = action.data;
         break;
       }
       case LOAD_COMMENTS_FAILURE: {
@@ -151,7 +151,7 @@ export default (state = initialState, action) => {
       }
       //modal 불러오기
       case LOAD_MODAL_POST_REQUEST: {
-        draft.modalPost = null;
+        draft.modalPost = [];
         break;
       }
       case LOAD_MODAL_POST_SUCCESS: {
