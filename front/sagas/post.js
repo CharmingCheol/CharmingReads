@@ -158,8 +158,8 @@ function* watchLoadSearchPosts() {
 function loadFollowPostsApi(data) {
   console.log("asdadasdasdsa", data);
   return axios.get(
-    `/posts/follow/${parseInt(data.userId, 10) || 0}
-    ?lastId=${data.lastId || 0}&limit=9`,
+    `/posts/follow/${parseInt(data.userId, 10)}
+    ?lastId=${data.lastId}&limit=9`,
     { withCredentials: true }
   );
 }

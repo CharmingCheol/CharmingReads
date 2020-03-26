@@ -141,26 +141,33 @@ router.get("/follow/:id", async (req, res, next) => {
         }
       ]
     });
-    const test = Object.assign({}, user.toJSON());
+    const jsonUser = Object.assign({}, user.toJSON());
     let followId = []; //유저 팔로우 id를 담은 배열
-    test.Follow.forEach(follow => followId.push(follow.id));
+    jsonUser.Follow.forEach(follow => followId.push(follow.id));
     let where = {};
-    if (parseInt(req.query.lastId, 10)) {
-      where = {
-        UserId: {
-          [db.Sequelize.Op.or]: followId
-        },
-        id: {
-          [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10)
-        }
-      };
+    console.log(followId, "followIdfollowIdfollowId");
+    if (parseInt(req.params.id, 10) || (req.user && req.user.id) || 0) {
+      where = {};
     } else {
-      where = {
-        UserId: {
-          [db.Sequelize.Op.or]: followId
-        }
-      };
+      where = {};
     }
+    //followId 배열 중에서 해당되는 id가 있어야 되고, lastId보다 id가 커야 됨
+    // if (parseInt(req.query.lastId, 10)) {
+    //   where = {
+    //     UserId: {
+    //       [db.Sequelize.Op.or]: followId
+    //     },
+    //     id: {
+    //       [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10)
+    //     }
+    //   };
+    // } else {
+    //   where = {
+    //     UserId: {
+    //       [db.Sequelize.Op.or]: followId
+    //     }
+    //   };
+    // }
     const posts = await db.Post.findAll({
       where,
       limit: parseInt(req.query.limit, 10),

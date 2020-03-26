@@ -38,6 +38,7 @@ export const initialState = {
   mainPosts: [],
   modalPost: [],
   followPosts: [],
+  hasMoreComments: true,
   hasMoreCategoryPosts: null,
   hasMoreSearchPosts: null
 };
@@ -73,7 +74,7 @@ export default (state = initialState, action) => {
       //게시글 불러오기
       //카테고리별 게시글 불러오기
       case LOAD_POSTS_REQUEST: {
-        draft.mainPosts = [];
+        draft.modalPost = [];
         break;
       }
       case LOAD_SEARCH_POSTS_SUCCESS:
@@ -83,8 +84,7 @@ export default (state = initialState, action) => {
           return;
         }
         if (action.type === LOAD_POSTS_SUCCESS) {
-          console.log(action.data);
-          action.data.forEach(post => draft.mainPosts.push(post));
+          draft.mainPosts = action.data;
           return;
         }
         if (action.type === LOAD_CATEGORY_POSTS_SUCCESS) {
@@ -139,11 +139,12 @@ export default (state = initialState, action) => {
       }
       //댓글 불러오기
       case LOAD_COMMENTS_REQUEST: {
-        // draft.modalPost.Comments = null;
         break;
       }
       case LOAD_COMMENTS_SUCCESS: {
-        // draft.modalPost.Comments = action.data;
+        console.log(action.data);
+        action.data.forEach(comment => draft.modalPost.Comments.push(comment));
+        draft.hasMoreComments = action.data.length === 6;
         break;
       }
       case LOAD_COMMENTS_FAILURE: {
@@ -151,7 +152,6 @@ export default (state = initialState, action) => {
       }
       //modal 불러오기
       case LOAD_MODAL_POST_REQUEST: {
-        draft.modalPost = [];
         break;
       }
       case LOAD_MODAL_POST_SUCCESS: {

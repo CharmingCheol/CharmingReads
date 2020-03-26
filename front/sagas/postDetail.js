@@ -105,10 +105,10 @@ function* watchAddCommentLike() {
 }
 
 //댓글 불러오기
-function loadCommentsApi(loadCommentsData) {
-  return axios.get(`/post/loadComments?postId=${loadCommentsData}`, {
-    withCredentials: true
-  });
+function loadCommentsApi(data) {
+  return axios.get(
+    `/post/${data.postId}/comments?lastId=${data.lastId}&limit=6`
+  );
 }
 
 function* loadComments(action) {

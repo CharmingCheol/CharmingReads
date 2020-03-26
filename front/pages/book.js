@@ -21,7 +21,9 @@ import CommentInput from "../Components/Home/CommentInput";
 import Comment from "../Components/Home/Comment";
 
 const Book = ({ id }) => {
-  const { modalPost } = useSelector(state => state.postReducer);
+  const { modalPost, hasMoreComments } = useSelector(
+    state => state.postReducer
+  );
   const { me } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
   const liked =
@@ -66,12 +68,38 @@ const Book = ({ id }) => {
     }
   }, [stored, id]);
 
-  const onScrollComments = useCallback(event => {
-    console.log(event);
-    console.log("gd");
-  }, []);
+  const loadComments = useCallback(
+    e => {
+      const { clientHeight, scrollHeight, scrollTop } = e.target;
+      if (150 > scrollHeight - clientHeight - scrollTop) {
+        console.log(clientHeight, scrollHeight, scrollTop);
+        if (hasMoreComments) {
+          dispatch({
+            type: LOAD_COMMENTS_REQUEST,
+            data: {
+              postId: id,
+              lastId: modalPost.Comments[modalPost.Comments.length - 1].id
+            }
+          });
+        }
+      }
+    },
+    [
+      hasMoreComments,
+      modalPost.Comments && modalPost.Comments[modalPost.Comments.length - 1].id
+    ]
+  );
+  console.log(modalPost);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    Comments.current.onscroll = loadComments;
+    return () => {
+      Comments.current.onscroll = null;
+    };
+  }, [
+    hasMoreComments,
+    modalPost.Comments && modalPost.Comments[modalPost.Comments.length - 1].id
+  ]);
 
   return (
     <>
@@ -114,12 +142,12 @@ const Book = ({ id }) => {
             <CommentInput id={id} />
           </Book_Main>
         </div>
-        <div className="Flex-Section Second">
+        <div className="Flex-Section Second" ref={Comments}>
           <div className="Second-A">
             <h2>감상평</h2>
             <h3 className="Book-Detail-Content">{modalPost.content}</h3>
           </div>
-          <Book_Comment_List onScroll={onScrollComments}>
+          <Book_Comment_List>
             {modalPost.Comments &&
               modalPost.Comments.map(comment => {
                 return <Comment key={comment.id} comment={comment} />;
@@ -136,12 +164,6 @@ Book.getInitialProps = async context => {
   context.store.dispatch({
     type: LOAD_MODAL_POST_REQUEST,
     data: id
-  });
-  context.store.dispatch({
-    type: LOAD_COMMENTS_REQUEST,
-    data: {
-      postId: id
-    }
   });
   return { id };
 };

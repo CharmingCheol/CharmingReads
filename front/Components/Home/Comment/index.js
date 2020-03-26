@@ -4,7 +4,7 @@ import { CommentLayout } from "./style";
 const Comment = ({ comment }) => {
   return (
     <>
-      {comment ? (
+      {comment.User ? (
         <CommentLayout>
           <img
             src={

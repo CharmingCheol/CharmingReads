@@ -56,17 +56,30 @@ router.post("/addComment", async (req, res, next) => {
 });
 
 //댓글 불러오기
-router.get("/loadComments", async (req, res, next) => {
+router.get("/:id/comments", async (req, res, next) => {
   try {
-    console.log(req.query.postId, "queryyyyy");
+    let where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      where = {
+        PostId: req.params.id,
+        id: {
+          [db.Sequelize.Op.gt]: req.query.lastId
+        }
+      };
+    } else {
+      where = {
+        PostId: req.params.id
+      };
+    }
     const comments = await db.Comment.findAll({
-      where: { PostId: req.query.postId },
+      where,
       include: [
         {
           model: db.User,
           attributes: ["id", "nickName", "src"]
         }
-      ]
+      ],
+      limit: parseInt(req.query.limit, 10)
     });
     return res.json(comments);
   } catch (error) {
@@ -91,7 +104,8 @@ router.get("/:id/loadModal", async (req, res, next) => {
               model: db.User,
               attributes: ["id", "nickName", "src"]
             }
-          ]
+          ],
+          limit: 12
         },
         {
           model: db.User,
@@ -100,8 +114,6 @@ router.get("/:id/loadModal", async (req, res, next) => {
         }
       ]
     });
-    // const returnPost = Object.assign({}, post.toJSON());
-    // delete returnPost.User.password;
     return res.status(200).json(post);
   } catch (error) {
     console.error(error);
