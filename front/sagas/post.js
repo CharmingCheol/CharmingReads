@@ -17,9 +17,12 @@ import {
   LOAD_SEARCH_POSTS_REQUEST,
   LOAD_SEARCH_POSTS_SUCCESS,
   LOAD_SEARCH_POSTS_FAILURE,
-  LOAD_FOLLOW_POSTS_SUCCESS,
-  LOAD_FOLLOW_POSTS_FAILURE,
-  LOAD_FOLLOW_POSTS_REQUEST
+  LOAD_TOP_RATED_COMMENT_POSTS_SUCCESS,
+  LOAD_TOP_RATED_COMMENT_POSTS_FAILURE,
+  LOAD_TOP_RATED_COMMENT_POSTS_REQUEST,
+  LOAD_TOP_RATED_LIKE_POSTS_REQUEST,
+  LOAD_TOP_RATED_LIKE_POSTS_SUCCESS,
+  LOAD_TOP_RATED_LIKE_POSTS_FAILURE
 } from "../redux/actions/postAction";
 
 //이미지 불러오기
@@ -126,7 +129,7 @@ function* watchcategoryPosts() {
   yield takeLatest(LOAD_CATEGORY_POSTS_REQUEST, categoryPosts);
 }
 
-//게시글 불러오기
+//검색 게시글 불러오기
 function loadsearchPostsApi(data) {
   return axios.get(
     `/posts/search/${encodeURIComponent(data.word)}
@@ -137,7 +140,6 @@ function loadsearchPostsApi(data) {
 function* loadsearchPosts(action) {
   try {
     const result = yield call(loadsearchPostsApi, action.data);
-    console.log(result.data);
     yield put({
       type: LOAD_SEARCH_POSTS_SUCCESS,
       data: result.data
@@ -154,33 +156,53 @@ function* watchLoadSearchPosts() {
   yield takeLatest(LOAD_SEARCH_POSTS_REQUEST, loadsearchPosts);
 }
 
-//팔로우 게시글 불러오기
-function loadFollowPostsApi(data) {
-  console.log("asdadasdasdsa", data);
-  return axios.get(
-    `/posts/follow/${parseInt(data.userId, 10)}
-    ?lastId=${data.lastId}&limit=9`,
-    { withCredentials: true }
-  );
+//좋아요 많은 게시글 불러오기
+function loadTopLikedPostsApi() {
+  return axios.get("/posts/topRatedLike?limit=10");
 }
 
-function* loadFollowPosts(action) {
+function* loadTopLikedPosts() {
   try {
-    const result = yield call(loadFollowPostsApi, action.data);
-    yield put({
-      type: LOAD_FOLLOW_POSTS_SUCCESS,
-      data: result.data
-    });
+    const result = yield call(loadTopLikedPostsApi);
+    console.log(result);
+    // yield put({
+    //   type: LOAD_TOP_RATED_LIKE_POSTS_SUCCESS,
+    //   data: result.data
+    // });
   } catch (error) {
     console.error(error);
     yield put({
-      type: LOAD_FOLLOW_POSTS_FAILURE
+      type: LOAD_TOP_RATED_LIKE_POSTS_FAILURE
     });
   }
 }
 
-function* watchLoadFollowPosts() {
-  yield takeLatest(LOAD_FOLLOW_POSTS_REQUEST, loadFollowPosts);
+function* watchLoadTopLikedPosts() {
+  yield takeLatest(LOAD_TOP_RATED_LIKE_POSTS_REQUEST, loadTopLikedPosts);
+}
+
+//댓글 많은 게시글 불러오기
+function loadTopCommentPostsApi() {
+  return axios.get("/posts/topRatedComment?limit=10");
+}
+
+function* loadTopCommentPosts() {
+  try {
+    const result = yield call(loadTopCommentPostsApi);
+    // yield put({
+    //   type: LOAD_TOP_RATED_COMMENT_POSTS_SUCCESS,
+    //   data: result.data
+    // });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_TOP_RATED_COMMENT_POSTS_FAILURE
+    });
+  }
+}
+
+function* watchloadTopCommentPosts() {
+  yield takeLatest(LOAD_TOP_RATED_COMMENT_POSTS_REQUEST, loadTopCommentPosts);
 }
 
 export default function* postSaga() {
@@ -190,6 +212,7 @@ export default function* postSaga() {
     fork(watchloadPosts),
     fork(watchcategoryPosts),
     fork(watchLoadSearchPosts),
-    fork(watchLoadFollowPosts)
+    fork(watchLoadTopLikedPosts),
+    fork(watchloadTopCommentPosts)
   ]);
 }

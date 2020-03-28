@@ -3,11 +3,21 @@ const db = require("../models");
 
 const router = express.Router();
 
-//메인 화면 게시글 불러오기
+//내가 쓴 게시글 불러오기
 router.get("/loadPosts", async (req, res, next) => {
   try {
+    let where = {};
+    if (req.user && parseInt(req.user.id, 10)) {
+      where = {
+        UserId: parseInt(req.user.id, 10)
+      };
+    } else {
+      where = {
+        UserId: 0
+      };
+    }
     const myPosts = await db.Post.findAll({
-      where: { UserId: req.user.id },
+      where,
       include: [
         {
           model: db.User,
@@ -37,12 +47,6 @@ router.get("/loadPosts", async (req, res, next) => {
 //카테고리별 게시글 불러오기
 router.get("/:word", async (req, res, next) => {
   try {
-    console.log(
-      req.query.lastId,
-      req.query.limit,
-      decodeURIComponent(req.params.word),
-      "시작부분"
-    );
     let where = {};
     if (parseInt(req.query.lastId, 10)) {
       where = {
@@ -91,12 +95,6 @@ router.get("/:word", async (req, res, next) => {
 //게시글 검색
 router.get("/search/:word", async (req, res, next) => {
   try {
-    console.log(
-      "dsfsdfsdfdsfsdfsd",
-      decodeURIComponent(req.params.word.trim()),
-      req.query.lastId,
-      req.query.limit
-    );
     let where = {};
     if (parseInt(req.query.lastId, 10)) {
       where = {
@@ -126,54 +124,20 @@ router.get("/search/:word", async (req, res, next) => {
   }
 });
 
-//팔로우 게시글 불러오기
-router.get("/follow/:id", async (req, res, next) => {
+//좋아요 많은 게시글 불러오기
+router.get("/topRatedLike", async (req, res, next) => {
   try {
-    const user = await db.User.findOne({
-      where: {
-        id: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0
-      },
-      include: [
-        {
-          model: db.User,
-          as: "Follow",
-          attributes: ["id"]
-        }
-      ]
-    });
-    const jsonUser = Object.assign({}, user.toJSON());
-    let followId = []; //유저 팔로우 id를 담은 배열
-    jsonUser.Follow.forEach(follow => followId.push(follow.id));
-    let where = {};
-    console.log(followId, "followIdfollowIdfollowId");
-    if (parseInt(req.params.id, 10) || (req.user && req.user.id) || 0) {
-      where = {};
-    } else {
-      where = {};
-    }
-    //followId 배열 중에서 해당되는 id가 있어야 되고, lastId보다 id가 커야 됨
-    // if (parseInt(req.query.lastId, 10)) {
-    //   where = {
-    //     UserId: {
-    //       [db.Sequelize.Op.or]: followId
-    //     },
-    //     id: {
-    //       [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10)
-    //     }
-    //   };
-    // } else {
-    //   where = {
-    //     UserId: {
-    //       [db.Sequelize.Op.or]: followId
-    //     }
-    //   };
-    // }
-    const posts = await db.Post.findAll({
-      where,
-      limit: parseInt(req.query.limit, 10),
-      order: [["createdAt", "DESC"]]
-    });
-    return res.status(200).json(posts);
+    console.log("sdlvhsdkjfhsdlaflskdfksdhflwesfkh", req.query);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//댓글 많은 게시글 불러오기
+router.get("/topRatedComment", async (req, res, next) => {
+  try {
+    console.log("zxzxbkJZBVkjSDBFkjs");
   } catch (error) {
     console.error(error);
     next(error);

@@ -1,10 +1,11 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import {
   LOAD_POSTS_REQUEST,
-  LOAD_FOLLOW_POSTS_REQUEST
+  LOAD_TOP_RATED_LIKE_POSTS_REQUEST,
+  LOAD_TOP_RATED_COMMENT_POSTS_REQUEST
 } from "../redux/actions/postAction";
 import Book from "../Components/Home/BookImage";
 
@@ -20,37 +21,30 @@ const Grid = styled.div`
 
 const Home = () => {
   const { me } = useSelector(state => state.userReducer);
-  const { mainPosts, followPosts } = useSelector(state => state.postReducer);
-
+  const { mainPosts } = useSelector(state => state.postReducer);
   const dispatch = useDispatch();
-  const onScrollPosts = useCallback(() => {}, []);
 
   useEffect(() => {
-    window.addEventListener("scroll", onScrollPosts);
-    return () => {
-      window.removeEventListener("scroll", onScrollPosts);
-    };
+    dispatch({
+      type: LOAD_TOP_RATED_LIKE_POSTS_REQUEST
+    });
   }, []);
 
   return (
     <>
-      <div>
-        <Section_Title>내가 쓴 최신글</Section_Title>
-        <Grid>
-          {mainPosts
-            ? mainPosts.map(post => {
-                return <Book key={post.id} post={post} />;
-              })
-            : null}
-        </Grid>
+      {me ? (
         <div>
-          <Section_Title>친구가 작성한 추천 책</Section_Title>
+          <Section_Title>내가 쓴 최신글</Section_Title>
           <Grid>
-            {followPosts.map(post => {
+            {mainPosts.map(post => {
               return <Book key={post.id} post={post} />;
             })}
           </Grid>
         </div>
+      ) : null}
+      <div>
+        <Section_Title>좋아요 TOP10 게시글</Section_Title>
+        <Grid></Grid>
       </div>
     </>
   );
@@ -60,13 +54,12 @@ Home.getInitialProps = async context => {
   context.store.dispatch({
     type: LOAD_POSTS_REQUEST
   });
-  context.store.dispatch({
-    type: LOAD_FOLLOW_POSTS_REQUEST,
-    data: {
-      lastId: parseInt(0, 10),
-      userId: parseInt(0, 10)
-    }
-  });
+  // context.store.dispatch({
+  //   type: LOAD_TOP_RATED_LIKE_POSTS_REQUEST
+  // });
+  // context.store.dispatch({
+  //   type: LOAD_TOP_RATED_COMMENT_POSTS_REQUEST
+  // });
 };
 
 export default Home;

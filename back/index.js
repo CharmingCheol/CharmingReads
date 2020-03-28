@@ -15,14 +15,14 @@ const postDetailRouter = require("./routers/postDetail");
 const loadPostsRouter = require("./routers/posts");
 const db = require("./models");
 
+const router = express.Router();
+
 const app = express();
 const port = 3001;
 db.sequelize.sync();
 dotenv.config();
 passportConfig();
 
-app.use("/", express.static("upload"));
-app.use("/", express.static("uploadPost"));
 app.use(morgan("dev"));
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
@@ -46,8 +46,8 @@ app.use("/user", userAuthRouter);
 app.use("/user", userDetailRouter);
 app.use("/auth", kakaoRouter);
 app.use("/post", postRouter);
-app.use("/posts", loadPostsRouter);
 app.use("/post", postDetailRouter);
+app.use("/posts", loadPostsRouter);
 
 app.listen(port, () => {
   console.log(`server start : ${port}`);
