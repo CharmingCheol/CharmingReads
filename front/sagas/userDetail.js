@@ -248,15 +248,16 @@ function* watchLoadFollower() {
 }
 
 //유저 게시글 불러오기
-function loadUserPostsApi(lastId, userId, limit = 9) {
+function loadUserPostsApi(data, limit = 9) {
   return axios.get(
-    `/user/${userId}/userPosts/?lastId=${lastId}&limit=${limit}`
+    `/user/${data.userId}/userPosts?lastId=${data.lastId}&limit=${limit}`
   );
 }
 
 function* loadUserPosts(action) {
   try {
-    const result = yield call(loadUserPostsApi, action.lastId, action.userId);
+    const result = yield call(loadUserPostsApi, action.data);
+    console.log("loadUserPostsApi", result);
     yield put({
       type: LOAD_USER_POSTS_SUCCESS,
       data: result.data
@@ -274,19 +275,15 @@ function* watchLoadUserPosts() {
 }
 
 //유저 저장 게시글 불러오기
-function loadUserSavedPostsApi(lastId, userId, limit = 9) {
+function loadUserSavedPostsApi(data, limit = 9) {
   return axios.get(
-    `/user/${userId}/userSavedPosts/?lastId=${lastId}&limit=${limit}`
+    `/user/${data.userId}/userSavedPosts?lastId=${data.lastId}&limit=${limit}`
   );
 }
 
 function* loadUserSavedPosts(action) {
   try {
-    const result = yield call(
-      loadUserSavedPostsApi,
-      action.lastId,
-      action.userId
-    );
+    const result = yield call(loadUserSavedPostsApi, action.data);
     yield put({
       type: LOAD_USER_SAVED_POSTS_SUCCESS,
       data: result.data

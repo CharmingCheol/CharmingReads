@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 
 const dev = process.env.NODE_ENV !== "production";
-const PORT = 3000;
+const PORT = 3005;
 
 const app = next({ dev });
 const handle = app.getRequestHandler();

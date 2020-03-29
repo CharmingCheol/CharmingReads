@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { ADD_COMMENT_REQUEST } from "../../../redux/actions/postAction";
 import { Comment_Form } from "./style";
 
-const CommentInput = ({ id }) => {
+const CommentInput = ({ id, commentCount }) => {
   const dispatch = useDispatch();
   const [comment, onChangeComment] = useState("");
   const [submitDisable, onSubmitDisable] = useState(true);
@@ -30,7 +30,8 @@ const CommentInput = ({ id }) => {
         type: ADD_COMMENT_REQUEST,
         data: {
           comment,
-          postId: id
+          postId: id,
+          commentCount
         }
       });
       onSubmitDisable(true);

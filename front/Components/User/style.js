@@ -100,4 +100,13 @@ export const User_Tab_Section = styled.div`
   article:last-child {
     display: none;
   }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 30px;
+  }
+`;
+
+export const User_Tab_Post_Grid = styled.div`
+  display: none;
 `;

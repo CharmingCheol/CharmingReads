@@ -4,11 +4,36 @@ const router = express.Router();
 const db = require("../models");
 
 //게시글 좋아요
-router.post("/like", async (req, res, next) => {
+router.post("/:id/addLike", async (req, res, next) => {
   try {
-    const post = await db.Post.findOne({ where: { id: req.body.postId } });
+    await db.Post.update(
+      {
+        likeCount: req.body.likeCount + 1
+      },
+      { where: { id: parseInt(req.params.id, 10) } }
+    );
+    const post = await db.Post.findOne({
+      where: { id: parseInt(req.params.id, 10) }
+    });
     await post.addLike(req.user.id);
-    return res.json(post);
+    return res.json(req.user.id);
+
+    // const post = await db.Post.update(
+    //   {
+    //     where: { id: 1 }
+    //   },
+    //   {
+    //     likeCount: parseInt(req.body.likeCount, 10) + 1
+    //   }
+    // );
+
+    // const post = await db.Post.update(
+    //   {
+    //     where: { id: req.body.postId }
+    //   },
+    //   { likeCount: req.body.likeCount + 1 }
+    // );
+    // return res.json(post);
   } catch (error) {
     console.error(error);
     next(error);
@@ -16,11 +41,24 @@ router.post("/like", async (req, res, next) => {
 });
 
 //좋아요 취소
-router.post("/likeRemove", async (req, res, next) => {
+router.post("/:id/removeLike", async (req, res, next) => {
   try {
-    const post = await db.Post.findOne({ where: { id: req.body.postId } });
+    console.log("sdkjfhk", req.params.id, req.body.likeCount);
+    await db.Post.update(
+      {
+        likeCount: req.body.likeCount - 1
+      },
+      { where: { id: parseInt(req.params.id, 10) } }
+    );
+    const post = await db.Post.findOne({
+      where: { id: parseInt(req.params.id, 10) }
+    });
     await post.removeLike(req.user.id);
-    return res.json(post);
+    return res.json(req.user.id);
+
+    // const post = await db.Post.findOne({ where: { id: req.body.postId } });
+    // await post.removeLike(req.user.id);
+    // return res.json(post);
   } catch (error) {
     console.error(error);
     next(error);
@@ -28,17 +66,28 @@ router.post("/likeRemove", async (req, res, next) => {
 });
 
 //댓글 추가
-router.post("/addComment", async (req, res, next) => {
+router.post("/:id/addComment", async (req, res, next) => {
   try {
+    console.log(req.params.id, req.body);
+
+    await db.Post.update(
+      {
+        commentCount: req.body.commentCount + 1
+      },
+      { where: { id: parseInt(req.params.id, 10) } }
+    );
+
     const newComment = await db.Comment.create({
       content: req.body.comment,
       PostId: req.body.postId,
       UserId: req.user.id
     });
+
     const post = await db.Post.findOne({
-      where: { id: req.body.postId }
+      where: { id: parseInt(req.params.id, 10) }
     });
     await post.addComment(newComment.id);
+
     const returnComment = await db.Comment.findOne({
       where: { id: newComment.id },
       include: [
@@ -109,8 +158,7 @@ router.get("/:id/loadModal", async (req, res, next) => {
         },
         {
           model: db.User,
-          as: "Like",
-          attributes: ["id"]
+          as: "Like"
         }
       ]
     });

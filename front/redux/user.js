@@ -58,7 +58,9 @@ export const initialState = {
   me: null,
   iamge: null,
   modalInfo: null,
-  userInfo: null,
+  userInfo: {},
+  userPosts: [],
+  userSavedPosts: [],
   hasMoreFollow: null,
   hasMoreFollower: null,
   hasMoreUserPost: null,
@@ -107,7 +109,7 @@ export default (state = initialState, action) => {
       case LOG_OUT_FAILURE: {
         break;
       }
-      //유저 정보 로드
+      //내 정보 로드
       case LOAD_USER_REQUEST: {
         draft.me = null;
         break;
@@ -170,6 +172,7 @@ export default (state = initialState, action) => {
       }
       //유저 정보 불러오기
       case LOAD_USER_DETAIL_REQUEST: {
+        draft.userInfo = {};
         break;
       }
       case LOAD_USER_DETAIL_SUCCESS: {
@@ -235,15 +238,16 @@ export default (state = initialState, action) => {
       }
       //유저 게시글 불러오기
       case LOAD_USER_POSTS_REQUEST: {
+        draft.userPosts = [];
+        draft.hasMoreUserPost = null;
         break;
       }
       case LOAD_USER_POSTS_SUCCESS: {
         if (action.data.id === 0) {
           return;
         } else {
-          action.data.Posts.forEach(post => draft.userInfo.Posts.push(post));
-          draft.hasMoreUserPost =
-            action.data.Posts[action.data.Posts.length - 1].id;
+          action.data.forEach(post => draft.userPosts.unshift(post));
+          draft.hasMoreUserPost = action.data[action.data.length - 1].id;
         }
         break;
       }
@@ -252,17 +256,16 @@ export default (state = initialState, action) => {
       }
       //유저 저장 게시글 불러오기
       case LOAD_USER_SAVED_POSTS_REQUEST: {
+        draft.userSavedPosts = [];
+        draft.hasMoreUserSavedPost = null;
         break;
       }
       case LOAD_USER_SAVED_POSTS_SUCCESS: {
         if (action.data.id === 0) {
           return;
         } else {
-          action.data.PostStorages.forEach(post =>
-            draft.userInfo.PostStorages.push(post)
-          );
-          draft.hasMoreUserSavedPost =
-            action.data.PostStorages[action.data.PostStorages.length - 1].id;
+          action.data.forEach(post => draft.userSavedPosts.unshift(post));
+          draft.hasMoreUserSavedPost = action.data[action.data.length - 1].id;
         }
         break;
       }

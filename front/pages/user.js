@@ -15,13 +15,19 @@ import {
   User_Section,
   User_Info,
   User_Info_Friends,
-  User_Tab_Section
+  User_Tab_Section,
+  User_Tab_Post_Grid
 } from "../Components/User/style";
 
 const User = ({ id }) => {
-  const { me, userInfo, hasMoreUserPost, hasMoreUserSavedPost } = useSelector(
-    state => state.userReducer
-  );
+  const {
+    me,
+    userInfo,
+    userPosts,
+    userSavedPosts,
+    hasMoreUserPost,
+    hasMoreUserSavedPost
+  } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
   const followed =
     me && me.Follow ? me.Follow.find(user => user.id === id) : null;
@@ -62,15 +68,11 @@ const User = ({ id }) => {
   const onClickTab = useCallback(
     event => {
       if (event.target.classList.contains("fa-th")) {
-        tab01.current.style = "display:flex";
-        tab01.current.className = "flex";
-        tab02.current.style = "display:none";
-        tab02.current.className = "";
+        tab01.current.classList.add("grid");
+        tab02.current.classList.remove("grid");
       } else {
-        tab01.current.style = "display:none";
-        tab01.current.className = "";
-        tab02.current.style = "display:flex";
-        tab02.current.className = "flex";
+        tab01.current.classList.remove("grid");
+        tab02.current.classList.add("grid");
       }
     },
     [tab01, tab02]
@@ -88,36 +90,35 @@ const User = ({ id }) => {
   //게시글, 저장한 게시글 불러오기
   const onScrollPosts = useCallback(() => {
     if (document.documentElement.scrollHeight - scrollY < 750) {
-      if (tab01.current.className === "flex") {
+      if (tab01.current.className === "grid") {
         if (
-          hasMoreUserPost !== userInfo &&
+          hasMoreUserPost !== userPosts &&
           userInfo.Posts[userInfo.Posts.length - 1].id
         ) {
           dispatch({
             type: LOAD_USER_POSTS_REQUEST,
             userId: id,
-            lastId: userInfo.Posts[userInfo.Posts.length - 1]["id"]
+            lastId: userPosts && userPosts[userPosts.length - 1].id
           });
         }
       } else {
         if (
-          hasMoreUserSavedPost !==
-          userInfo.PostStorages[userInfo.PostStorages.length - 1].id
+          hasMoreUserSavedPost !== userSavedPosts &&
+          userSavedPosts[userSavedPosts.length - 1].id
         ) {
           dispatch({
             type: LOAD_USER_SAVED_POSTS_REQUEST,
             userId: id,
             lastId:
-              userInfo.PostStorages[userInfo.PostStorages.length - 1]["id"]
+              userSavedPosts && userSavedPosts[userSavedPosts.length - 1].id
           });
         }
       }
     }
   }, [
     tab01,
-    hasMoreUserPost,
-    userInfo && userInfo.Posts,
-    userInfo && userInfo.PostStorages
+    userPosts && userPosts[userPosts.length - 1],
+    userSavedPosts && userSavedPosts[userSavedPosts.length - 1]
   ]);
 
   useEffect(() => {
@@ -126,9 +127,8 @@ const User = ({ id }) => {
       window.removeEventListener("scroll", onScrollPosts);
     };
   }, [
-    hasMoreUserPost,
-    userInfo && userInfo.Posts,
-    userInfo && userInfo.PostStorages
+    userPosts && userPosts[userPosts.length - 1],
+    userSavedPosts && userSavedPosts[userSavedPosts.length - 1]
   ]);
 
   return (
@@ -138,7 +138,7 @@ const User = ({ id }) => {
           <User_Info>
             <div className="User-Info">
               <img className="User-Info-Image" />
-              <h3>{userInfo ? userInfo.nickName : null}</h3>
+              <h3>{userInfo.nickName}</h3>
             </div>
             <div className="User-Info-Section">
               <div className="User-Info-Buttons">
@@ -169,31 +169,27 @@ const User = ({ id }) => {
               : "소개글이 없습니다"}
           </h3>
           <User_Info_Friends>
-            <h3 className="User-Info-Friends PostCount">{`게시글 ${
-              userInfo ? userInfo.postCount : null
-            }`}</h3>
+            <h3 className="User-Info-Friends PostCount">{`게시글 ${userInfo.postCount}`}</h3>
             <div className="User-Info-Friends FollowerCount">
-              <h3 className="popup" onClick={FollowerPopup}>{`팔로워 ${
-                userInfo ? userInfo.followerCount : null
-              }`}</h3>
+              <h3
+                className="popup"
+                onClick={FollowerPopup}
+              >{`팔로워 ${userInfo.followerCount}`}</h3>
               <div className="none">
                 <UserPopup
                   title="팔로워"
                   userId={id}
-                  data={userInfo ? userInfo.Follower : null}
+                  data={userInfo.Follower}
                 />
               </div>
             </div>
             <div className="User-Info-Friends FollowCount">
-              <h3 className="popup" onClick={FollowerPopup}>{`팔로우 ${
-                userInfo ? userInfo.followCount : null
-              }`}</h3>
+              <h3
+                className="popup"
+                onClick={FollowerPopup}
+              >{`팔로우 ${userInfo.followCount}`}</h3>
               <div className="none">
-                <UserPopup
-                  title="팔로우"
-                  userId={id}
-                  data={userInfo ? userInfo.Follow : null}
-                />
+                <UserPopup title="팔로우" userId={id} data={userInfo.Follow} />
               </div>
             </div>
           </User_Info_Friends>
@@ -207,20 +203,16 @@ const User = ({ id }) => {
               <i className="far fa-bookmark"></i>
             </li>
           </ul>
-          <article className="grid" ref={tab01}>
-            {userInfo
-              ? userInfo.Posts.map(post => {
-                  return <UserPost key={post.id} post={post} />;
-                })
-              : null}
-          </article>
-          <article ref={tab02}>
-            {userInfo
-              ? userInfo.PostStorages.map(post => {
-                  return <UserPost key={post.id} post={post.Post} />;
-                })
-              : null}
-          </article>
+          <User_Tab_Post_Grid className="grid" ref={tab01}>
+            {userPosts.map(post => {
+              return <UserPost key={post.id} post={post} />;
+            })}
+          </User_Tab_Post_Grid>
+          <User_Tab_Post_Grid ref={tab02}>
+            {userSavedPosts.map(post => {
+              return <UserPost key={post.id + 0.1} post={post.Post} />;
+            })}
+          </User_Tab_Post_Grid>
         </User_Tab_Section>
       </User_Section>
     </>
@@ -232,6 +224,14 @@ User.getInitialProps = async context => {
   context.store.dispatch({
     type: LOAD_USER_DETAIL_REQUEST,
     data: id
+  });
+  context.store.dispatch({
+    type: LOAD_USER_POSTS_REQUEST,
+    data: { userId: id, lastId: 0 }
+  });
+  context.store.dispatch({
+    type: LOAD_USER_SAVED_POSTS_REQUEST,
+    data: { userId: id, lastId: 0 }
   });
   return { id };
 };

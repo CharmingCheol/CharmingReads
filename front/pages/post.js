@@ -22,6 +22,7 @@ const Post = () => {
   const [content, onContent] = useInput();
 
   const { image } = useSelector(state => state.postReducer);
+  const { userInfo } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
   const postImage = useRef();
 
@@ -56,13 +57,14 @@ const Post = () => {
       postData.append("category", category);
       postData.append("content", content);
       postData.append("image", image);
+      postData.append("postCount", userInfo.postCount);
       dispatch({
         type: ADD_POST_REQUEST,
         data: postData
       });
       Router.push("/");
     },
-    [title, category, content, image]
+    [title, category, content, image, userInfo && userInfo.postCount]
   );
 
   //뒤로 가기 버튼

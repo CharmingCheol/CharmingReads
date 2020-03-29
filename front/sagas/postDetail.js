@@ -25,16 +25,19 @@ import {
 } from "../redux/actions/postAction";
 
 //좋아요 누르기
-function postLikeApi(postLikeData) {
-  return axios.post("/post/like", postLikeData, {
-    withCredentials: true
-  });
+function postLikeApi(data) {
+  return axios.post(
+    `/post/${data.postId}/addLike`,
+    { likeCount: data.likeCount },
+    {
+      withCredentials: true
+    }
+  );
 }
 
 function* postLike(action) {
   try {
     const result = yield call(postLikeApi, action.data);
-    console.log(result);
     yield put({
       type: POST_LIKE_SUCCESS,
       data: result.data
@@ -52,16 +55,19 @@ function* watchPostLike() {
 }
 
 //좋아요 취소
-function postLikeRemoveApi(postLikeRemoveData) {
-  return axios.post("/post/likeRemove", postLikeRemoveData, {
-    withCredentials: true
-  });
+function postLikeRemoveApi(data) {
+  return axios.post(
+    `/post/${data.postId}/removeLike`,
+    { likeCount: data.likeCount },
+    {
+      withCredentials: true
+    }
+  );
 }
 
 function* postLikeRemove(action) {
   try {
     const result = yield call(postLikeRemoveApi, action.data);
-    console.log(result);
     yield put({
       type: POST_LIKE_REMOVE_SUCCESS,
       data: result.data
@@ -79,10 +85,14 @@ function* watcPostRemoveLike() {
 }
 
 //댓글 추가
-function addCommentApi(addCommentData) {
-  return axios.post("/post/addComment", addCommentData, {
-    withCredentials: true
-  });
+function addCommentApi(data) {
+  return axios.post(
+    `/post/${data.postId}/addComment`,
+    { comment: data.comment, commentCount: data.commentCount },
+    {
+      withCredentials: true
+    }
+  );
 }
 
 function* addComment(action) {

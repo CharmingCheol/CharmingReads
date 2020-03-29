@@ -22,13 +22,6 @@ const Grid = styled.div`
 const Home = () => {
   const { me } = useSelector(state => state.userReducer);
   const { mainPosts } = useSelector(state => state.postReducer);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch({
-      type: LOAD_TOP_RATED_LIKE_POSTS_REQUEST
-    });
-  }, []);
 
   return (
     <>
@@ -54,9 +47,9 @@ Home.getInitialProps = async context => {
   context.store.dispatch({
     type: LOAD_POSTS_REQUEST
   });
-  // context.store.dispatch({
-  //   type: LOAD_TOP_RATED_LIKE_POSTS_REQUEST
-  // });
+  context.store.dispatch({
+    type: LOAD_TOP_RATED_LIKE_POSTS_REQUEST
+  });
   // context.store.dispatch({
   //   type: LOAD_TOP_RATED_COMMENT_POSTS_REQUEST
   // });

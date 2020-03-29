@@ -17,11 +17,11 @@ const UserPost = ({ post }) => {
               <UserPost_HeartComment>
                 <div>
                   <i className="fas fa-heart"></i>
-                  <h3>{post.Like.length}</h3>
+                  <h3>{post.likeCount}</h3>
                 </div>
                 <div>
                   <i className="fas fa-comment"></i>
-                  <h3>{post.Comments.length}</h3>
+                  <h3>{post.commentCount}</h3>
                 </div>
               </UserPost_HeartComment>
             </div>

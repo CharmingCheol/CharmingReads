@@ -105,7 +105,8 @@ export default (state = initialState, action) => {
         break;
       }
       case POST_LIKE_SUCCESS: {
-        draft.modalPost.Like.unshift({ id: action.data.UserId });
+        draft.modalPost.Like.unshift({ id: action.data });
+        draft.modalPost.likeCount += 1;
         break;
       }
       case POST_LIKE_FAILURE: {
@@ -116,10 +117,10 @@ export default (state = initialState, action) => {
         break;
       }
       case POST_LIKE_REMOVE_SUCCESS: {
-        const userIndex = draft.modalPost.Like.findIndex(
-          user => user.id === action.data.UserId
+        draft.modalPost.Like = draft.modalPost.Like.filter(
+          id => Object.values(id)[0] !== action.data
         );
-        draft.modalPost.Like.splice(userIndex, 1);
+        draft.modalPost.likeCount -= 1;
         break;
       }
       case POST_LIKE_REMOVE_FAILURE: {

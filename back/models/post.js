@@ -17,6 +17,14 @@ module.exports = (sequelize, DataTypes) => {
       src: {
         type: DataTypes.TEXT,
         allowNull: false
+      },
+      likeCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+      },
+      commentCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
       }
     },
     {
@@ -29,7 +37,10 @@ module.exports = (sequelize, DataTypes) => {
     db.Post.hasMany(db.Comment);
     db.Post.hasMany(db.PostStorage);
     db.Post.hasMany(db.Image);
-    db.Post.belongsToMany(db.User, { through: "PostLike", as: "Like" });
+    db.Post.belongsToMany(db.User, {
+      through: "PostLike",
+      as: "Like"
+    });
   };
   return Post;
 };

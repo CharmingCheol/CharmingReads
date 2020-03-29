@@ -18,22 +18,22 @@ router.get("/loadPosts", async (req, res, next) => {
     }
     const myPosts = await db.Post.findAll({
       where,
-      include: [
-        {
-          model: db.User,
-          as: "Like",
-          attributes: ["id"]
-        },
-        {
-          model: db.Comment,
-          include: [
-            {
-              model: db.User,
-              attributes: ["id", "nickName", "src"]
-            }
-          ]
-        }
-      ],
+      // include: [
+      //   {
+      //     model: db.User,
+      //     as: "Like",
+      //     attributes: ["id"]
+      //   },
+      //   {
+      //     model: db.Comment,
+      //     include: [
+      //       {
+      //         model: db.User,
+      //         attributes: ["id", "nickName", "src"]
+      //       }
+      //     ]
+      //   }
+      // ],
       limit: parseInt(req.query.limit, 10),
       order: [["createdAt", "DESC"]]
     });
@@ -66,22 +66,22 @@ router.get("/:word", async (req, res, next) => {
     }
     const posts = await db.Post.findAll({
       where,
-      include: [
-        {
-          model: db.User,
-          as: "Like",
-          attributes: ["id"]
-        },
-        {
-          model: db.Comment,
-          include: [
-            {
-              model: db.User,
-              attributes: ["id", "nickName", "src"]
-            }
-          ]
-        }
-      ],
+      // include: [
+      //   {
+      //     model: db.User,
+      //     as: "Like",
+      //     attributes: ["id"]
+      //   },
+      //   {
+      //     model: db.Comment,
+      //     include: [
+      //       {
+      //         model: db.User,
+      //         attributes: ["id", "nickName", "src"]
+      //       }
+      //     ]
+      //   }
+      // ],
       limit: parseInt(req.query.limit, 10),
       order: [["createdAt", "DESC"]]
     });
@@ -118,16 +118,6 @@ router.get("/search/:word", async (req, res, next) => {
       order: [["createdAt", "DESC"]]
     });
     return res.status(200).json(posts);
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-
-//좋아요 많은 게시글 불러오기
-router.get("/topRatedLike", async (req, res, next) => {
-  try {
-    console.log("sdlvhsdkjfhsdlaflskdfksdhflwesfkh", req.query);
   } catch (error) {
     console.error(error);
     next(error);

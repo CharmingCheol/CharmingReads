@@ -54,7 +54,7 @@ export const Post_section = styled.form`
     background: #ecf0f1;
     border: 1px solid rgb(198, 201, 207);
     border-radius: 1em;
-    z-index: -10;
+    z-index: 10;
     box-shadow: none;
   }
   @media (min-width: 650px) {

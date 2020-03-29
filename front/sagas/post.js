@@ -158,13 +158,13 @@ function* watchLoadSearchPosts() {
 
 //좋아요 많은 게시글 불러오기
 function loadTopLikedPostsApi() {
-  return axios.get("/posts/topRatedLike?limit=10");
+  return axios.get("/post/topLiked?limit=10");
 }
 
 function* loadTopLikedPosts() {
   try {
     const result = yield call(loadTopLikedPostsApi);
-    console.log(result);
+    console.log("fdfdfdfdfdfd", result);
     // yield put({
     //   type: LOAD_TOP_RATED_LIKE_POSTS_SUCCESS,
     //   data: result.data

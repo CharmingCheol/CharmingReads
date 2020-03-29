@@ -20,8 +20,7 @@ export const UserPost_HeartComment = styled.div`
 
 export const UserPost_Section = styled.div`
   position: relative;
-  width: 33%;
-  padding: 0.5rem;
+  width: 100%;
   figure {
     height: 30vw;
     background-image: url(${props => props.src});
@@ -34,10 +33,10 @@ export const UserPost_Section = styled.div`
       opacity: 1;
     }
   }
-  @media (min-width: 700px) {
+  /* @media (min-width: 700px) {
     width: 25%;
     figure {
       height: 25vw;
     }
-  }
+  } */
 `;

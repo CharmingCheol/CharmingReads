@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useMemo } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 
@@ -38,18 +38,20 @@ const Book = ({ id }) => {
       dispatch({
         type: POST_LIKE_REMOVE_REQUEST,
         data: {
-          postId: id
+          postId: id,
+          likeCount: modalPost.likeCount
         }
       });
     } else {
       dispatch({
         type: POST_LIKE_REQUEST,
         data: {
-          postId: id
+          postId: id,
+          likeCount: modalPost.likeCount
         }
       });
     }
-  }, [liked, id]);
+  }, [liked, modalPost && modalPost.likeCount]);
 
   //게시글 저장
   const onClickPostStorage = useCallback(() => {
@@ -66,13 +68,12 @@ const Book = ({ id }) => {
         }
       });
     }
-  }, [stored, id]);
+  }, [stored]);
 
   const loadComments = useCallback(
     e => {
       const { clientHeight, scrollHeight, scrollTop } = e.target;
       if (150 > scrollHeight - clientHeight - scrollTop) {
-        console.log(clientHeight, scrollHeight, scrollTop);
         if (hasMoreComments) {
           dispatch({
             type: LOAD_COMMENTS_REQUEST,
@@ -85,11 +86,10 @@ const Book = ({ id }) => {
       }
     },
     [
-      hasMoreComments,
-      modalPost.Comments && modalPost.Comments[modalPost.Comments.length - 1].id
+      hasMoreComments
+      // modalPost.Comments && modalPost.Comments[modalPost.Comments.length - 1].id
     ]
   );
-  console.log(modalPost);
 
   useEffect(() => {
     Comments.current.onscroll = loadComments;
@@ -97,8 +97,8 @@ const Book = ({ id }) => {
       Comments.current.onscroll = null;
     };
   }, [
-    hasMoreComments,
-    modalPost.Comments && modalPost.Comments[modalPost.Comments.length - 1].id
+    hasMoreComments
+    // modalPost.Comments && modalPost.Comments[modalPost.Comments.length - 1].id
   ]);
 
   return (
@@ -122,24 +122,29 @@ const Book = ({ id }) => {
           <Book_Main postSrc={modalPost.src}>
             <h3>제목 : {modalPost.title}</h3>
             <figure />
-            <Book_Comment_Menu>
-              <li onClick={onClickLike}>
-                {liked ? (
-                  <i className="fas fa-heart" style={{ color: "crimson" }}></i>
-                ) : (
-                  <i className="far fa-heart"></i>
-                )}
-              </li>
-              <li onClick={onClickPostStorage}>
-                {stored ? (
-                  <i className="fas fa-share-square"></i>
-                ) : (
-                  <i className="far fa-share-square"></i>
-                )}
-              </li>
-            </Book_Comment_Menu>
-            <h3>{`좋아요 ${modalPost.Like ? modalPost.Like.length : 0}`}</h3>
-            <CommentInput id={id} />
+            {me ? (
+              <Book_Comment_Menu>
+                <li onClick={onClickLike}>
+                  {liked ? (
+                    <i
+                      className="fas fa-heart"
+                      style={{ color: "crimson" }}
+                    ></i>
+                  ) : (
+                    <i className="far fa-heart"></i>
+                  )}
+                </li>
+                <li onClick={onClickPostStorage}>
+                  {stored ? (
+                    <i className="fas fa-share-square"></i>
+                  ) : (
+                    <i className="far fa-share-square"></i>
+                  )}
+                </li>
+              </Book_Comment_Menu>
+            ) : null}
+            <h3>{`좋아요 ${modalPost.likeCount}`}</h3>
+            <CommentInput id={id} commentCount={modalPost.commentCount} />
           </Book_Main>
         </div>
         <div className="Flex-Section Second" ref={Comments}>

@@ -107,73 +107,12 @@ router.get("/:id", async (req, res, next) => {
   try {
     const user = await db.User.findOne({
       where: {
-        id: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0
-      },
-      include: [
-        {
-          model: db.Post,
-          include: [
-            {
-              model: db.User,
-              as: "Like",
-              attributes: ["id"]
-            },
-            {
-              model: db.Comment,
-              attributes: ["id"]
-            }
-          ]
-        },
-        {
-          model: db.User,
-          as: "Follow",
-          attributes: ["id", "nickName", "src"]
-        },
-        {
-          model: db.User,
-          as: "Follower",
-          attributes: ["id", "nickName", "src"]
-        },
-        {
-          model: db.PostStorage,
-          include: [
-            {
-              model: db.Post,
-              include: [
-                {
-                  model: db.User,
-                  as: "Like",
-                  attributes: ["id"]
-                },
-                {
-                  model: db.Comment,
-                  attributes: ["id"]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+        id: parseInt(req.params.id, 10)
+      }
     });
-    const jsonUser = Object.assign({}, user.toJSON());
-    jsonUser.Follow = jsonUser.Follow.sort((p, c) => {
-      return c["id"] - p["id"];
-    });
-    jsonUser.Follow = jsonUser.Follow.slice(0, 10);
-    jsonUser.Follower = jsonUser.Follower.sort((p, c) => {
-      return c["id"] - p["id"];
-    });
-    jsonUser.Follower = jsonUser.Follower.slice(0, 10);
-    jsonUser.Posts = jsonUser.Posts.sort((p, c) => {
-      return c["id"] - p["id"];
-    });
-    jsonUser.Posts = jsonUser.Posts.slice(0, 9);
-    jsonUser.PostStorages = jsonUser.PostStorages.sort((p, c) => {
-      return c["id"] - p["id"];
-    });
-    jsonUser.PostStorages = jsonUser.PostStorages.slice(0, 9);
-    delete jsonUser.password;
-    return res.status(200).json(jsonUser);
+    const returnUser = Object.assign({}, user.toJSON());
+    delete returnUser.password;
+    return res.status(200).json(returnUser);
   } catch (error) {
     console.error(error);
     next(error);
@@ -303,38 +242,22 @@ router.get("/:id/follower", async (req, res, next) => {
 //유저 게시글 불러오기
 router.get("/:id/userPosts", async (req, res, next) => {
   try {
-    const user = await db.User.findOne({
-      where: { id: req.params.id },
-      include: [
-        {
-          model: db.Post,
-          where: {
-            id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) }
-          },
-          include: [
-            {
-              model: db.User,
-              as: "Like",
-              attributes: ["id"]
-            },
-            {
-              model: db.Comment,
-              attributes: ["id"]
-            }
-          ]
-        }
-      ]
-    });
-    if (user) {
-      const jsonUser = Object.assign({}, user.toJSON());
-      jsonUser.Posts = jsonUser.Posts.sort((p, c) => {
-        return c["id"] - p["id"];
-      });
-      jsonUser.Posts = jsonUser.Posts.slice(0, req.query.limit);
-      return res.status(200).json(jsonUser);
+    let where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      where = {
+        id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) },
+        UserId: parseInt(req.params.id, 10)
+      };
     } else {
-      return res.status(200).json({ id: 0 });
+      where = {
+        UserId: parseInt(req.params.id, 10)
+      };
     }
+    const user = await db.Post.findAll({
+      where,
+      limit: parseInt(req.query.limit, 10)
+    });
+    return res.status(200).json(user);
   } catch (error) {
     console.error(error);
     next(error);
@@ -344,47 +267,27 @@ router.get("/:id/userPosts", async (req, res, next) => {
 //유저 저장 게시글 불러오기
 router.get("/:id/userSavedPosts", async (req, res, next) => {
   try {
-    const user = await db.User.findOne({
-      where: { id: req.params.id },
+    let where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      where = {
+        id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) },
+        UserId: parseInt(req.params.id, 10)
+      };
+    } else {
+      where = {
+        UserId: parseInt(req.params.id, 10)
+      };
+    }
+    const user = await db.PostStorage.findAll({
+      where,
       include: [
         {
-          model: db.PostStorage,
-          where: {
-            id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) }
-          },
-          include: [
-            {
-              model: db.Post,
-              include: [
-                {
-                  model: db.User,
-                  as: "Like",
-                  attributes: ["id"]
-                },
-                {
-                  model: db.Comment,
-                  attributes: ["id"]
-                }
-              ]
-            }
-          ]
+          model: db.Post
         }
-      ]
+      ],
+      limit: parseInt(req.query.limit, 10)
     });
-    const jsonUser = Object.assign({}, user.toJSON());
-    if (!jsonUser || !jsonUser.PostStorages[1]) {
-      if (jsonUser) {
-        return res.status(200).json(jsonUser);
-      } else {
-        return res.status(200).json({ id: 0 });
-      }
-    } else {
-      jsonUser.PostStorages = jsonUser.PostStorages.sort((p, c) => {
-        return c["id"] - p["id"];
-      });
-      jsonUser.PostStorages = jsonUser.PostStorages.slice(0, req.query.limit);
-      return res.status(200).json(jsonUser);
-    }
+    return res.status(200).json(user);
   } catch (error) {
     console.error(error);
     next(error);

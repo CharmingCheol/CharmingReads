@@ -15,8 +15,6 @@ const postDetailRouter = require("./routers/postDetail");
 const loadPostsRouter = require("./routers/posts");
 const db = require("./models");
 
-const router = express.Router();
-
 const app = express();
 const port = 3001;
 db.sequelize.sync();

@@ -48,7 +48,27 @@ router.post("/addPost", upload.none(), async (req, res, next) => {
       src: req.body.image,
       UserId: req.user.id
     });
+    console.log("postCountpostCount", req.body, req.body.postCount);
+    await db.User.update(
+      {
+        postCount: parseInt(req.body.postCount, 10) + 1
+      },
+      {
+        where: { id: req.user.id }
+      }
+    );
     return res.json(post);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//좋아요 많은 게시글 불러오기
+router.get("/topLiked", async (req, res, next) => {
+  try {
+    console.log("zxczxczxczxczxczxasdasd", req.query);
+    return res.status(200).send("hello");
   } catch (error) {
     console.error(error);
     next(error);

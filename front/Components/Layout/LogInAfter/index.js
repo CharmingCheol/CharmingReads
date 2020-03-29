@@ -13,6 +13,7 @@ const LogInAfter = () => {
       type: LOG_OUT_REQUEST
     });
   }, []);
+  console.log(me);
 
   return (
     <>
@@ -26,13 +27,7 @@ const LogInAfter = () => {
           as={`/user/${me.id}`}
         >
           <a>
-            <LogInAfterImage
-              src={
-                me && me.src
-                  ? `http://localhost:3001/${me.src}`
-                  : `http://localhost:3001/기본이미지.png`
-              }
-            />
+            <LogInAfterImage profileSrc={me.src} />
           </a>
         </Link>
       </LogInAfterLayout>
