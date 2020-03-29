@@ -124,14 +124,4 @@ router.get("/search/:word", async (req, res, next) => {
   }
 });
 
-//댓글 많은 게시글 불러오기
-router.get("/topRatedComment", async (req, res, next) => {
-  try {
-    console.log("zxzxbkJZBVkjSDBFkjs");
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-
 module.exports = router;

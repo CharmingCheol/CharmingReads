@@ -11,7 +11,7 @@ const Book = ({ post }) => {
           as={`/book/${post.id}`}
         >
           <a>
-            <Image src={post.src} />
+            <Image postSrc={post.src} />
             <h3>{post.title}</h3>
           </a>
         </Link>

@@ -30,13 +30,25 @@ import {
   LOAD_SEARCH_POSTS_SUCCESS,
   LOAD_FOLLOW_POSTS_REQUEST,
   LOAD_FOLLOW_POSTS_SUCCESS,
-  LOAD_FOLLOW_POSTS_FAILURE
+  LOAD_FOLLOW_POSTS_FAILURE,
+  LOAD_TOP_RATED_LIKE_POSTS_REQUEST,
+  LOAD_TOP_RATED_LIKE_POSTS_SUCCESS,
+  LOAD_TOP_RATED_LIKE_POSTS_FAILURE,
+  LOAD_TOP_RATED_COMMENT_POSTS_REQUEST,
+  LOAD_TOP_RATED_COMMENT_POSTS_SUCCESS,
+  LOAD_TOP_RATED_COMMENT_POSTS_FAILURE,
+  LOAD_ALL_POSTS_REQUEST,
+  LOAD_ALL_POSTS_SUCCESS,
+  LOAD_ALL_POSTS_FAILURE
 } from "./actions/postAction";
 
 export const initialState = {
   image: null,
   mainPosts: [],
   modalPost: [],
+  mostLikePosts: [],
+  mostCommentPosts: [],
+  allPosts: [],
   hasMoreComments: true,
   hasMoreCategoryPosts: null,
   hasMoreSearchPosts: null
@@ -142,7 +154,6 @@ export default (state = initialState, action) => {
         break;
       }
       case LOAD_COMMENTS_SUCCESS: {
-        console.log(action.data);
         action.data.forEach(comment => draft.modalPost.Comments.push(comment));
         draft.hasMoreComments = action.data.length === 6;
         break;
@@ -159,6 +170,42 @@ export default (state = initialState, action) => {
         break;
       }
       case LOAD_MODAL_POST_FAILURE: {
+        break;
+      }
+      //좋아요 많은 10개 게시글 불러오기
+      case LOAD_TOP_RATED_LIKE_POSTS_REQUEST: {
+        draft.mostLikePosts = [];
+        break;
+      }
+      case LOAD_TOP_RATED_LIKE_POSTS_SUCCESS: {
+        action.data.forEach(post => draft.mostLikePosts.push(post));
+        break;
+      }
+      case LOAD_TOP_RATED_LIKE_POSTS_FAILURE: {
+        break;
+      }
+      //댓글 많은 10개 게시글 불러오기
+      case LOAD_TOP_RATED_COMMENT_POSTS_REQUEST: {
+        draft.mostCommentPosts = [];
+        break;
+      }
+      case LOAD_TOP_RATED_COMMENT_POSTS_SUCCESS: {
+        action.data.forEach(post => draft.mostCommentPosts.push(post));
+        break;
+      }
+      case LOAD_TOP_RATED_COMMENT_POSTS_FAILURE: {
+        break;
+      }
+      //모든 게시글 불러오기
+      case LOAD_ALL_POSTS_REQUEST: {
+        draft.allPosts = [];
+        break;
+      }
+      case LOAD_ALL_POSTS_SUCCESS: {
+        action.data.forEach(post => draft.allPosts.push(post));
+        break;
+      }
+      case LOAD_ALL_POSTS_FAILURE: {
         break;
       }
     }

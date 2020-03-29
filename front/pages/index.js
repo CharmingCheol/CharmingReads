@@ -1,43 +1,76 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import {
   LOAD_POSTS_REQUEST,
   LOAD_TOP_RATED_LIKE_POSTS_REQUEST,
-  LOAD_TOP_RATED_COMMENT_POSTS_REQUEST
+  LOAD_TOP_RATED_COMMENT_POSTS_REQUEST,
+  LOAD_ALL_POSTS_REQUEST
 } from "../redux/actions/postAction";
 import Book from "../Components/Home/BookImage";
 
-const Section_Title = styled.h3`
+const Books_Layout_Title = styled.h3`
   margin: 1rem 0;
   font-weight: bold;
+  font-size: 1.4rem;
+  text-align: center;
 `;
 
-const Grid = styled.div`
+const Books_Layout = styled.div`
   display: flex;
   flex-wrap: wrap;
 `;
 
 const Home = () => {
   const { me } = useSelector(state => state.userReducer);
-  const { mainPosts } = useSelector(state => state.postReducer);
+  const { mainPosts, mostLikePosts, mostCommentPosts, allPosts } = useSelector(
+    state => state.postReducer
+  );
+
+  const scrollPosts = useCallback(() => {}, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", scrollPosts);
+    return () => {
+      window.removeEventListener("scroll", scrollPosts);
+    };
+  }, []);
 
   return (
     <>
       {me ? (
         <div>
-          <Section_Title>내가 쓴 최신글</Section_Title>
-          <Grid>
+          <Books_Layout_Title>내가 쓴 최신글</Books_Layout_Title>
+          <Books_Layout>
             {mainPosts.map(post => {
               return <Book key={post.id} post={post} />;
             })}
-          </Grid>
+          </Books_Layout>
         </div>
       ) : null}
       <div>
-        <Section_Title>좋아요 TOP10 게시글</Section_Title>
-        <Grid></Grid>
+        <Books_Layout_Title>좋아요 TOP10 게시글</Books_Layout_Title>
+        <Books_Layout>
+          {mostLikePosts.map(post => {
+            return <Book key={post.id + 0.1} post={post} />;
+          })}
+        </Books_Layout>
+      </div>
+      <Books_Layout_Title>댓글 TOP10 게시글</Books_Layout_Title>
+      <div>
+        <Books_Layout>
+          {mostCommentPosts.map(post => {
+            return <Book key={post.id + 0.2} post={post} />;
+          })}
+        </Books_Layout>
+      </div>
+      <div>
+        <Books_Layout>
+          {allPosts.map(post => {
+            return <Book key={post.id + 0.3} post={post} />;
+          })}
+        </Books_Layout>
       </div>
     </>
   );
@@ -50,9 +83,13 @@ Home.getInitialProps = async context => {
   context.store.dispatch({
     type: LOAD_TOP_RATED_LIKE_POSTS_REQUEST
   });
-  // context.store.dispatch({
-  //   type: LOAD_TOP_RATED_COMMENT_POSTS_REQUEST
-  // });
+  context.store.dispatch({
+    type: LOAD_TOP_RATED_COMMENT_POSTS_REQUEST
+  });
+  context.store.dispatch({
+    type: LOAD_ALL_POSTS_REQUEST,
+    data: { lastId: 0 }
+  });
 };
 
 export default Home;

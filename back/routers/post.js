@@ -48,7 +48,6 @@ router.post("/addPost", upload.none(), async (req, res, next) => {
       src: req.body.image,
       UserId: req.user.id
     });
-    console.log("postCountpostCount", req.body, req.body.postCount);
     await db.User.update(
       {
         postCount: parseInt(req.body.postCount, 10) + 1
@@ -67,8 +66,50 @@ router.post("/addPost", upload.none(), async (req, res, next) => {
 //좋아요 많은 게시글 불러오기
 router.get("/topLiked", async (req, res, next) => {
   try {
-    console.log("zxczxczxczxczxczxasdasd", req.query);
-    return res.status(200).send("hello");
+    const posts = await db.Post.findAll({
+      limit: parseInt(req.query.limit, 10),
+      order: [
+        ["likeCount", "DESC"],
+        ["createdAt", "DESC"]
+      ]
+    });
+    return res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//댓글 많은 게시글 불러오기
+router.get("/topRatedComment", async (req, res, next) => {
+  try {
+    console.log("zxzxbkJZBVkjSDBFkjs", req.query);
+    const posts = await db.Post.findAll({
+      limit: parseInt(req.query.limit, 10),
+      order: [
+        ["commentCount", "DESC"],
+        ["createdAt", "DESC"]
+      ]
+    });
+    return res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//모든 게시물 불러오기
+router.get("/all", async (req, res, next) => {
+  try {
+    const posts = await db.Post.findAll({
+      limit: parseInt(req.query.limit, 10),
+      order: [
+        ["likeCount", "DESC"],
+        ["commentCount", "DESC"],
+        ["createdAt", "DESC"]
+      ]
+    });
+    return res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     next(error);

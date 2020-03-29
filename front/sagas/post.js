@@ -22,7 +22,10 @@ import {
   LOAD_TOP_RATED_COMMENT_POSTS_REQUEST,
   LOAD_TOP_RATED_LIKE_POSTS_REQUEST,
   LOAD_TOP_RATED_LIKE_POSTS_SUCCESS,
-  LOAD_TOP_RATED_LIKE_POSTS_FAILURE
+  LOAD_TOP_RATED_LIKE_POSTS_FAILURE,
+  LOAD_ALL_POSTS_REQUEST,
+  LOAD_ALL_POSTS_SUCCESS,
+  LOAD_ALL_POSTS_FAILURE
 } from "../redux/actions/postAction";
 
 //이미지 불러오기
@@ -164,11 +167,10 @@ function loadTopLikedPostsApi() {
 function* loadTopLikedPosts() {
   try {
     const result = yield call(loadTopLikedPostsApi);
-    console.log("fdfdfdfdfdfd", result);
-    // yield put({
-    //   type: LOAD_TOP_RATED_LIKE_POSTS_SUCCESS,
-    //   data: result.data
-    // });
+    yield put({
+      type: LOAD_TOP_RATED_LIKE_POSTS_SUCCESS,
+      data: result.data
+    });
   } catch (error) {
     console.error(error);
     yield put({
@@ -183,16 +185,16 @@ function* watchLoadTopLikedPosts() {
 
 //댓글 많은 게시글 불러오기
 function loadTopCommentPostsApi() {
-  return axios.get("/posts/topRatedComment?limit=10");
+  return axios.get("/post/topRatedComment?limit=10");
 }
 
 function* loadTopCommentPosts() {
   try {
     const result = yield call(loadTopCommentPostsApi);
-    // yield put({
-    //   type: LOAD_TOP_RATED_COMMENT_POSTS_SUCCESS,
-    //   data: result.data
-    // });
+    yield put({
+      type: LOAD_TOP_RATED_COMMENT_POSTS_SUCCESS,
+      data: result.data
+    });
   } catch (error) {
     console.error(error);
     yield put({
@@ -202,7 +204,31 @@ function* loadTopCommentPosts() {
 }
 
 function* watchloadTopCommentPosts() {
-  yield takeLatest(LOAD_TOP_RATED_COMMENT_POSTS_REQUEST, loadTopCommentPosts);
+  yield takeLatest(LOAD_ALL_POSTS_REQUEST, loadTopCommentPosts);
+}
+
+//모든 게시글 불러오기
+function loadAllPostsApi() {
+  return axios.get("/post/all?limit=9");
+}
+
+function* loadAllPosts() {
+  try {
+    const result = yield call(loadAllPostsApi);
+    yield put({
+      type: LOAD_ALL_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_ALL_POSTS_FAILURE
+    });
+  }
+}
+
+function* watchLoadAllPosts() {
+  yield takeLatest(LOAD_TOP_RATED_COMMENT_POSTS_REQUEST, loadAllPosts);
 }
 
 export default function* postSaga() {
@@ -213,6 +239,7 @@ export default function* postSaga() {
     fork(watchcategoryPosts),
     fork(watchLoadSearchPosts),
     fork(watchLoadTopLikedPosts),
-    fork(watchloadTopCommentPosts)
+    fork(watchloadTopCommentPosts),
+    fork(watchLoadAllPosts)
   ]);
 }
