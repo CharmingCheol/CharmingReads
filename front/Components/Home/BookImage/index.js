@@ -1,11 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import { Image, Book_Layout } from "./style";
+import { Image, Book_Layout, Heart_Comment } from "./style";
 
-const Book = ({ post }) => {
+const Book = ({ post, all }) => {
   return (
     <>
-      <Book_Layout>
+      <Book_Layout all={all}>
         <Link
           href={{ pathname: "/book", query: { id: post.id } }}
           as={`/book/${post.id}`}
@@ -15,6 +15,16 @@ const Book = ({ post }) => {
             <h3>{post.title}</h3>
           </a>
         </Link>
+        <Heart_Comment className="Book-Heart-Comment">
+          <div>
+            <i className="fas fa-heart"></i>
+            <h3>{post.likeCount}</h3>
+          </div>
+          <div>
+            <i className="fas fa-comment"></i>
+            <h3>{post.commentCount}</h3>
+          </div>
+        </Heart_Comment>
       </Book_Layout>
     </>
   );

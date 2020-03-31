@@ -45,13 +45,14 @@ import {
 export const initialState = {
   image: null,
   mainPosts: [],
-  modalPost: [],
+  modalPost: {},
   mostLikePosts: [],
   mostCommentPosts: [],
   allPosts: [],
   hasMoreComments: true,
   hasMoreCategoryPosts: null,
-  hasMoreSearchPosts: null
+  hasMoreSearchPosts: null,
+  hasMoreAllPosts: null
 };
 
 export default (state = initialState, action) => {
@@ -85,7 +86,7 @@ export default (state = initialState, action) => {
       //게시글 불러오기
       //카테고리별 게시글 불러오기
       case LOAD_POSTS_REQUEST: {
-        draft.modalPost = [];
+        draft.mainPosts = [];
         break;
       }
       case LOAD_SEARCH_POSTS_SUCCESS:
@@ -163,6 +164,7 @@ export default (state = initialState, action) => {
       }
       //modal 불러오기
       case LOAD_MODAL_POST_REQUEST: {
+        draft.modalPost = {};
         break;
       }
       case LOAD_MODAL_POST_SUCCESS: {
@@ -198,11 +200,12 @@ export default (state = initialState, action) => {
       }
       //모든 게시글 불러오기
       case LOAD_ALL_POSTS_REQUEST: {
-        draft.allPosts = [];
+        draft.allPosts = draft.allPosts ? draft.allPosts : [];
         break;
       }
       case LOAD_ALL_POSTS_SUCCESS: {
         action.data.forEach(post => draft.allPosts.push(post));
+        draft.hasMoreAllPosts = action.data.length === 9;
         break;
       }
       case LOAD_ALL_POSTS_FAILURE: {

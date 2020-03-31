@@ -21,8 +21,10 @@ export const UserPost_HeartComment = styled.div`
 export const UserPost_Section = styled.div`
   position: relative;
   width: 100%;
+  padding: 0.3rem;
   figure {
-    height: 30vw;
+    height: 0;
+    padding-bottom: 100%;
     background-image: url(${props => props.src});
     background-repeat: no-repeat;
     background-size: cover;
@@ -33,10 +35,10 @@ export const UserPost_Section = styled.div`
       opacity: 1;
     }
   }
-  /* @media (min-width: 700px) {
-    width: 25%;
-    figure {
-      height: 25vw;
-    }
-  } */
+  @media (min-width: 500px) {
+    width: 50%;
+  }
+  @media (min-width: 900px) {
+    width: 33%;
+  }
 `;

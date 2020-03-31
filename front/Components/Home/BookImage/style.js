@@ -9,9 +9,30 @@ export const Image = styled.figure`
   padding-bottom: 100%;
 `;
 
+export const Heart_Comment = styled.div`
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  color: #4d4d4d;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: -0.3rem 0 0 -0.3rem;
+  div {
+    display: flex;
+    i:first-child {
+      margin: 0 0.7rem 0.7rem 0;
+    }
+  }
+`;
+
 export const Book_Layout = styled.div`
   width: 50%;
   padding: 0.2rem;
+  position: relative;
   a {
     width: 100%;
     height: 100%;
@@ -22,15 +43,20 @@ export const Book_Layout = styled.div`
       white-space: nowrap;
     }
   }
+  &:hover {
+    ${Heart_Comment} {
+      opacity: 1;
+    }
+  }
   @media (min-width: 450px) {
-    width: 33%;
+    width: ${props => (props.all ? "50%" : "33%")};
     padding: 0.5rem;
   }
   @media (min-width: 900px) {
-    width: 25%;
+    width: ${props => (props.all ? "33%" : "25%")};
     padding: 0.2rem;
   }
   @media (min-width: 1200px) {
-    width: 20%;
+    width: ${props => (props.all ? "25%" : "20%")};
   }
 `;

@@ -12,6 +12,11 @@ export const Menu = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
+  i {
+    cursor: pointer;
+    font-size: calc(20px + 2vw);
+    color: white;
+  }
   @media (max-width: 700px) {
     h3,
     button {

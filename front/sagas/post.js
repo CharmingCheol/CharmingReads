@@ -1,4 +1,4 @@
-import { all, call, fork, put, takeLatest } from "redux-saga/effects";
+import { all, call, fork, put, takeLatest, throttle } from "redux-saga/effects";
 import axios from "axios";
 
 import {
@@ -204,17 +204,18 @@ function* loadTopCommentPosts() {
 }
 
 function* watchloadTopCommentPosts() {
-  yield takeLatest(LOAD_ALL_POSTS_REQUEST, loadTopCommentPosts);
+  yield takeLatest(LOAD_TOP_RATED_COMMENT_POSTS_REQUEST, loadTopCommentPosts);
 }
 
 //모든 게시글 불러오기
-function loadAllPostsApi() {
-  return axios.get("/post/all?limit=9");
+function loadAllPostsApi(data) {
+  return axios.get(`/post/all?limit=9&lastId=${data.lastId}`);
 }
 
-function* loadAllPosts() {
+function* loadAllPosts(action) {
   try {
-    const result = yield call(loadAllPostsApi);
+    const result = yield call(loadAllPostsApi, action.data);
+    console.log("resulresultt", result);
     yield put({
       type: LOAD_ALL_POSTS_SUCCESS,
       data: result.data
@@ -228,7 +229,7 @@ function* loadAllPosts() {
 }
 
 function* watchLoadAllPosts() {
-  yield takeLatest(LOAD_TOP_RATED_COMMENT_POSTS_REQUEST, loadAllPosts);
+  yield throttle(2000, LOAD_ALL_POSTS_REQUEST, loadAllPosts);
 }
 
 export default function* postSaga() {

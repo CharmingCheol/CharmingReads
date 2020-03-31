@@ -17,12 +17,18 @@ export const User_Info = styled.div`
   .User-Info {
     display: flex;
   }
-  .User-Info-Image {
-    width: 100px;
-    height: 100px;
+  figure {
+    width: calc(80px + 5vw);
+    height: calc(80px + 5vw);
     border-radius: 50%;
-    background-color: red;
     margin: 0 1rem 1rem 0;
+    background-image: url(${props =>
+      props.profileSrc
+        ? props.profileSrc
+        : "https://charmingbooks.s3.ap-northeast-2.amazonaws.com/basic/%EA%B8%B0%EB%B3%B8%EC%9D%B4%EB%AF%B8%EC%A7%80.PNG"});
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
   }
   .User-Info-Section {
     display: flex;
@@ -101,9 +107,8 @@ export const User_Tab_Section = styled.div`
     display: none;
   }
   .grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 30px;
+    display: flex;
+    flex-wrap: wrap;
   }
 `;
 

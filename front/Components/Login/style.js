@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const LogInMain = styled.div`
+  width: 100%;
+  height: calc(100vh - 80px - 4rem);
   font-size: 1rem;
   display: flex;
   justify-content: center;

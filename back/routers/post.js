@@ -83,7 +83,6 @@ router.get("/topLiked", async (req, res, next) => {
 //댓글 많은 게시글 불러오기
 router.get("/topRatedComment", async (req, res, next) => {
   try {
-    console.log("zxzxbkJZBVkjSDBFkjs", req.query);
     const posts = await db.Post.findAll({
       limit: parseInt(req.query.limit, 10),
       order: [
@@ -102,12 +101,11 @@ router.get("/topRatedComment", async (req, res, next) => {
 router.get("/all", async (req, res, next) => {
   try {
     const posts = await db.Post.findAll({
+      where: {
+        id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) }
+      },
       limit: parseInt(req.query.limit, 10),
-      order: [
-        ["likeCount", "DESC"],
-        ["commentCount", "DESC"],
-        ["createdAt", "DESC"]
-      ]
+      order: [["createdAt", "DESC"]]
     });
     return res.status(200).json(posts);
   } catch (error) {

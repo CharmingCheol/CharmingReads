@@ -27,7 +27,10 @@ const Book = ({ id }) => {
   const { me } = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
   const liked =
-    me && modalPost.Like && modalPost.Like.find(like => like.id === me.id);
+    me &&
+    modalPost &&
+    modalPost.Like &&
+    modalPost.Like.find(like => like.id === me.id);
   const stored =
     me && me.PostStorages && me.PostStorages.find(post => post.postId === id);
   const Comments = useRef();
@@ -100,12 +103,14 @@ const Book = ({ id }) => {
     hasMoreComments
     // modalPost.Comments && modalPost.Comments[modalPost.Comments.length - 1].id
   ]);
+  console.log(modalPost);
+  console.log(modalPost.createdAt.slice(0, 16).replace("T", " "));
 
   return (
     <>
       <Book_Layout>
         <div className="Flex-Section First">
-          <Book_User_Info profileSrc={me.src}>
+          <Book_User_Info profileSrc={modalPost.User.src}>
             <Link
               href={{ pathname: "/user", query: { id: modalPost.UserId } }}
               as={`/user/${modalPost.UserId}`}
@@ -115,8 +120,9 @@ const Book = ({ id }) => {
               </a>
             </Link>
             <div>
-              <h3>{me.nickName}</h3>
-              <h3>작성일</h3>
+              <h3>{modalPost.User.nickName}</h3>
+              <h3>{modalPost.createdAt.slice(0, 16).replace("T", " ")}</h3>
+              <h3>카테고리: {modalPost.category}</h3>
             </div>
           </Book_User_Info>
           <Book_Main postSrc={modalPost.src}>

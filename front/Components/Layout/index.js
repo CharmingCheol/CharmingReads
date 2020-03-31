@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 import GlobalStyles from "../GlobalStyle";
 import { Menu, Main } from "./style";
@@ -15,7 +16,9 @@ const AppLayout = ({ children, pathname }) => {
     <>
       <GlobalStyles />
       <Menu>
-        <div>로고 영역</div>
+        <Link href="/">
+          <i className="fas fa-book-open"></i>
+        </Link>
         <Search />
         {me ? <LogInAfter /> : <LogInBefore />}
       </Menu>

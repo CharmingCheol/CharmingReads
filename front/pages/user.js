@@ -90,7 +90,7 @@ const User = ({ id }) => {
   //게시글, 저장한 게시글 불러오기
   const onScrollPosts = useCallback(() => {
     if (document.documentElement.scrollHeight - scrollY < 750) {
-      if (tab01.current.className === "grid") {
+      if (tab01.current.classList.contains("grid")) {
         if (
           hasMoreUserPost !== userPosts &&
           userInfo.Posts[userInfo.Posts.length - 1].id
@@ -127,6 +127,7 @@ const User = ({ id }) => {
       window.removeEventListener("scroll", onScrollPosts);
     };
   }, [
+    tab01,
     userPosts && userPosts[userPosts.length - 1],
     userSavedPosts && userSavedPosts[userSavedPosts.length - 1]
   ]);
@@ -135,9 +136,9 @@ const User = ({ id }) => {
     <>
       <User_Section>
         <div>
-          <User_Info>
+          <User_Info profileSrc={userInfo.src}>
             <div className="User-Info">
-              <img className="User-Info-Image" />
+              <figure />
               <h3>{userInfo.nickName}</h3>
             </div>
             <div className="User-Info-Section">

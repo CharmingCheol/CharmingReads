@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const SignUpMain = styled.form`
+  width: 100%;
+  height: calc(100vh - 80px - 4rem);
   font-size: 1rem;
   display: flex;
   justify-content: center;
@@ -27,6 +29,9 @@ export const SignUpMain = styled.form`
   & div {
     margin: 0 auto;
     margin-bottom: 3vh;
+  }
+  label {
+    margin-left: 0.5rem;
   }
 `;
 

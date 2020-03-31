@@ -7,6 +7,7 @@ export const Menu = styled.ul`
   color: white;
   padding-bottom: 30px;
   background-color: rgba(204, 174, 98, 1);
+  cursor: pointer;
   & li:not(:last-child) {
     margin-right: 30px;
   }

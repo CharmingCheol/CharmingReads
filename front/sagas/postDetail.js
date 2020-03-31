@@ -143,14 +143,14 @@ function* watchLoadComments() {
 
 //modal 불러오기
 function loadModalApi(loadModalData) {
-  return axios.get(`/post/${loadModalData}/loadModal`, {
-    withCredentials: true
-  });
+  console.log("rrrrrrrrrrrrrrrrrr");
+  return axios.get(`/post/${loadModalData}/loadModal`);
 }
 
 function* loadModal(action) {
   try {
     const result = yield call(loadModalApi, action.data);
+    console.log("qqqqqqqweweweew", result);
     yield put({
       type: LOAD_MODAL_POST_SUCCESS,
       data: result.data

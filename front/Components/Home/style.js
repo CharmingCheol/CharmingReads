@@ -33,8 +33,8 @@ export const Book_User_Info = styled.div`
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    height: 6vw;
-    width: 6vw;
+    height: calc(50px + 3vw);
+    width: calc(50px + 3vw);
     border-radius: 50%;
     margin-right: 1rem;
   }
@@ -42,7 +42,7 @@ export const Book_User_Info = styled.div`
     display: flex;
     flex-direction: column;
     h3:first-child {
-      margin-bottom: 0.5rem;
+      font-weight: bold;
     }
   }
 `;
