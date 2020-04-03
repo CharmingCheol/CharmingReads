@@ -28,9 +28,6 @@ import {
   LOAD_CATEGORY_POSTS_SUCCESS,
   LOAD_CATEGORY_POSTS_FAILURE,
   LOAD_SEARCH_POSTS_SUCCESS,
-  LOAD_FOLLOW_POSTS_REQUEST,
-  LOAD_FOLLOW_POSTS_SUCCESS,
-  LOAD_FOLLOW_POSTS_FAILURE,
   LOAD_TOP_RATED_LIKE_POSTS_REQUEST,
   LOAD_TOP_RATED_LIKE_POSTS_SUCCESS,
   LOAD_TOP_RATED_LIKE_POSTS_FAILURE,
@@ -39,13 +36,15 @@ import {
   LOAD_TOP_RATED_COMMENT_POSTS_FAILURE,
   LOAD_ALL_POSTS_REQUEST,
   LOAD_ALL_POSTS_SUCCESS,
-  LOAD_ALL_POSTS_FAILURE
+  LOAD_ALL_POSTS_FAILURE,
+  LOAD_SEARCH_POSTS_REQUEST,
+  LOAD_SEARCH_POSTS_FAILURE
 } from "./actions/postAction";
 
 export const initialState = {
   image: null,
   mainPosts: [],
-  modalPost: {},
+  modalPost: null,
   mostLikePosts: [],
   mostCommentPosts: [],
   allPosts: [],
@@ -85,6 +84,8 @@ export default (state = initialState, action) => {
       }
       //게시글 불러오기
       //카테고리별 게시글 불러오기
+      case LOAD_SEARCH_POSTS_REQUEST:
+      case LOAD_CATEGORY_POSTS_REQUEST:
       case LOAD_POSTS_REQUEST: {
         draft.mainPosts = [];
         break;
@@ -110,7 +111,21 @@ export default (state = initialState, action) => {
         }
         break;
       }
+      case LOAD_SEARCH_POSTS_FAILURE:
+      case LOAD_CATEGORY_POSTS_FAILURE:
       case LOAD_POSTS_FAILURE: {
+        break;
+      }
+      //modal 불러오기
+      case LOAD_MODAL_POST_REQUEST: {
+        draft.modalPost = null;
+        break;
+      }
+      case LOAD_MODAL_POST_SUCCESS: {
+        draft.modalPost = action.data;
+        break;
+      }
+      case LOAD_MODAL_POST_FAILURE: {
         break;
       }
       //좋아요 추가
@@ -160,18 +175,6 @@ export default (state = initialState, action) => {
         break;
       }
       case LOAD_COMMENTS_FAILURE: {
-        break;
-      }
-      //modal 불러오기
-      case LOAD_MODAL_POST_REQUEST: {
-        draft.modalPost = {};
-        break;
-      }
-      case LOAD_MODAL_POST_SUCCESS: {
-        draft.modalPost = action.data;
-        break;
-      }
-      case LOAD_MODAL_POST_FAILURE: {
         break;
       }
       //좋아요 많은 10개 게시글 불러오기

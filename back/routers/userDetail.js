@@ -255,7 +255,8 @@ router.get("/:id/userPosts", async (req, res, next) => {
     }
     const user = await db.Post.findAll({
       where,
-      limit: parseInt(req.query.limit, 10)
+      limit: parseInt(req.query.limit, 10),
+      order: [["createdAt", "DESC"]]
     });
     return res.status(200).json(user);
   } catch (error) {

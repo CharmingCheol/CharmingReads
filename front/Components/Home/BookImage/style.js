@@ -7,22 +7,21 @@ export const Image = styled.figure`
   background-position: center;
   height: 0;
   padding-bottom: 100%;
+  cursor: pointer;
 `;
 
 export const Heart_Comment = styled.div`
   opacity: 0;
-  width: 100%;
-  height: 100%;
   position: absolute;
-  top: 0;
   color: #4d4d4d;
-  display: flex;
+  display: none;
+  top: 35%;
+  left: 40%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: -0.3rem 0 0 -0.3rem;
   div {
-    display: flex;
     i:first-child {
       margin: 0 0.7rem 0.7rem 0;
     }
@@ -46,6 +45,10 @@ export const Book_Layout = styled.div`
   &:hover {
     ${Heart_Comment} {
       opacity: 1;
+      display: flex;
+      div {
+        display: flex;
+      }
     }
   }
   @media (min-width: 450px) {

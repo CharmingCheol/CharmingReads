@@ -1,5 +1,5 @@
 import axios from "axios";
-import { all, call, fork, takeLatest, put } from "redux-saga/effects";
+import { all, call, fork, takeLatest, throttle, put } from "redux-saga/effects";
 import {
   POST_LIKE_REQUEST,
   POST_LIKE_FAILURE,
@@ -143,7 +143,6 @@ function* watchLoadComments() {
 
 //modal 불러오기
 function loadModalApi(loadModalData) {
-  console.log("rrrrrrrrrrrrrrrrrr");
   return axios.get(`/post/${loadModalData}/loadModal`);
 }
 

@@ -15,7 +15,7 @@ const Book = ({ post, all }) => {
             <h3>{post.title}</h3>
           </a>
         </Link>
-        <Heart_Comment className="Book-Heart-Comment">
+        <Heart_Comment>
           <div>
             <i className="fas fa-heart"></i>
             <h3>{post.likeCount}</h3>

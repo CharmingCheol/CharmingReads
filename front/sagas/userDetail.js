@@ -257,7 +257,6 @@ function loadUserPostsApi(data, limit = 9) {
 function* loadUserPosts(action) {
   try {
     const result = yield call(loadUserPostsApi, action.data);
-    console.log("loadUserPostsApi", result);
     yield put({
       type: LOAD_USER_POSTS_SUCCESS,
       data: result.data

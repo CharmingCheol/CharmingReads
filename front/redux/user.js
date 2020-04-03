@@ -63,7 +63,7 @@ export const initialState = {
   userSavedPosts: [],
   hasMoreFollow: null,
   hasMoreFollower: null,
-  hasMoreUserPost: null,
+  hasMoreUserPost: true,
   hasMoreUserSavedPost: null
 };
 
@@ -238,16 +238,16 @@ export default (state = initialState, action) => {
       }
       //유저 게시글 불러오기
       case LOAD_USER_POSTS_REQUEST: {
-        draft.userPosts = [];
-        draft.hasMoreUserPost = null;
+        draft.userPosts = action.lastId ? draft.userPosts : [];
         break;
       }
       case LOAD_USER_POSTS_SUCCESS: {
         if (action.data.id === 0) {
           return;
         } else {
-          action.data.forEach(post => draft.userPosts.unshift(post));
-          draft.hasMoreUserPost = action.data[action.data.length - 1].id;
+          action.data.forEach(post => draft.userPosts.push(post));
+          draft.hasMoreUserPost = action.data.length === 9;
+          // draft.hasMoreUserPost = action.data[action.data.length - 1].id;
         }
         break;
       }

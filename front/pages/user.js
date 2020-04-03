@@ -91,14 +91,13 @@ const User = ({ id }) => {
   const onScrollPosts = useCallback(() => {
     if (document.documentElement.scrollHeight - scrollY < 750) {
       if (tab01.current.classList.contains("grid")) {
-        if (
-          hasMoreUserPost !== userPosts &&
-          userInfo.Posts[userInfo.Posts.length - 1].id
-        ) {
+        if (hasMoreUserPost) {
           dispatch({
             type: LOAD_USER_POSTS_REQUEST,
-            userId: id,
-            lastId: userPosts && userPosts[userPosts.length - 1].id
+            data: {
+              userId: id,
+              lastId: userPosts && userPosts[userPosts.length - 1].id
+            }
           });
         }
       } else {
@@ -117,6 +116,7 @@ const User = ({ id }) => {
     }
   }, [
     tab01,
+    hasMoreUserPost,
     userPosts && userPosts[userPosts.length - 1],
     userSavedPosts && userSavedPosts[userSavedPosts.length - 1]
   ]);

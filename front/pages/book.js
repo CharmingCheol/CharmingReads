@@ -94,38 +94,45 @@ const Book = ({ id }) => {
     ]
   );
 
-  useEffect(() => {
-    Comments.current.onscroll = loadComments;
-    return () => {
-      Comments.current.onscroll = null;
-    };
-  }, [
-    hasMoreComments
-    // modalPost.Comments && modalPost.Comments[modalPost.Comments.length - 1].id
-  ]);
-  console.log(modalPost);
-  console.log(modalPost.createdAt.slice(0, 16).replace("T", " "));
+  // useEffect(() => {
+  //   Comments.current.onscroll = loadComments;
+  //   return () => {
+  //     Comments.current.onscroll = null;
+  //   };
+  // }, [
+  //   hasMoreComments
+  //   // modalPost.Comments && modalPost.Comments[modalPost.Comments.length - 1].id
+  // ]);
+  // console.log(modalPost);
+  // // console.log(modalPost.createdAt.slice(0, 16).replace("T", " "));
 
+  console.log(modalPost);
   return (
     <>
       <Book_Layout>
         <div className="Flex-Section First">
           <Book_User_Info profileSrc={modalPost.User.src}>
-            <Link
-              href={{ pathname: "/user", query: { id: modalPost.UserId } }}
+            {/* <Link
+              href={{
+                pathname: "/user",
+                query: { id: modalPost.UserId }
+              }}
               as={`/user/${modalPost.UserId}`}
             >
               <a>
                 <figure></figure>
               </a>
-            </Link>
+            </Link> */}
             <div>
               <h3>{modalPost.User.nickName}</h3>
-              <h3>{modalPost.createdAt.slice(0, 16).replace("T", " ")}</h3>
+              <h3>
+                {modalPost.createdAt &&
+                  modalPost.createdAt.slice(0, 16).replace("T", " ")}
+              </h3>
               <h3>카테고리: {modalPost.category}</h3>
             </div>
           </Book_User_Info>
-          <Book_Main postSrc={modalPost.src}>
+          {/* <Book_Main postSrc={modalPost.src}>
             <h3>제목 : {modalPost.title}</h3>
             <figure />
             {me ? (
@@ -151,9 +158,9 @@ const Book = ({ id }) => {
             ) : null}
             <h3>{`좋아요 ${modalPost.likeCount}`}</h3>
             <CommentInput id={id} commentCount={modalPost.commentCount} />
-          </Book_Main>
+          </Book_Main> */}
         </div>
-        <div className="Flex-Section Second" ref={Comments}>
+        {/* <div className="Flex-Section Second" ref={Comments}>
           <div className="Second-A">
             <h2>감상평</h2>
             <h3 className="Book-Detail-Content">{modalPost.content}</h3>
@@ -164,7 +171,7 @@ const Book = ({ id }) => {
                 return <Comment key={comment.id} comment={comment} />;
               })}
           </Book_Comment_List>
-        </div>
+        </div>  */}
       </Book_Layout>
     </>
   );
