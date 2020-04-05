@@ -8,31 +8,31 @@ import {
   LOAD_COMMENTS_REQUEST,
   LOAD_MODAL_POST_REQUEST,
   REMOVE_POST_STORAGE_REQUEST,
-  ADD_POST_STORAGE_REQUEST
+  ADD_POST_STORAGE_REQUEST,
 } from "../redux/actions/postAction";
 import {
   Book_Layout,
   Book_Main,
   Book_User_Info,
   Book_Comment_List,
-  Book_Comment_Menu
+  Book_Comment_Menu,
 } from "../Components/Home/style";
 import CommentInput from "../Components/Home/CommentInput";
 import Comment from "../Components/Home/Comment";
 
 const Book = ({ id }) => {
   const { modalPost, hasMoreComments } = useSelector(
-    state => state.postReducer
+    (state) => state.postReducer
   );
-  const { me } = useSelector(state => state.userReducer);
+  const { me } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
   const liked =
     me &&
     modalPost &&
     modalPost.Like &&
-    modalPost.Like.find(like => like.id === me.id);
+    modalPost.Like.find((like) => like.id === me.id);
   const stored =
-    me && me.PostStorages && me.PostStorages.find(post => post.postId === id);
+    me && me.PostStorages && me.PostStorages.find((post) => post.postId === id);
   const Comments = useRef();
 
   //좋아요 버튼
@@ -42,16 +42,16 @@ const Book = ({ id }) => {
         type: POST_LIKE_REMOVE_REQUEST,
         data: {
           postId: id,
-          likeCount: modalPost.likeCount
-        }
+          likeCount: modalPost.likeCount,
+        },
       });
     } else {
       dispatch({
         type: POST_LIKE_REQUEST,
         data: {
           postId: id,
-          likeCount: modalPost.likeCount
-        }
+          likeCount: modalPost.likeCount,
+        },
       });
     }
   }, [liked, modalPost && modalPost.likeCount]);
@@ -61,20 +61,21 @@ const Book = ({ id }) => {
     if (stored) {
       dispatch({
         type: REMOVE_POST_STORAGE_REQUEST,
-        data: id
+        data: id,
       });
     } else {
       dispatch({
         type: ADD_POST_STORAGE_REQUEST,
         data: {
-          postId: id
-        }
+          postId: id,
+        },
       });
     }
   }, [stored]);
 
+  //게시글 불러오기
   const loadComments = useCallback(
-    e => {
+    (e) => {
       const { clientHeight, scrollHeight, scrollTop } = e.target;
       if (150 > scrollHeight - clientHeight - scrollTop) {
         if (hasMoreComments) {
@@ -82,49 +83,41 @@ const Book = ({ id }) => {
             type: LOAD_COMMENTS_REQUEST,
             data: {
               postId: id,
-              lastId: modalPost.Comments[modalPost.Comments.length - 1].id
-            }
+              lastId: modalPost.Comments[modalPost.Comments.length - 1].id,
+            },
           });
         }
       }
     },
-    [
-      hasMoreComments
-      // modalPost.Comments && modalPost.Comments[modalPost.Comments.length - 1].id
-    ]
+    [hasMoreComments]
   );
 
-  // useEffect(() => {
-  //   Comments.current.onscroll = loadComments;
-  //   return () => {
-  //     Comments.current.onscroll = null;
-  //   };
-  // }, [
-  //   hasMoreComments
-  //   // modalPost.Comments && modalPost.Comments[modalPost.Comments.length - 1].id
-  // ]);
-  // console.log(modalPost);
-  // // console.log(modalPost.createdAt.slice(0, 16).replace("T", " "));
+  //게시글 불러오기 useEffect
+  useEffect(() => {
+    Comments.current.onscroll = loadComments;
+    return () => {
+      Comments.current.onscroll = null;
+    };
+  }, [hasMoreComments]);
 
-  console.log(modalPost);
   return (
     <>
       <Book_Layout>
         <div className="Flex-Section First">
-          <Book_User_Info profileSrc={modalPost.User.src}>
-            {/* <Link
+          <Book_User_Info profileSrc={modalPost.User && modalPost.User.src}>
+            <Link
               href={{
                 pathname: "/user",
-                query: { id: modalPost.UserId }
+                query: { id: modalPost.UserId },
               }}
               as={`/user/${modalPost.UserId}`}
             >
               <a>
                 <figure></figure>
               </a>
-            </Link> */}
+            </Link>
             <div>
-              <h3>{modalPost.User.nickName}</h3>
+              <h3>{modalPost.User && modalPost.User.nickName}</h3>
               <h3>
                 {modalPost.createdAt &&
                   modalPost.createdAt.slice(0, 16).replace("T", " ")}
@@ -132,7 +125,7 @@ const Book = ({ id }) => {
               <h3>카테고리: {modalPost.category}</h3>
             </div>
           </Book_User_Info>
-          {/* <Book_Main postSrc={modalPost.src}>
+          <Book_Main postSrc={modalPost.src}>
             <h3>제목 : {modalPost.title}</h3>
             <figure />
             {me ? (
@@ -158,30 +151,30 @@ const Book = ({ id }) => {
             ) : null}
             <h3>{`좋아요 ${modalPost.likeCount}`}</h3>
             <CommentInput id={id} commentCount={modalPost.commentCount} />
-          </Book_Main> */}
+          </Book_Main>
         </div>
-        {/* <div className="Flex-Section Second" ref={Comments}>
+        <div className="Flex-Section Second" ref={Comments}>
           <div className="Second-A">
             <h2>감상평</h2>
             <h3 className="Book-Detail-Content">{modalPost.content}</h3>
           </div>
           <Book_Comment_List>
             {modalPost.Comments &&
-              modalPost.Comments.map(comment => {
+              modalPost.Comments.map((comment) => {
                 return <Comment key={comment.id} comment={comment} />;
               })}
           </Book_Comment_List>
-        </div>  */}
+        </div>
       </Book_Layout>
     </>
   );
 };
 
-Book.getInitialProps = async context => {
+Book.getInitialProps = async (context) => {
   const id = parseInt(context.query.id, 10);
   context.store.dispatch({
     type: LOAD_MODAL_POST_REQUEST,
-    data: id
+    data: id,
   });
   return { id };
 };

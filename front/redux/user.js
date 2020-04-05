@@ -41,7 +41,7 @@ import {
   LOAD_USER_POSTS_FAILURE,
   LOAD_USER_SAVED_POSTS_REQUEST,
   LOAD_USER_SAVED_POSTS_SUCCESS,
-  LOAD_USER_SAVED_POSTS_FAILURE
+  LOAD_USER_SAVED_POSTS_FAILURE,
 } from "./actions/userAction";
 import {
   ADD_POST_STORAGE_REQUEST,
@@ -49,7 +49,7 @@ import {
   ADD_POST_STORAGE_FAILURE,
   REMOVE_POST_STORAGE_REQUEST,
   REMOVE_POST_STORAGE_SUCCESS,
-  REMOVE_POST_STORAGE_FAILURE
+  REMOVE_POST_STORAGE_FAILURE,
 } from "./actions/postAction";
 
 export const initialState = {
@@ -64,11 +64,11 @@ export const initialState = {
   hasMoreFollow: null,
   hasMoreFollower: null,
   hasMoreUserPost: true,
-  hasMoreUserSavedPost: null
+  hasMoreUserSavedPost: null,
 };
 
 export default (state = initialState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     switch (action.type) {
       //회원가입
       case SIGN_UP_REQUEST: {
@@ -150,7 +150,7 @@ export default (state = initialState, action) => {
         break;
       }
       case ADD_POST_STORAGE_SUCCESS: {
-        draft.me.PostStorages.unshift({ postId: action.data });
+        draft.me.PostStorages.push({ postId: action.data });
         break;
       }
       case ADD_POST_STORAGE_FAILURE: {
@@ -162,7 +162,7 @@ export default (state = initialState, action) => {
       }
       case REMOVE_POST_STORAGE_SUCCESS: {
         const userIndex = draft.me.PostStorages.findIndex(
-          post => post.postId === action.data
+          (post) => post.postId === action.data
         );
         draft.me.PostStorages.splice(userIndex, 1);
         break;
@@ -211,7 +211,7 @@ export default (state = initialState, action) => {
         break;
       }
       case LOAD_FOLLOW_SUCCESS: {
-        action.data.Follow.forEach(follow =>
+        action.data.Follow.forEach((follow) =>
           draft.userInfo.Follow.push(follow)
         );
         draft.hasMoreFollow =
@@ -226,7 +226,7 @@ export default (state = initialState, action) => {
         break;
       }
       case LOAD_FOLLOWER_SUCCESS: {
-        action.data.Follower.forEach(follower =>
+        action.data.Follower.forEach((follower) =>
           draft.userInfo.Follower.push(follower)
         );
         draft.hasMoreFollower =
@@ -238,14 +238,14 @@ export default (state = initialState, action) => {
       }
       //유저 게시글 불러오기
       case LOAD_USER_POSTS_REQUEST: {
-        draft.userPosts = action.lastId ? draft.userPosts : [];
+        draft.userPosts = action.data.lastId ? draft.userPosts : [];
         break;
       }
       case LOAD_USER_POSTS_SUCCESS: {
         if (action.data.id === 0) {
           return;
         } else {
-          action.data.forEach(post => draft.userPosts.push(post));
+          action.data.forEach((post) => draft.userPosts.push(post));
           draft.hasMoreUserPost = action.data.length === 9;
           // draft.hasMoreUserPost = action.data[action.data.length - 1].id;
         }
@@ -256,16 +256,15 @@ export default (state = initialState, action) => {
       }
       //유저 저장 게시글 불러오기
       case LOAD_USER_SAVED_POSTS_REQUEST: {
-        draft.userSavedPosts = [];
-        draft.hasMoreUserSavedPost = null;
+        draft.userSavedPosts = action.data.lastId ? draft.userSavedPosts : [];
         break;
       }
       case LOAD_USER_SAVED_POSTS_SUCCESS: {
         if (action.data.id === 0) {
           return;
         } else {
-          action.data.forEach(post => draft.userSavedPosts.unshift(post));
-          draft.hasMoreUserSavedPost = action.data[action.data.length - 1].id;
+          action.data.forEach((post) => draft.userSavedPosts.push(post));
+          draft.hasMoreUserSavedPost = action.data.length === 9;
         }
         break;
       }

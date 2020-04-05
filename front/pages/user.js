@@ -7,7 +7,7 @@ import {
   FOLLOW_REQUEST,
   UNFOLLOW_REQUEST,
   LOAD_USER_POSTS_REQUEST,
-  LOAD_USER_SAVED_POSTS_REQUEST
+  LOAD_USER_SAVED_POSTS_REQUEST,
 } from "../redux/actions/userAction";
 import UserPost from "../Components/User/UserPost";
 import UserPopup from "../Components/User/UserPopup";
@@ -16,7 +16,7 @@ import {
   User_Info,
   User_Info_Friends,
   User_Tab_Section,
-  User_Tab_Post_Grid
+  User_Tab_Post_Grid,
 } from "../Components/User/style";
 
 const User = ({ id }) => {
@@ -26,13 +26,15 @@ const User = ({ id }) => {
     userPosts,
     userSavedPosts,
     hasMoreUserPost,
-    hasMoreUserSavedPost
-  } = useSelector(state => state.userReducer);
+    hasMoreUserSavedPost,
+  } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
   const followed =
-    me && me.Follow ? me.Follow.find(user => user.id === id) : null;
+    me && me.Follow ? me.Follow.find((user) => user.id === id) : null;
   const tab01 = useRef();
   const tab02 = useRef();
+  const postLastId = useRef([]);
+  const savedPostLastId = useRef([]);
 
   //팔로우 토글
   const followToggle = useCallback(() => {
@@ -43,8 +45,8 @@ const User = ({ id }) => {
           user: id,
           me: me.id,
           followCount: me.followCount,
-          followerCount: userInfo.followerCount
-        }
+          followerCount: userInfo.followerCount,
+        },
       });
     } else {
       dispatch({
@@ -53,20 +55,20 @@ const User = ({ id }) => {
           user: id,
           me: me.id,
           followCount: me.followCount,
-          followerCount: userInfo.followerCount
-        }
+          followerCount: userInfo.followerCount,
+        },
       });
     }
   }, [
     followed,
     me && me.id,
     userInfo && userInfo.followCount,
-    userInfo && userInfo.followerCount
+    userInfo && userInfo.followerCount,
   ]);
 
   //tab 메뉴 변경
   const onClickTab = useCallback(
-    event => {
+    (event) => {
       if (event.target.classList.contains("fa-th")) {
         tab01.current.classList.add("grid");
         tab02.current.classList.remove("grid");
@@ -79,7 +81,7 @@ const User = ({ id }) => {
   );
 
   //팔로워 팝업창 출력
-  const FollowerPopup = useCallback(event => {
+  const FollowerPopup = useCallback((event) => {
     const targetElem = event.target;
     if (targetElem.classList.contains("popup")) {
       targetElem.nextSibling.classList.add("opened");
@@ -92,34 +94,37 @@ const User = ({ id }) => {
     if (document.documentElement.scrollHeight - scrollY < 750) {
       if (tab01.current.classList.contains("grid")) {
         if (hasMoreUserPost) {
-          dispatch({
-            type: LOAD_USER_POSTS_REQUEST,
-            data: {
-              userId: id,
-              lastId: userPosts && userPosts[userPosts.length - 1].id
-            }
-          });
+          const postId = userSavedPosts[userSavedPosts.length - 1].id;
+          if (!postLastId.current.includes(postId)) {
+            dispatch({
+              type: LOAD_USER_POSTS_REQUEST,
+              data: {
+                userId: id,
+                lastId: userPosts && userPosts[userPosts.length - 1].id,
+              },
+            });
+            postLastId.current.push(postId);
+          }
         }
       } else {
-        if (
-          hasMoreUserSavedPost !== userSavedPosts &&
-          userSavedPosts[userSavedPosts.length - 1].id
-        ) {
-          dispatch({
-            type: LOAD_USER_SAVED_POSTS_REQUEST,
-            userId: id,
-            lastId:
-              userSavedPosts && userSavedPosts[userSavedPosts.length - 1].id
-          });
+        if (hasMoreUserSavedPost) {
+          const postId = userSavedPosts[userSavedPosts.length - 1].id;
+          if (!savedPostLastId.current.includes(postId)) {
+            dispatch({
+              type: LOAD_USER_SAVED_POSTS_REQUEST,
+              data: {
+                userId: id,
+                lastId:
+                  userSavedPosts &&
+                  userSavedPosts[userSavedPosts.length - 1].id,
+              },
+            });
+            savedPostLastId.current.push(postId);
+          }
         }
       }
     }
-  }, [
-    tab01,
-    hasMoreUserPost,
-    userPosts && userPosts[userPosts.length - 1],
-    userSavedPosts && userSavedPosts[userSavedPosts.length - 1]
-  ]);
+  }, [tab01, hasMoreUserPost, hasMoreUserSavedPost]);
 
   useEffect(() => {
     window.addEventListener("scroll", onScrollPosts);
@@ -129,7 +134,7 @@ const User = ({ id }) => {
   }, [
     tab01,
     userPosts && userPosts[userPosts.length - 1],
-    userSavedPosts && userSavedPosts[userSavedPosts.length - 1]
+    userSavedPosts && userSavedPosts[userSavedPosts.length - 1],
   ]);
 
   return (
@@ -205,12 +210,12 @@ const User = ({ id }) => {
             </li>
           </ul>
           <User_Tab_Post_Grid className="grid" ref={tab01}>
-            {userPosts.map(post => {
+            {userPosts.map((post) => {
               return <UserPost key={post.id} post={post} />;
             })}
           </User_Tab_Post_Grid>
           <User_Tab_Post_Grid ref={tab02}>
-            {userSavedPosts.map(post => {
+            {userSavedPosts.map((post) => {
               return <UserPost key={post.id + 0.1} post={post.Post} />;
             })}
           </User_Tab_Post_Grid>
@@ -220,19 +225,19 @@ const User = ({ id }) => {
   );
 };
 
-User.getInitialProps = async context => {
+User.getInitialProps = async (context) => {
   const id = parseInt(context.query.id, 10);
   context.store.dispatch({
     type: LOAD_USER_DETAIL_REQUEST,
-    data: id
+    data: id,
   });
   context.store.dispatch({
     type: LOAD_USER_POSTS_REQUEST,
-    data: { userId: id, lastId: 0 }
+    data: { userId: id, lastId: 0 },
   });
   context.store.dispatch({
     type: LOAD_USER_SAVED_POSTS_REQUEST,
-    data: { userId: id, lastId: 0 }
+    data: { userId: id, lastId: 0 },
   });
   return { id };
 };

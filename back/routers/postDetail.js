@@ -8,12 +8,12 @@ router.post("/:id/addLike", async (req, res, next) => {
   try {
     await db.Post.update(
       {
-        likeCount: req.body.likeCount + 1
+        likeCount: req.body.likeCount + 1,
       },
       { where: { id: parseInt(req.params.id, 10) } }
     );
     const post = await db.Post.findOne({
-      where: { id: parseInt(req.params.id, 10) }
+      where: { id: parseInt(req.params.id, 10) },
     });
     await post.addLike(req.user.id);
     return res.json(req.user.id);
@@ -46,12 +46,12 @@ router.post("/:id/removeLike", async (req, res, next) => {
     console.log("sdkjfhk", req.params.id, req.body.likeCount);
     await db.Post.update(
       {
-        likeCount: req.body.likeCount - 1
+        likeCount: req.body.likeCount - 1,
       },
       { where: { id: parseInt(req.params.id, 10) } }
     );
     const post = await db.Post.findOne({
-      where: { id: parseInt(req.params.id, 10) }
+      where: { id: parseInt(req.params.id, 10) },
     });
     await post.removeLike(req.user.id);
     return res.json(req.user.id);
@@ -72,7 +72,7 @@ router.post("/:id/addComment", async (req, res, next) => {
 
     await db.Post.update(
       {
-        commentCount: req.body.commentCount + 1
+        commentCount: req.body.commentCount + 1,
       },
       { where: { id: parseInt(req.params.id, 10) } }
     );
@@ -80,11 +80,11 @@ router.post("/:id/addComment", async (req, res, next) => {
     const newComment = await db.Comment.create({
       content: req.body.comment,
       PostId: req.body.postId,
-      UserId: req.user.id
+      UserId: req.user.id,
     });
 
     const post = await db.Post.findOne({
-      where: { id: parseInt(req.params.id, 10) }
+      where: { id: parseInt(req.params.id, 10) },
     });
     await post.addComment(newComment.id);
 
@@ -93,9 +93,9 @@ router.post("/:id/addComment", async (req, res, next) => {
       include: [
         {
           model: db.User,
-          attributes: ["id", "nickName", "src"]
-        }
-      ]
+          attributes: ["id", "nickName", "src"],
+        },
+      ],
     });
     return res.json(returnComment);
   } catch (error) {
@@ -112,12 +112,12 @@ router.get("/:id/comments", async (req, res, next) => {
       where = {
         PostId: req.params.id,
         id: {
-          [db.Sequelize.Op.gt]: req.query.lastId
-        }
+          [db.Sequelize.Op.gt]: req.query.lastId,
+        },
       };
     } else {
       where = {
-        PostId: req.params.id
+        PostId: req.params.id,
       };
     }
     const comments = await db.Comment.findAll({
@@ -125,10 +125,10 @@ router.get("/:id/comments", async (req, res, next) => {
       include: [
         {
           model: db.User,
-          attributes: ["id", "nickName", "src"]
-        }
+          attributes: ["id", "nickName", "src"],
+        },
       ],
-      limit: parseInt(req.query.limit, 10)
+      limit: parseInt(req.query.limit, 10),
     });
     return res.json(comments);
   } catch (error) {
@@ -141,26 +141,26 @@ router.get("/:id/comments", async (req, res, next) => {
 router.get("/:id/loadModal", async (req, res, next) => {
   try {
     const post = await db.Post.findOne({
-      where: { id: req.params.id },
+      where: { id: parseInt(req.params.id, 10) },
       include: [
         {
-          model: db.User
+          model: db.User,
         },
         {
           model: db.Comment,
           include: [
             {
               model: db.User,
-              attributes: ["id", "nickName", "src"]
-            }
+              attributes: ["id", "nickName", "src"],
+            },
           ],
-          limit: 12
+          limit: 12,
         },
         {
           model: db.User,
-          as: "Like"
-        }
-      ]
+          as: "Like",
+        },
+      ],
     });
     return res.status(200).json(post);
   } catch (error) {

@@ -10,7 +10,7 @@ const multerS3 = require("multer-s3");
 AWS.config.update({
   region: "ap-northeast-2",
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_KEY
+  secretAccessKey: process.env.AWS_SECRET_KEY,
 });
 
 const upload = multer({
@@ -19,9 +19,9 @@ const upload = multer({
     bucket: "charmingbooks",
     key(req, file, cb) {
       cb(null, `original/${+new Date()}${path.basename(file.originalname)}`);
-    }
+    },
   }),
-  limits: { fileSize: 1024 * 1024 * 20 }
+  limits: { fileSize: 1024 * 1024 * 20 },
 });
 
 //이미지 불러오기
@@ -46,14 +46,14 @@ router.post("/addPost", upload.none(), async (req, res, next) => {
       content: req.body.content,
       category: req.body.category,
       src: req.body.image,
-      UserId: req.user.id
+      UserId: req.user.id,
     });
     await db.User.update(
       {
-        postCount: parseInt(req.body.postCount, 10) + 1
+        postCount: parseInt(req.body.postCount, 10) + 1,
       },
       {
-        where: { id: req.user.id }
+        where: { id: req.user.id },
       }
     );
     return res.json(post);
@@ -70,8 +70,8 @@ router.get("/topLiked", async (req, res, next) => {
       limit: parseInt(req.query.limit, 10),
       order: [
         ["likeCount", "DESC"],
-        ["createdAt", "DESC"]
-      ]
+        ["createdAt", "DESC"],
+      ],
     });
     return res.status(200).json(posts);
   } catch (error) {
@@ -87,8 +87,8 @@ router.get("/topRatedComment", async (req, res, next) => {
       limit: parseInt(req.query.limit, 10),
       order: [
         ["commentCount", "DESC"],
-        ["createdAt", "DESC"]
-      ]
+        ["createdAt", "DESC"],
+      ],
     });
     return res.status(200).json(posts);
   } catch (error) {
@@ -100,12 +100,20 @@ router.get("/topRatedComment", async (req, res, next) => {
 //모든 게시물 불러오기
 router.get("/all", async (req, res, next) => {
   try {
+    let where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      where = {
+        id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) },
+      };
+    } else {
+      where = {
+        id: { [db.Sequelize.Op.lt]: 99999999 },
+      };
+    }
     const posts = await db.Post.findAll({
-      where: {
-        id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) }
-      },
+      where,
       limit: parseInt(req.query.limit, 10),
-      order: [["createdAt", "DESC"]]
+      order: [["createdAt", "DESC"]],
     });
     return res.status(200).json(posts);
   } catch (error) {

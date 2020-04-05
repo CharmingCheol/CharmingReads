@@ -38,24 +38,24 @@ import {
   LOAD_ALL_POSTS_SUCCESS,
   LOAD_ALL_POSTS_FAILURE,
   LOAD_SEARCH_POSTS_REQUEST,
-  LOAD_SEARCH_POSTS_FAILURE
+  LOAD_SEARCH_POSTS_FAILURE,
 } from "./actions/postAction";
 
 export const initialState = {
   image: null,
   mainPosts: [],
-  modalPost: null,
+  modalPost: {},
   mostLikePosts: [],
   mostCommentPosts: [],
   allPosts: [],
   hasMoreComments: true,
   hasMoreCategoryPosts: null,
   hasMoreSearchPosts: null,
-  hasMoreAllPosts: null
+  hasMoreAllPosts: null,
 };
 
 export default (state = initialState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     switch (action.type) {
       //이미지 미리보기
       case LOAD_POST_IMAGE_REQUEST: {
@@ -101,12 +101,12 @@ export default (state = initialState, action) => {
           return;
         }
         if (action.type === LOAD_CATEGORY_POSTS_SUCCESS) {
-          action.data.forEach(post => draft.mainPosts.push(post));
+          action.data.forEach((post) => draft.mainPosts.push(post));
           draft.hasMoreCategoryPosts = action.data.length === 9;
           return;
         }
         if (action.type === LOAD_SEARCH_POSTS_SUCCESS) {
-          action.data.forEach(post => draft.mainPosts.push(post));
+          action.data.forEach((post) => draft.mainPosts.push(post));
           draft.hasMoreSearchPosts = action.data.length === 9;
         }
         break;
@@ -118,7 +118,7 @@ export default (state = initialState, action) => {
       }
       //modal 불러오기
       case LOAD_MODAL_POST_REQUEST: {
-        draft.modalPost = null;
+        draft.modalPost = {};
         break;
       }
       case LOAD_MODAL_POST_SUCCESS: {
@@ -146,7 +146,7 @@ export default (state = initialState, action) => {
       }
       case POST_LIKE_REMOVE_SUCCESS: {
         draft.modalPost.Like = draft.modalPost.Like.filter(
-          id => Object.values(id)[0] !== action.data
+          (id) => Object.values(id)[0] !== action.data
         );
         draft.modalPost.likeCount -= 1;
         break;
@@ -170,7 +170,9 @@ export default (state = initialState, action) => {
         break;
       }
       case LOAD_COMMENTS_SUCCESS: {
-        action.data.forEach(comment => draft.modalPost.Comments.push(comment));
+        action.data.forEach((comment) =>
+          draft.modalPost.Comments.push(comment)
+        );
         draft.hasMoreComments = action.data.length === 6;
         break;
       }
@@ -183,7 +185,7 @@ export default (state = initialState, action) => {
         break;
       }
       case LOAD_TOP_RATED_LIKE_POSTS_SUCCESS: {
-        action.data.forEach(post => draft.mostLikePosts.push(post));
+        action.data.forEach((post) => draft.mostLikePosts.push(post));
         break;
       }
       case LOAD_TOP_RATED_LIKE_POSTS_FAILURE: {
@@ -195,7 +197,7 @@ export default (state = initialState, action) => {
         break;
       }
       case LOAD_TOP_RATED_COMMENT_POSTS_SUCCESS: {
-        action.data.forEach(post => draft.mostCommentPosts.push(post));
+        action.data.forEach((post) => draft.mostCommentPosts.push(post));
         break;
       }
       case LOAD_TOP_RATED_COMMENT_POSTS_FAILURE: {
@@ -203,11 +205,11 @@ export default (state = initialState, action) => {
       }
       //모든 게시글 불러오기
       case LOAD_ALL_POSTS_REQUEST: {
-        draft.allPosts = draft.allPosts ? draft.allPosts : [];
+        draft.allPosts = action.data.lastId ? draft.allPosts : [];
         break;
       }
       case LOAD_ALL_POSTS_SUCCESS: {
-        action.data.forEach(post => draft.allPosts.push(post));
+        action.data.forEach((post) => draft.allPosts.push(post));
         draft.hasMoreAllPosts = action.data.length === 9;
         break;
       }

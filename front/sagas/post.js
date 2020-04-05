@@ -25,13 +25,13 @@ import {
   LOAD_TOP_RATED_LIKE_POSTS_FAILURE,
   LOAD_ALL_POSTS_REQUEST,
   LOAD_ALL_POSTS_SUCCESS,
-  LOAD_ALL_POSTS_FAILURE
+  LOAD_ALL_POSTS_FAILURE,
 } from "../redux/actions/postAction";
 
 //이미지 불러오기
 function loadPostImageApi(loadPostImageData) {
   return axios.post("/post/loadPostImage", loadPostImageData, {
-    withCredentials: true
+    withCredentials: true,
   });
 }
 
@@ -40,12 +40,12 @@ function* loadPostImage(action) {
     const result = yield call(loadPostImageApi, action.data);
     yield put({
       type: LOAD_POST_IMAGE_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: LOAD_POST_IMAGE_FAILURE
+      type: LOAD_POST_IMAGE_FAILURE,
     });
   }
 }
@@ -57,7 +57,7 @@ function* watchLoadPostImage() {
 //게시글 추가
 function postApi(postData) {
   return axios.post("/post/addPost", postData, {
-    withCredentials: true
+    withCredentials: true,
   });
 }
 
@@ -66,12 +66,12 @@ function* post(action) {
     const result = yield call(postApi, action.data);
     yield put({
       type: ADD_POST_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: ADD_POST_FAILURE
+      type: ADD_POST_FAILURE,
     });
   }
 }
@@ -83,7 +83,7 @@ function* watchPost() {
 //게시글 불러오기
 function loadPostsApi() {
   return axios.get("/posts/loadPosts?limit=10", {
-    withCredentials: true
+    withCredentials: true,
   });
 }
 
@@ -92,12 +92,12 @@ function* loadposts() {
     const result = yield call(loadPostsApi);
     yield put({
       type: LOAD_POSTS_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: LOAD_POSTS_FAILURE
+      type: LOAD_POSTS_FAILURE,
     });
   }
 }
@@ -118,12 +118,12 @@ function* categoryPosts(action) {
     const result = yield call(categoryPostsApi, action.data);
     yield put({
       type: LOAD_CATEGORY_POSTS_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: LOAD_CATEGORY_POSTS_FAILURE
+      type: LOAD_CATEGORY_POSTS_FAILURE,
     });
   }
 }
@@ -145,12 +145,12 @@ function* loadsearchPosts(action) {
     const result = yield call(loadsearchPostsApi, action.data);
     yield put({
       type: LOAD_SEARCH_POSTS_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: LOAD_SEARCH_POSTS_FAILURE
+      type: LOAD_SEARCH_POSTS_FAILURE,
     });
   }
 }
@@ -169,12 +169,12 @@ function* loadTopLikedPosts() {
     const result = yield call(loadTopLikedPostsApi);
     yield put({
       type: LOAD_TOP_RATED_LIKE_POSTS_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: LOAD_TOP_RATED_LIKE_POSTS_FAILURE
+      type: LOAD_TOP_RATED_LIKE_POSTS_FAILURE,
     });
   }
 }
@@ -193,12 +193,12 @@ function* loadTopCommentPosts() {
     const result = yield call(loadTopCommentPostsApi);
     yield put({
       type: LOAD_TOP_RATED_COMMENT_POSTS_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: LOAD_TOP_RATED_COMMENT_POSTS_FAILURE
+      type: LOAD_TOP_RATED_COMMENT_POSTS_FAILURE,
     });
   }
 }
@@ -215,15 +215,14 @@ function loadAllPostsApi(data) {
 function* loadAllPosts(action) {
   try {
     const result = yield call(loadAllPostsApi, action.data);
-    console.log("resulresultt", result);
     yield put({
       type: LOAD_ALL_POSTS_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: LOAD_ALL_POSTS_FAILURE
+      type: LOAD_ALL_POSTS_FAILURE,
     });
   }
 }
@@ -241,6 +240,6 @@ export default function* postSaga() {
     fork(watchLoadSearchPosts),
     fork(watchLoadTopLikedPosts),
     fork(watchloadTopCommentPosts),
-    fork(watchLoadAllPosts)
+    fork(watchLoadAllPosts),
   ]);
 }

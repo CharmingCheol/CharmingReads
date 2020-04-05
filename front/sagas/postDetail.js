@@ -21,7 +21,7 @@ import {
   ADD_POST_STORAGE_SUCCESS,
   REMOVE_POST_STORAGE_SUCCESS,
   REMOVE_POST_STORAGE_FAILURE,
-  REMOVE_POST_STORAGE_REQUEST
+  REMOVE_POST_STORAGE_REQUEST,
 } from "../redux/actions/postAction";
 
 //좋아요 누르기
@@ -30,7 +30,7 @@ function postLikeApi(data) {
     `/post/${data.postId}/addLike`,
     { likeCount: data.likeCount },
     {
-      withCredentials: true
+      withCredentials: true,
     }
   );
 }
@@ -40,12 +40,12 @@ function* postLike(action) {
     const result = yield call(postLikeApi, action.data);
     yield put({
       type: POST_LIKE_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: POST_LIKE_FAILURE
+      type: POST_LIKE_FAILURE,
     });
   }
 }
@@ -60,7 +60,7 @@ function postLikeRemoveApi(data) {
     `/post/${data.postId}/removeLike`,
     { likeCount: data.likeCount },
     {
-      withCredentials: true
+      withCredentials: true,
     }
   );
 }
@@ -70,12 +70,12 @@ function* postLikeRemove(action) {
     const result = yield call(postLikeRemoveApi, action.data);
     yield put({
       type: POST_LIKE_REMOVE_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: POST_LIKE_REMOVE_FAILURE
+      type: POST_LIKE_REMOVE_FAILURE,
     });
   }
 }
@@ -90,7 +90,7 @@ function addCommentApi(data) {
     `/post/${data.postId}/addComment`,
     { comment: data.comment, commentCount: data.commentCount },
     {
-      withCredentials: true
+      withCredentials: true,
     }
   );
 }
@@ -100,12 +100,12 @@ function* addComment(action) {
     const result = yield call(addCommentApi, action.data);
     yield put({
       type: ADD_COMMENT_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: ADD_COMMENT_FAILURE
+      type: ADD_COMMENT_FAILURE,
     });
   }
 }
@@ -127,12 +127,12 @@ function* loadComments(action) {
     yield put({
       type: LOAD_COMMENTS_SUCCESS,
       data: result.data,
-      post: action.data
+      post: action.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: LOAD_COMMENTS_FAILURE
+      type: LOAD_COMMENTS_FAILURE,
     });
   }
 }
@@ -142,22 +142,21 @@ function* watchLoadComments() {
 }
 
 //modal 불러오기
-function loadModalApi(loadModalData) {
-  return axios.get(`/post/${loadModalData}/loadModal`);
+function loadModalApi(data) {
+  return axios.get(`/post/${data}/loadModal`);
 }
 
 function* loadModal(action) {
   try {
     const result = yield call(loadModalApi, action.data);
-    console.log("qqqqqqqweweweew", result);
     yield put({
       type: LOAD_MODAL_POST_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: LOAD_MODAL_POST_FAILURE
+      type: LOAD_MODAL_POST_FAILURE,
     });
   }
 }
@@ -169,7 +168,7 @@ function* watchLoadModal() {
 //게시글 저장
 function addPostStorageApi(addPostStorageData) {
   return axios.post("/user/addPostStorage", addPostStorageData, {
-    withCredentials: true
+    withCredentials: true,
   });
 }
 
@@ -178,12 +177,12 @@ function* addPostStorage(action) {
     const result = yield call(addPostStorageApi, action.data);
     yield put({
       type: ADD_POST_STORAGE_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: ADD_POST_STORAGE_FAILURE
+      type: ADD_POST_STORAGE_FAILURE,
     });
   }
 }
@@ -195,7 +194,7 @@ function* watchAddPostStorage() {
 //게시글 저장 취소
 function removePostStorageApi(postId) {
   return axios.delete(`/user/${postId}/removePostStorage`, {
-    withCredentials: true
+    withCredentials: true,
   });
 }
 
@@ -204,12 +203,12 @@ function* removePostStorage(action) {
     const result = yield call(removePostStorageApi, action.data);
     yield put({
       type: REMOVE_POST_STORAGE_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (error) {
     console.error(error);
     yield put({
-      type: REMOVE_POST_STORAGE_FAILURE
+      type: REMOVE_POST_STORAGE_FAILURE,
     });
   }
 }
@@ -218,7 +217,7 @@ function* watchRemovePostStorage() {
   yield takeLatest(REMOVE_POST_STORAGE_REQUEST, removePostStorage);
 }
 
-export default function*() {
+export default function* () {
   yield all([
     fork(watchPostLike),
     fork(watcPostRemoveLike),
@@ -226,6 +225,6 @@ export default function*() {
     fork(watchLoadComments),
     fork(watchLoadModal),
     fork(watchAddPostStorage),
-    fork(watchRemovePostStorage)
+    fork(watchRemovePostStorage),
   ]);
 }

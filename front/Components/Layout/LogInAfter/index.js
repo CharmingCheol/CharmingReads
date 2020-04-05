@@ -6,14 +6,13 @@ import { LogInAfterLayout, LogInAfterImage, LogInAfterButton } from "./style";
 import { LOG_OUT_REQUEST } from "../../../redux/actions/userAction";
 
 const LogInAfter = () => {
-  const { me } = useSelector(state => state.userReducer);
+  const { me } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
   const onClickLogout = useCallback(() => {
     dispatch({
-      type: LOG_OUT_REQUEST
+      type: LOG_OUT_REQUEST,
     });
   }, []);
-  console.log(me);
 
   return (
     <>

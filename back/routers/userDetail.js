@@ -11,7 +11,7 @@ const multerS3 = require("multer-s3");
 AWS.config.update({
   region: "ap-northeast-2",
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_KEY
+  secretAccessKey: process.env.AWS_SECRET_KEY,
 });
 
 const upload = multer({
@@ -20,16 +20,16 @@ const upload = multer({
     bucket: "charmingbooks",
     key(req, file, cb) {
       cb(null, `original/${+new Date()}${path.basename(file.originalname)}`);
-    }
+    },
   }),
-  limits: { fileSize: 1024 * 1024 * 20 }
+  limits: { fileSize: 1024 * 1024 * 20 },
 });
 
 //내 정보 불러오기
 router.get("/loadUser", async (req, res, next) => {
   try {
     if (!req.user) {
-      return res.status(401).send("로그인 먼저 해라");
+      return res.status(401).send("먼저 로그인을 하시기 바랍니다");
     }
     const loadUser = Object.assign({}, req.user.toJSON());
     delete loadUser.password;
@@ -50,15 +50,15 @@ router.patch("/edit", upload.none(), async (req, res, next) => {
         nickName: req.body.nickName,
         password: hashPassword,
         introduction: req.body.introduction,
-        src: req.body.image
+        src: req.body.image,
       },
       {
-        where: { id: req.user.id }
+        where: { id: req.user.id },
       }
     );
     const returnUser = await db.User.findOne({
       where: { id: req.user.id },
-      attributes: ["id", "userId", "nickName", "introduction", "src"]
+      attributes: ["id", "userId", "nickName", "introduction", "src"],
     });
     return res.json(returnUser);
   } catch (error) {
@@ -82,7 +82,7 @@ router.post("/addPostStorage", async (req, res, next) => {
   try {
     await db.PostStorage.create({
       UserId: req.user.id,
-      PostId: req.body.postId
+      PostId: req.body.postId,
     });
     return res.json(req.body.postId);
   } catch (error) {
@@ -107,8 +107,8 @@ router.get("/:id", async (req, res, next) => {
   try {
     const user = await db.User.findOne({
       where: {
-        id: parseInt(req.params.id, 10)
-      }
+        id: parseInt(req.params.id, 10),
+      },
     });
     const returnUser = Object.assign({}, user.toJSON());
     delete returnUser.password;
@@ -124,22 +124,22 @@ router.post("/:id/follow", async (req, res, next) => {
   try {
     await db.User.update(
       {
-        followCount: req.body.followCount + 1
+        followCount: req.body.followCount + 1,
       },
       { where: { id: req.user.id } }
     );
     await db.User.update(
       {
-        followerCount: req.body.followerCount + 1
+        followerCount: req.body.followerCount + 1,
       },
       { where: { id: req.params.id } }
     );
 
     const me = await db.User.findOne({
-      where: { id: req.user.id }
+      where: { id: req.user.id },
     });
     const anotherUser = await db.User.findOne({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
 
     await me.addFollow(req.params.id);
@@ -156,22 +156,22 @@ router.post("/:id/unfollow", async (req, res, next) => {
   try {
     await db.User.update(
       {
-        followCount: req.body.followCount - 1
+        followCount: req.body.followCount - 1,
       },
       { where: { id: req.user.id } }
     );
     await db.User.update(
       {
-        followerCount: req.body.followerCount - 1
+        followerCount: req.body.followerCount - 1,
       },
       { where: { id: req.params.id } }
     );
 
     const me = await db.User.findOne({
-      where: { id: req.user.id }
+      where: { id: req.user.id },
     });
     const anotherUser = await db.User.findOne({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
 
     await me.removeFollow(req.params.id);
@@ -194,10 +194,10 @@ router.get("/:id/follow", async (req, res, next) => {
           as: "Follow",
           attributes: ["id", "nickName", "src"],
           where: {
-            id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) }
-          }
-        }
-      ]
+            id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) },
+          },
+        },
+      ],
     });
     const jsonUser = Object.assign({}, user.toJSON());
     jsonUser.Follow = jsonUser.Follow.sort((p, c) => {
@@ -222,10 +222,10 @@ router.get("/:id/follower", async (req, res, next) => {
           as: "Follower",
           attributes: ["id", "nickName", "src"],
           where: {
-            id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) }
-          }
-        }
-      ]
+            id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) },
+          },
+        },
+      ],
     });
     const jsonUser = Object.assign({}, user.toJSON());
     jsonUser.Follower = jsonUser.Follower.sort((p, c) => {
@@ -246,17 +246,17 @@ router.get("/:id/userPosts", async (req, res, next) => {
     if (parseInt(req.query.lastId, 10)) {
       where = {
         id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) },
-        UserId: parseInt(req.params.id, 10)
+        UserId: parseInt(req.params.id, 10),
       };
     } else {
       where = {
-        UserId: parseInt(req.params.id, 10)
+        UserId: parseInt(req.params.id, 10),
       };
     }
     const user = await db.Post.findAll({
       where,
       limit: parseInt(req.query.limit, 10),
-      order: [["createdAt", "DESC"]]
+      order: [["createdAt", "DESC"]],
     });
     return res.status(200).json(user);
   } catch (error) {
@@ -272,21 +272,22 @@ router.get("/:id/userSavedPosts", async (req, res, next) => {
     if (parseInt(req.query.lastId, 10)) {
       where = {
         id: { [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10) },
-        UserId: parseInt(req.params.id, 10)
+        UserId: parseInt(req.params.id, 10),
       };
     } else {
       where = {
-        UserId: parseInt(req.params.id, 10)
+        UserId: parseInt(req.params.id, 10),
       };
     }
     const user = await db.PostStorage.findAll({
       where,
       include: [
         {
-          model: db.Post
-        }
+          model: db.Post,
+        },
       ],
-      limit: parseInt(req.query.limit, 10)
+      limit: parseInt(req.query.limit, 10),
+      order: [["createdAt", "DESC"]],
     });
     return res.status(200).json(user);
   } catch (error) {

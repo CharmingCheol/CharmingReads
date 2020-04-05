@@ -6,7 +6,7 @@ import {
   LOAD_POSTS_REQUEST,
   LOAD_TOP_RATED_LIKE_POSTS_REQUEST,
   LOAD_TOP_RATED_COMMENT_POSTS_REQUEST,
-  LOAD_ALL_POSTS_REQUEST
+  LOAD_ALL_POSTS_REQUEST,
 } from "../redux/actions/postAction";
 import Book from "../Components/Home/BookImage";
 
@@ -23,14 +23,14 @@ const Books_Layout = styled.div`
 `;
 
 const Home = () => {
-  const { me } = useSelector(state => state.userReducer);
+  const { me } = useSelector((state) => state.userReducer);
   const {
     mainPosts,
     mostLikePosts,
     mostCommentPosts,
     allPosts,
-    hasMoreAllPosts
-  } = useSelector(state => state.postReducer);
+    hasMoreAllPosts,
+  } = useSelector((state) => state.postReducer);
   const dispatch = useDispatch();
   const countLastId = useRef([]);
 
@@ -41,7 +41,7 @@ const Home = () => {
         if (!countLastId.current.includes(lastId)) {
           dispatch({
             type: LOAD_ALL_POSTS_REQUEST,
-            data: { lastId }
+            data: { lastId },
           });
           countLastId.current.push(lastId);
         }
@@ -62,7 +62,7 @@ const Home = () => {
         <div>
           <Books_Layout_Title>내가 쓴 최신글</Books_Layout_Title>
           <Books_Layout>
-            {mainPosts.map(post => {
+            {mainPosts.map((post) => {
               return <Book key={post.id} post={post} />;
             })}
           </Books_Layout>
@@ -71,7 +71,7 @@ const Home = () => {
       <div>
         <Books_Layout_Title>좋아요 TOP10 게시글</Books_Layout_Title>
         <Books_Layout>
-          {mostLikePosts.map(post => {
+          {mostLikePosts.map((post) => {
             return <Book key={post.id + 0.1} post={post} />;
           })}
         </Books_Layout>
@@ -79,7 +79,7 @@ const Home = () => {
       <Books_Layout_Title>댓글 TOP10 게시글</Books_Layout_Title>
       <div>
         <Books_Layout>
-          {mostCommentPosts.map(post => {
+          {mostCommentPosts.map((post) => {
             return <Book key={post.id + 0.2} post={post} />;
           })}
         </Books_Layout>
@@ -87,7 +87,7 @@ const Home = () => {
       <div>
         <Books_Layout_Title>모두 보기</Books_Layout_Title>
         <Books_Layout>
-          {allPosts.map(post => {
+          {allPosts.map((post) => {
             return <Book key={post.id + 0.3} post={post} all="all" />;
           })}
         </Books_Layout>
@@ -96,21 +96,21 @@ const Home = () => {
   );
 };
 
-Home.getInitialProps = async context => {
+Home.getInitialProps = async (context) => {
   context.store.dispatch({
-    type: LOAD_POSTS_REQUEST
+    type: LOAD_POSTS_REQUEST,
   });
   context.store.dispatch({
-    type: LOAD_TOP_RATED_LIKE_POSTS_REQUEST
+    type: LOAD_TOP_RATED_LIKE_POSTS_REQUEST,
   });
   context.store.dispatch({
-    type: LOAD_TOP_RATED_COMMENT_POSTS_REQUEST
+    type: LOAD_TOP_RATED_COMMENT_POSTS_REQUEST,
   });
   context.store.dispatch({
     type: LOAD_ALL_POSTS_REQUEST,
     data: {
-      lastId: 99999999
-    }
+      lastId: 0,
+    },
   });
 };
 

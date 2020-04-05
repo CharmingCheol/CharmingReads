@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useInput } from "../Components/SignUp";
 import {
   USER_EDIT_REQUEST,
-  UPLOAD_IMAGE_REQUEST
+  UPLOAD_IMAGE_REQUEST,
 } from "../redux/actions/userAction";
 import { UserEdit_Form, UserEdit_Image } from "../Components/userEdit/style";
 
 const UserEdit = () => {
   const dispatch = useDispatch();
-  const { me, image } = useSelector(state => state.userReducer);
+  const { me, image } = useSelector((state) => state.userReducer);
   const imageChange = useRef();
 
   const [editnickName, onEditnickName] = useInput();
@@ -18,7 +18,7 @@ const UserEdit = () => {
   const [editText, onEditText] = useInput();
 
   const onSubmitEdit = useCallback(
-    event => {
+    (event) => {
       event.preventDefault();
       const submitInfo = new FormData();
       submitInfo.append("userId", editId);
@@ -28,28 +28,26 @@ const UserEdit = () => {
       submitInfo.append("image", image.filename);
       dispatch({
         type: USER_EDIT_REQUEST,
-        data: submitInfo
+        data: submitInfo,
       });
     },
     [editId, editnickName, editPassword, editText, image]
   );
 
-  const uploadImage = useCallback(event => {
+  const uploadImage = useCallback((event) => {
     const image = new FormData();
-    [].forEach.call(event.target.files, file => {
+    [].forEach.call(event.target.files, (file) => {
       image.append("image", file);
     });
     dispatch({
       type: UPLOAD_IMAGE_REQUEST,
-      data: image
+      data: image,
     });
   }, []);
 
   const onClickImage = useCallback(() => {
     imageChange.current.click();
   }, [imageChange.current]);
-
-  console.log(image);
 
   return (
     <>
